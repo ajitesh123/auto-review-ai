@@ -1,0 +1,3 @@
+myenv2
+.*
+!.gitignore
