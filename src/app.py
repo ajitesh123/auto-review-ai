@@ -1,22 +1,19 @@
 import os
 import openai
-from dotenv import load_dotenv, dotenv_values
 import streamlit as st
+from dotenv import load_dotenv, dotenv_values
+from langchain.chat_models import ChatOpenAI
 
-load_dotenv()
+# load_dotenv()
 
-#API_KEY = os.getenv("OPENAI_API_KEY")
+
+
+# API_KEY = os.getenv("OPENAI_API_KEY")
 
 def get_completion(prompt, API_KEY, model="gpt-4"):
-    client = openai.OpenAI(api_key=API_KEY)
-    messages = [{"role": "user", "content": prompt}]
-    response = client.chat.completions.create(
-        model=model,
-        messages=messages,
-        temperature=0.2
-    )
-    print(response.choices[0].message.content)
-    return response.choices[0].message.content
+    llm = ChatOpenAI(openai_api_key=API_KEY, model="gpt-4")
+    response = llm.invoke(prompt)
+    return response.content
 
 def generate_review(your_role, candidate_role, perf_question, your_review, your_openai_key):
     if perf_question == None:
