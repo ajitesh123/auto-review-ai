@@ -67,9 +67,9 @@ def generate_review(your_role, candidate_role, perf_question, your_review, llm_t
 st.title("Write Performance Review in a Minute")
 
 st.text("""If no question is passed, following are considered:
-        - Describe example(s) of the topics selected. What was the context? What actions did they take?
-        - In your opinion, what impact did their actions have?
-        - What recommendations do you have for their growth and development? Your feedback can be about any area of their work.
+        1. Describe example(s) of the topics selected. What was the context? What actions did they take?
+        2. In your opinion, what impact did their actions have?
+        3. What recommendations do you have for their growth and development? Your feedback can be about any area of their work.
         """)
 
 # Sidebar for LLM and model size selection, and API key input
