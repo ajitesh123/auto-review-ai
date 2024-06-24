@@ -1,0 +1,8 @@
+{
+    "buildCommand": "npm run build",
+    "outputDirectory": "build",
+    "framework": "react",
+    "routes": [
+      { "src": "/(.*)", "dest": "/index.html" }
+    ]
+  }
