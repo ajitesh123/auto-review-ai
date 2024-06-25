@@ -1,4 +1,6 @@
 import os
+import re
+from typing import Dict, List
 import streamlit as st
 from llm import OpenAILLM, GoogleLLM, AnthropicLLM, GroqLLM
 
@@ -46,22 +48,45 @@ def generate_prompt(your_role, candidate_role, perf_question, your_review):
     </question for performance>
 
     {delimiter} Output in markdown format in the following structure:{delimiter}
-    - Q1: Mention the first question in question for performance 
-    Your answer
-    - Q2: Mention the second question in question for performance
-    Your answer
-    - Q3: Mention the third question in question for performance
-    Your answer
-
-    Answer: """
+    <output>
+    <question>
+    {{Mention the first question in question for performance}}
+    </question>
+    <answer>
+    {{Your answer come here}}
+    </answer>
+    <question>
+    {{Mention the second question in question for performance}}
+    </question>
+    <answer>
+    {{Your answer for second question come here}}
+    </answer>
+    ...
+    </output>
+    """
     return prompt
 
+def parse_llm_response(response: str) -> List[Dict[str, str]]:
+    # Extract content between <output> tags
+    output_match = re.search(r'<output>(.*?)</output>', response, re.DOTALL)
+    if not output_match:
+        raise ValueError("No <output> tags found in the response")
+    
+    output_content = output_match.group(1).strip()
+    
+    # Split content into question-answer pairs
+    qa_pairs = re.findall(r'<question>(.*?)</question>\s*<answer>(.*?)</answer>', output_content, re.DOTALL)
+    
+    # Create list of dictionaries
+    result = [{"question": q.strip(), "answer": a.strip()} for q, a in qa_pairs]
+    
+    return result
 def generate_review(your_role, candidate_role, perf_question, your_review, llm_type, user_api_key, model_size):
     perf_question = perf_question or DEFAULT_QUESTIONS
     prompt = generate_prompt(your_role, candidate_role, perf_question, your_review)
     llm = create_llm_instance(llm_type, user_api_key)
     response = get_completion(prompt, llm, model_size)
-    return response
+    return parse_llm_response(response)
 
 # Streamlit UI
 st.title("Write Performance Review in a Minute")

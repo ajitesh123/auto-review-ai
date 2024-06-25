@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from typing import Optional, List, Dict
 import re
 from llm import OpenAILLM, GoogleLLM, AnthropicLLM, GroqLLM
@@ -17,6 +17,8 @@ class ReviewRequest(BaseModel):
     llm_type: str
     user_api_key: str
     model_size: str = "small"
+
+    model_config = ConfigDict(protected_namespaces=())
 
 def get_completion(prompt, llm, model_size):
     response = llm.generate_text(prompt, model=model_size)
