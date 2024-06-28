@@ -1,5 +1,5 @@
 from pydantic import BaseModel, ConfigDict
-from typing import List, Optional
+from typing import Dict, List, Optional
 from fastapi import UploadFile
 import re
 from llm import OpenAILLM, GoogleLLM, AnthropicLLM, GroqLLM
