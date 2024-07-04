@@ -1,6 +1,7 @@
 from pydantic import BaseModel, ConfigDict
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, bytes
 import re
+from st_audiorec import st_audiorec
 from llm import OpenAILLM, GoogleLLM, AnthropicLLM, GroqLLM
 
 class SelfReviewRequest(BaseModel):
@@ -10,6 +11,7 @@ class SelfReviewRequest(BaseModel):
     llm_type: str
     user_api_key: str
     model_size: str = "medium"
+    audio_review: Optional[bytes] = None
 
     model_config = ConfigDict(protected_namespaces=())
 
@@ -79,3 +81,30 @@ def generate_self_review(text_dump: str, questions: List[str], instructions: Opt
     llm = create_llm_instance(llm_type, user_api_key)
     response = llm.generate_text(prompt, model=model_size)
     return parse_self_review_response(response)
+
+def main():
+    st.title("Self-Review")
+
+    text_dump = st.text_area("Text Dump")
+    questions = st.text_area("Questions (one per line)")
+    instructions = st.text_area("Additional Instructions (Optional)")
+
+    st.subheader("Audio Review (Optional)")
+    audio_data = st_audiorec()
+    if audio_data is not None:
+        st.audio(audio_data, format='audio/wav')
+
+    if st.button("Generate Self-Review"):
+        request = SelfReviewRequest(
+            text_dump=text_dump,
+            questions=questions.split('\n'),
+            instructions=instructions,
+            llm_type="your_llm_type",
+            user_api_key="your_api_key",
+            audio_review=audio_data
+        )
+        # Call the API to generate the self-review using the request object
+        # Display the generated self-review
+
+if __name__ == "__main__":
+    main()

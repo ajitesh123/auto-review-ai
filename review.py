@@ -1,5 +1,6 @@
-from pydantic import BaseModel, ConfigDict
-from typing import Optional, List, Dict
+from pydantic import BaseModel
+from typing import Optional, List, Dict, bytes
+from st_audiorec import st_audiorec
 import re
 from llm import OpenAILLM, GoogleLLM, AnthropicLLM, GroqLLM
 
@@ -17,8 +18,7 @@ class ReviewRequest(BaseModel):
     llm_type: str
     user_api_key: str
     model_size: str = "small"
-
-    model_config = ConfigDict(protected_namespaces=())
+    audio_review: Optional[bytes] = None
 
 def get_completion(prompt, llm, model_size):
     response = llm.generate_text(prompt, model=model_size)
@@ -95,3 +95,32 @@ def generate_review(your_role, candidate_role, perf_question, your_review, llm_t
     llm = create_llm_instance(llm_type, user_api_key)
     response = get_completion(prompt, llm, model_size)
     return parse_llm_response(response)
+
+def main():
+    st.title("Performance Review")
+
+    your_role = st.text_input("Your Role")
+    candidate_role = st.text_input("Candidate's Role")
+    perf_question = st.text_area("Performance Question")
+    your_review = st.text_area("Your Review")
+
+    st.subheader("Audio Review (Optional)")
+    audio_data = st_audiorec()
+    if audio_data is not None:
+        st.audio(audio_data, format='audio/wav')
+
+    if st.button("Generate Review"):
+        request = ReviewRequest(
+            your_role=your_role,
+            candidate_role=candidate_role,
+            perf_question=perf_question,
+            your_review=your_review,
+            llm_type="your_llm_type",
+            user_api_key="your_api_key",
+            audio_review=audio_data
+        )
+        # Call the API to generate the review using the request object
+        # Display the generated review
+
+if __name__ == "__main__":
+    main()

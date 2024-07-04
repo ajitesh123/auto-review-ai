@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException
+from audio_utils import convert_speech_to_text
 from review import ReviewRequest, generate_review
 from self_review import SelfReviewRequest, generate_self_review
 from fastapi.middleware.cors import CORSMiddleware
@@ -15,11 +16,15 @@ app.add_middleware(
 @app.post("/generate_review")
 async def api_generate_review(request: ReviewRequest):
     try:
+        your_review = request.your_review
+        if request.audio_review:
+            your_review = convert_speech_to_text(request.audio_review, request.user_api_key)
+
         review = generate_review(
             request.your_role,
             request.candidate_role,
             request.perf_question,
-            request.your_review,
+            your_review,
             request.llm_type,
             request.user_api_key,
             request.model_size
@@ -31,8 +36,12 @@ async def api_generate_review(request: ReviewRequest):
 @app.post("/generate_self_review")
 async def api_generate_self_review(request: SelfReviewRequest):
     try:
+        text_dump = request.text_dump
+        if request.audio_review:
+            text_dump = convert_speech_to_text(request.audio_review, request.user_api_key)
+
         review = generate_self_review(
-            request.text_dump,
+            text_dump,
             request.questions,
             request.instructions,
             request.llm_type,
