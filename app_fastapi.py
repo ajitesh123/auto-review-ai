@@ -22,7 +22,8 @@ async def api_generate_review(request: ReviewRequest):
             request.your_review,
             request.llm_type,
             request.user_api_key,
-            request.model_size
+            request.model_size,
+            request.audio_review
         )
         return {"review": review}
     except Exception as e:
@@ -37,7 +38,8 @@ async def api_generate_self_review(request: SelfReviewRequest):
             request.instructions,
             request.llm_type,
             request.user_api_key,
-            request.model_size
+            request.model_size,
+            request.audio_review
         )
         return {"self_review": review}
     except Exception as e:

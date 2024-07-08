@@ -5,6 +5,7 @@ from llm import OpenAILLM, GoogleLLM, AnthropicLLM, GroqLLM
 
 class SelfReviewRequest(BaseModel):
     text_dump: str
+    audio_review: Optional[str] = None
     questions: List[str]
     instructions: Optional[str] = None
     llm_type: str
@@ -27,12 +28,13 @@ def create_llm_instance(llm_type, user_api_key):
     
     return llm_class(api_key=user_api_key)
 
-def generate_self_review_prompt(text_dump: str, questions: List[str], instructions: Optional[str]) -> str:
+def generate_self_review_prompt(text_dump: str, questions: List[str], instructions: Optional[str], audio_review: Optional[str] = None) -> str:
+    full_text_dump = f"{text_dump}\n\nAudio Review Transcript: {audio_review}" if audio_review else text_dump
     prompt = f"""
     You are an AI assistant tasked with helping write a performance self-review. Use the following information and instructions to generate a comprehensive self-review.
 
     Text Dump (containing various information about performance):
-    {text_dump}
+    {full_text_dump}
 
     Questions to Answer:
     {' '.join(f'{i+1}. {q}' for i, q in enumerate(questions))}
@@ -74,8 +76,8 @@ def parse_self_review_response(response: str) -> List[Dict[str, str]]:
     
     return result
 
-def generate_self_review(text_dump: str, questions: List[str], instructions: Optional[str], llm_type: str, user_api_key: str, model_size: str) -> List[Dict[str, str]]:
-    prompt = generate_self_review_prompt(text_dump, questions, instructions)
+def generate_self_review(text_dump: str, questions: List[str], instructions: Optional[str], llm_type: str, user_api_key: str, model_size: str, audio_review: Optional[str] = None) -> List[Dict[str, str]]:
+    prompt = generate_self_review_prompt(text_dump, questions, instructions, audio_review)
     llm = create_llm_instance(llm_type, user_api_key)
     response = llm.generate_text(prompt, model=model_size)
     return parse_self_review_response(response)

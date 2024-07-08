@@ -1,91 +1,114 @@
+import os
 import streamlit as st
-from review import ReviewRequest, generate_review, DEFAULT_QUESTIONS
-from self_review import SelfReviewRequest, generate_self_review
+from st_audiorec import st_audiorec
+from groq import Groq
+from llm import OpenAILLM, GoogleLLM, AnthropicLLM, GroqLLM
+
+DEFAULT_QUESTIONS = """
+- Describe example(s) of the topics selected. What was the context? What actions did they take?
+- In your opinion, what impact did their actions have?
+- What recommendations do you have for their growth and development? Your feedback can be about any area of their work.
+"""
+
+def get_completion(prompt, llm, model_size):
+    response = llm.generate_text(prompt, model=model_size)
+    return response
+
+def create_llm_instance(llm_type, user_api_key):
+    llm_classes = {
+        "openai": OpenAILLM,
+        "google": GoogleLLM,
+        "anthropic": AnthropicLLM,
+        "groq": GroqLLM
+    }
+    
+    llm_class = llm_classes.get(llm_type)
+    if not llm_class:
+        raise ValueError(f"Invalid LLM type: {llm_type}")
+    
+    return llm_class(api_key=user_api_key)
+
+def convert_speech_to_text(audio_bytes, user_api_key):
+    client = Groq(api_key=user_api_key)
+    try:
+        transcription = client.audio.transcriptions.create(
+            file=("audio.wav", audio_bytes),
+            model="whisper-large-v3",
+            response_format="text"
+        )
+        return transcription.text
+    except Exception as e:
+        st.error(f"Error in speech-to-text conversion: {str(e)}")
+        return None
+
+def generate_prompt(your_role, candidate_role, perf_question, your_review):
+    delimiter = "####"
+    prompt = f"""
+    I'm {your_role}. You're an expert at writing performance reviews. On my behalf, help answer the question for performance reviews below.
+
+    {delimiter} Instructions {delimiter}:
+    - Use the context below to understand my perspective of working with them
+    - Keep the role of the person I'm reviewing, {candidate_role}, in mind when writing the review
+    - Use simple language and keep it to the point
+    - Strictly answer the questions mentioned in "question for performance"
+
+    <context>
+    {your_review}
+    </context>
+
+    <question for performance>
+    {perf_question}
+    </question for performance>
+
+    {delimiter} Output in markdown format in the following structure:{delimiter}
+    - Q1: Mention the first question in question for performance 
+    Your answer
+    - Q2: Mention the second question in question for performance
+    Your answer
+    - Q3: Mention the third question in question for performance
+    Your answer
+
+    Answer: """
+    return prompt
+
+def generate_review(your_role, candidate_role, perf_question, your_review, llm_type, user_api_key, model_size):
+    perf_question = perf_question or DEFAULT_QUESTIONS
+    prompt = generate_prompt(your_role, candidate_role, perf_question, your_review)
+    llm = create_llm_instance(llm_type, user_api_key)
+    response = get_completion(prompt, llm, model_size)
+    return response
 
 # Streamlit UI
-st.set_page_config(page_title="Performance Review Assistant", layout="wide")
+st.title("Write Performance Review in a Minute")
 
-# Sidebar for common elements
+st.text("""If no question is passed, following are considered:
+        1. Describe example(s) of the topics selected. What was the context? What actions did they take?
+        2. In your opinion, what impact did their actions have?
+        3. What recommendations do you have for their growth and development? Your feedback can be about any area of their work.
+        """)
+
+# Sidebar for LLM and model size selection, and API key input
 with st.sidebar:
-    st.title("Review Settings")
-    review_type = st.radio("Select Review Type", ["Performance Review", "Self-Review"])
     llm_type = st.selectbox('Select LLM Type', ['openai', 'google', 'anthropic', 'groq'])
     model_size = st.selectbox('Select Model Size', ['small', 'medium', 'large'])
-    user_api_key = st.text_input('Your API Key', type="password")
+    user_api_key = st.text_input('Your API Key')
 
-if review_type == "Performance Review":
-    st.title("Write Performance Review in a Minute")
+your_role = st.text_input('Your Role')
+candidate_role = st.text_input('Candidate Role')
+perf_question = st.text_input('Performance Review Questions')
+your_review = st.text_area('Briefly describe your experience of working with the candidate including project, responsibility of candidate, unique things they did etc., in free flow writing')
 
-    st.text("""If no question is passed, the following are considered:
-            1. Describe example(s) of the topics selected. What was the context? What actions did they take?
-            2. In your opinion, what impact did their actions have?
-            3. What recommendations do you have for their growth and development? Your feedback can be about any area of their work.
-            """)
+st.subheader("Audio Input")
+audio_bytes = st_audiorec()
+if audio_bytes is not None:
+    st.audio(audio_bytes, format="audio/wav")
 
-    your_role = st.text_input('Your Role')
-    candidate_role = st.text_input('Candidate Role')
-    perf_question = st.text_area('Performance Review Questions (one per line)', height=100)
-    your_review = st.text_area('Briefly describe your experience of working with the candidate including project, responsibility of candidate, unique things they did etc., in free flow writing', height=200)
-
-    if st.button('Generate Performance Review'):
-        if not user_api_key:
-            st.error("Please enter your API key in the sidebar.")
-        elif not your_role or not candidate_role or not your_review:
-            st.error("Please fill in all required fields.")
-        else:
-            try:
-                questions = perf_question.split('\n') if perf_question else DEFAULT_QUESTIONS.split('\n')
-                review_request = ReviewRequest(
-                    your_role=your_role,
-                    candidate_role=candidate_role,
-                    perf_question="\n".join(questions),
-                    your_review=your_review,
-                    llm_type=llm_type,
-                    user_api_key=user_api_key,
-                    model_size=model_size
-                )
-                
-                review = generate_review(**review_request.model_dump())
-                
-                for qa in review:
-                    st.markdown(f"**{qa['question']}**")
-                    st.markdown(qa['answer'])
-                    st.markdown("---")
-            except Exception as e:
-                st.error(f"An error occurred: {str(e)}")
-
-else:  # Self-Review
-    st.title("Generate Your Self-Review")
-
-    st.text("""Provide a text dump of your performance information, specific questions you want to address,
-            and any additional instructions for the AI to consider while generating your self-review.""")
-
-    text_dump = st.text_area('Text Dump (information about your performance)', height=200)
-    questions = st.text_area('Questions to Answer in Self-Review (one per line)', height=100)
-    instructions = st.text_area('Additional Instructions (optional)', height=100)
-
-    if st.button('Generate Self-Review'):
-        if not user_api_key:
-            st.error("Please enter your API key in the sidebar.")
-        elif not text_dump or not questions:
-            st.error("Please provide both the text dump and questions.")
-        else:
-            try:
-                question_list = [q.strip() for q in questions.split('\n') if q.strip()]
-                self_review_request = SelfReviewRequest(
-                    text_dump=text_dump,
-                    questions=question_list,
-                    instructions=instructions if instructions else None,
-                    llm_type=llm_type,
-                    user_api_key=user_api_key,
-                    model_size=model_size
-                )
-                
-                self_review = generate_self_review(**self_review_request.model_dump())
-                
-                for qa in self_review:
-                    st.markdown(f"**{qa['question']}**")
-                    st.markdown(qa['answer'])
-                    st.markdown("---")
-            except Exception as e:
-                st.error(f"An error occurred: {str(e)}")
+if st.button('Write Review'):
+    audio_review = None
+    if audio_bytes is not None:
+        audio_review = convert_speech_to_text(audio_bytes, user_api_key)
+        if audio_review:
+            st.write("Transcribed Audio:", audio_review)
+    review = generate_review(your_role, candidate_role, perf_question, your_review, llm_type, user_api_key, model_size, audio_review)
+    review = generate_review(your_role, candidate_role, perf_question, your_review, llm_type, user_api_key, model_size="small")
+    st.markdown(review)
