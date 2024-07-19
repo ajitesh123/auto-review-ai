@@ -1,0 +1,24 @@
+name: Create Test PR
+
+on:
+  workflow_dispatch:  # Allows you to run this workflow manually from the Actions tab
+
+jobs:
+  create-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Create changes
+        run: |
+          echo "This is a test change" >> README.md
+          
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: Test change for bot PR
+          title: Test PR from GitHub Actions
+          body: |
+            This is a test PR created by the github-actions[bot].
+          branch: test-pr-branch
