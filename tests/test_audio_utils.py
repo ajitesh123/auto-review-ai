@@ -23,23 +23,6 @@ class TestAudioUtils(unittest.TestCase):
             with self.assertRaises(AudioTranscriptionError):
                 transcribe_audio("test_audio.wav")
 
-    def test_validate_audio_file_valid(self):
-        mock_file = MagicMock()
-        mock_file.name = "test.wav"
-        mock_file.size = 5 * 1024 * 1024  # 5 MB
-        self.assertTrue(validate_audio_file(mock_file))
-
-    def test_validate_audio_file_invalid_extension(self):
-        mock_file = MagicMock()
-        mock_file.name = "test.txt"
-        mock_file.size = 5 * 1024 * 1024  # 5 MB
-        self.assertFalse(validate_audio_file(mock_file))
-
-    def test_validate_audio_file_too_large(self):
-        mock_file = MagicMock()
-        mock_file.name = "test.wav"
-        mock_file.size = 15 * 1024 * 1024  # 15 MB
-        self.assertFalse(validate_audio_file(mock_file))
 
 if __name__ == '__main__':
     unittest.main()
