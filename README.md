@@ -1,7 +1,7 @@
 ## Performance Review AI
 Generate performance review in a minute using LLM. 
 
-<div style="position: relative; padding-bottom: 64.90384615384616%; height: 0;"><iframe src="https://www.loom.com/embed/5afa2d7fd46c470bbc884675a77aec3c?sid=8e48c6f1-2b87-4bb0-9e7e-38c1fa48e65a" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe></div>
+https://www.loom.com/share/5afa2d7fd46c470bbc884675a77aec3c?sid=de539a51-21e3-4dd4-b160-bc250e1d958b
 
 
 ## How to use?
