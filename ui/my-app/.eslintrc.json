@@ -1,11 +1,13 @@
 {
-  "extends": ["next/core-web-vitals"],
+  "extends": [
+    "next/core-web-vitals",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint"],
   "rules": {
-    "no-console": "warn",
-    "no-unused-vars": "warn",
-    "@typescript-eslint/no-explicit-any": "off",
-    "react/prop-types": "off",
-    "react/react-in-jsx-scope": "off"
+    "@typescript-eslint/no-unused-vars": "error",
+    "@typescript-eslint/no-explicit-any": "warn"
   },
   "ignorePatterns": ["*.test.js", "*.spec.js", "build/*", "dist/*"]
 }
