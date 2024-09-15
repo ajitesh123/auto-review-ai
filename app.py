@@ -1,8 +1,11 @@
+#thirdy party imports
 import streamlit as st
-from llm import GroqLLM
-from review import ReviewRequest, generate_review, DEFAULT_QUESTIONS
-from self_review import SelfReviewRequest, generate_self_review
 from audio_recorder_streamlit import audio_recorder
+
+#local imports
+from backend.llm import GroqLLM
+from backend.review import ReviewRequest, generate_review, DEFAULT_QUESTIONS
+from backend.self_review import SelfReviewRequest, generate_self_review
 
 # Streamlit UI
 st.set_page_config(page_title="Performance Review Assistant", layout="wide")
