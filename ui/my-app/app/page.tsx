@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import axios from "axios";
-import type { AxiosError } from "axios";
 import { ReactMediaRecorder } from "react-media-recorder";
 
 interface ReviewItem {
@@ -24,7 +23,7 @@ export default function Home() {
   const [questions, setQuestions] = useState("");
   const [instructions, setInstructions] = useState("");
   const [review, setReview] = useState<ReviewItem[]>([]);
-
+  const [transcription, setTranscription] = useState<string>(""); // New state for transcription
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
   
   const transcribeAudio = async () => {
@@ -48,12 +47,23 @@ export default function Home() {
         }
       );
       console.log("Transcription response:", response.data);
+      setTranscription(response.data.transcribed_text); // Set transcription state
       return response.data.transcribed_text;
     } catch (error: unknown) {
       console.error("Error transcribing audio:", error);
-      if (axios.isAxiosError(error)) {
-        console.error("Server response:", error.response?.data);
+      
+      // Check if error is an object and has a 'response' property
+      if (
+        error &&
+        typeof error === "object" &&
+        "response" in error &&
+        (error as any).response
+      ) {
+        console.error("Server response:", (error as any).response.data);
+      } else {
+        console.error("Unexpected error:", error);
       }
+      
       return "";
     }
   };
@@ -202,7 +212,10 @@ export default function Home() {
             </label>
             <ReactMediaRecorder
               audio
-              onStop={(blobUrl, blob) => setAudioBlob(blob)}
+              onStop={async (blobUrl, blob) => {
+                setAudioBlob(blob);
+                await transcribeAudio(); // Transcribe audio on stop
+              }}
               render={({ status, startRecording, stopRecording, mediaBlobUrl }) => (
                 <div>
                   <p>{status}</p>
@@ -217,6 +230,22 @@ export default function Home() {
               )}
             />
           </div>
+
+          {/* Display Transcribed Text */}
+          {transcription && (
+            <div className="mb-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2">
+                Transcribed Text
+              </label>
+              <textarea
+                value={transcription}
+                readOnly
+                className="w-full px-3 py-2 border rounded bg-gray-50"
+                rows={4}
+              />
+            </div>
+          )}
+
           {reviewType === "Performance Review" ? (
             <>
               <div className="mb-4">

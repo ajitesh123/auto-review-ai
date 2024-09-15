@@ -38,3 +38,4 @@ Thumbs.db
 *.njsproj
 *.sln
 .env
+__pycache__
