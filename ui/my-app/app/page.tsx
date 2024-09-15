@@ -1,13 +1,40 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
+import dynamic from 'next/dynamic';
 import { ReactMediaRecorder } from "react-media-recorder";
 
 interface ReviewItem {
   question: string;
   answer: string;
 }
+
+const DynamicMediaRecorder = dynamic(
+  () => Promise.resolve(({ onRecordingComplete }: { onRecordingComplete: (blob: Blob) => void }) => (
+    <ReactMediaRecorder
+      audio
+      onStop={(blobUrl, blob) => {
+        if (blob) {
+          onRecordingComplete(blob);
+        }
+      }}
+      render={({ status, startRecording, stopRecording, mediaBlobUrl }) => (
+        <div>
+          <p>{status}</p>
+          <button onClick={startRecording} className="mr-2 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700">
+            Start Recording
+          </button>
+          <button onClick={stopRecording} className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-700">
+            Stop Recording
+          </button>
+          {mediaBlobUrl && <audio src={mediaBlobUrl} controls className="mt-2" />}
+        </div>
+      )}
+    />
+  )),
+  { ssr: false }
+);
 
 export default function Home() {
   const [reviewType, setReviewType] = useState("Performance Review");
@@ -26,6 +53,12 @@ export default function Home() {
   const [transcription, setTranscription] = useState<string>(""); // New state for transcription
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
   
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   const transcribeAudio = async () => {
     if (!audioBlob || !groqApiKey) {
       alert("Please provide an audio recording and Groq API key.");
