@@ -1,4 +1,7 @@
 {
-  "outputDirectory": ".next",
-  "rewrites": [{ "source": "/(.*)", "destination": "/" }]
-}
+  "buildCommand": "npm run build",
+  "outputDirectory": "build",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/" }
+  ]
+} 
