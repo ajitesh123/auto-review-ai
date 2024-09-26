@@ -50,7 +50,7 @@ export default function Home() {
 
     try {
       const response = await axios.post<{ transcribed_text: string }>(
-        "http://localhost:8000/transcribe_audio",
+        "https://auto-review-ai-doc-478427299327.us-west4.run.app/transcribe_audio",
         formData,
         {
           headers: {
@@ -103,7 +103,7 @@ export default function Home() {
       };
 
       const response = await axios.post<{ review: Array<{ question: string; answer: string }> }>(
-        "http://localhost:8000/generate_review",
+        "https://auto-review-ai-doc-478427299327.us-west4.run.app/generate_review",
         requestData
       );
       setReview(response.data.review);
@@ -134,7 +134,7 @@ export default function Home() {
       };
 
       const response = await axios.post<{ self_review: string }>(
-        "http://localhost:8000/generate_self_review",
+        "https://auto-review-ai-doc-478427299327.us-west4.run.app/generate_self_review",
         requestData
       );
       setReview([{ question: "Self-Review", answer: response.data.self_review }]);
