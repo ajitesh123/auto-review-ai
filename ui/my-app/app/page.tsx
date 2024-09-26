@@ -38,6 +38,8 @@ export default function Home() {
     setIsClient(true);
   }, []);
 
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+
   const transcribeAudio = async () => {
     if (!audioBlob || !groqApiKey) {
       alert("Please provide an audio recording and Groq API key.");
@@ -50,7 +52,7 @@ export default function Home() {
 
     try {
       const response = await axios.post<{ transcribed_text: string }>(
-        "https://auto-review-ai-doc-478427299327.us-west4.run.app/transcribe_audio",
+        `${API_BASE_URL}/transcribe_audio`,
         formData,
         {
           headers: {
@@ -103,7 +105,7 @@ export default function Home() {
       };
 
       const response = await axios.post<{ review: Array<{ question: string; answer: string }> }>(
-        "https://auto-review-ai-doc-478427299327.us-west4.run.app/generate_review",
+        `${API_BASE_URL}/generate_review`,
         requestData
       );
       setReview(response.data.review);
@@ -134,7 +136,7 @@ export default function Home() {
       };
 
       const response = await axios.post<{ self_review: string }>(
-        "https://auto-review-ai-doc-478427299327.us-west4.run.app/generate_self_review",
+        `${API_BASE_URL}/generate_self_review`,
         requestData
       );
       setReview([{ question: "Self-Review", answer: response.data.self_review }]);
