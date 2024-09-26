@@ -51,6 +51,42 @@ API endpoints:
 - POST `/generate_review`: Generate a performance review
 - POST `/generate_self_review`: Generate a self-review
 
+### Using Docker
+
+1. **Build the Docker Image:**
+
+   Navigate to the root directory of the project and run:
+
+   ```bash
+   docker build -t performance-review-api .
+   ```
+
+2. **Run the Docker Container:**
+
+   Start the Docker container:
+
+   ```bash
+   docker run -p 8000:8000 performance-review-api
+   ```
+
+   This command maps port 8000 on your local machine to port 8000 in the Docker container, making the FastAPI application accessible at `http://localhost:8000`.
+
+3. **Verify the Application is Running:**
+
+   Open a web browser and navigate to `http://localhost:8000`. You should see the welcome message defined in the `root` endpoint.
+
+   You can also use `curl` to test the root endpoint:
+
+   ```bash
+   curl http://localhost:8000/
+   ```
+
+   You should see a response like:
+
+   ```json
+   {"message": "Welcome to the Performance Review API"}
+   ```
+
 ## Key Components
 
 ### review.py
