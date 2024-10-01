@@ -1,8 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import dynamic from 'next/dynamic';
+import Sidebar from './home/Sidebar';
+import { generateReview, generateSelfReview } from '@services/review';
+import { transcribeAudioBlob } from '@services/audio';
 
 // Dynamically import ReactMediaRecorder to avoid server-side rendering issues
 const DynamicMediaRecorder = dynamic(
@@ -38,8 +40,6 @@ export default function Home() {
     setIsClient(true);
   }, []);
 
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
-
   const transcribeAudio = async () => {
     if (!audioBlob || !groqApiKey) {
       alert('Please provide an audio recording and Groq API key.');
@@ -51,18 +51,12 @@ export default function Home() {
     formData.append('groq_api_key', groqApiKey);
 
     try {
-      const response = await axios.post<{ transcribed_text: string }>(
-        `${API_BASE_URL}/transcribe_audio`,
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        }
-      );
-      console.log('Transcription response:', response.data);
-      setTranscription(response.data.transcribed_text); // Set transcription state
-      return response.data.transcribed_text;
+      const response = (await transcribeAudioBlob(formData)) as {
+        transcribed_text: string;
+      };
+      console.log('Transcription response:', response);
+      setTranscription(response.transcribed_text); // Set transcription state
+      return response.transcribed_text;
     } catch (error: unknown) {
       console.error('Error transcribing audio:', error);
 
@@ -104,10 +98,10 @@ export default function Home() {
         model_size: modelSize,
       };
 
-      const response = await axios.post<{
+      const response = (await generateReview(requestData)) as {
         review: Array<{ question: string; answer: string }>;
-      }>(`${API_BASE_URL}/generate_review`, requestData);
-      setReview(response.data.review);
+      };
+      setReview(response.review);
     } catch (error) {
       console.error('Error generating review:', error);
     }
@@ -137,13 +131,10 @@ export default function Home() {
         model_size: modelSize,
       };
 
-      const response = await axios.post<{ self_review: string }>(
-        `${API_BASE_URL}/generate_self_review`,
-        requestData
-      );
-      setReview([
-        { question: 'Self-Review', answer: response.data.self_review },
-      ]);
+      const response = (await generateSelfReview(requestData)) as {
+        self_review: Array<{ question: string; answer: string }>;
+      };
+      setReview(response.self_review);
     } catch (error) {
       console.error('Error generating self-review:', error);
     }
@@ -152,73 +143,13 @@ export default function Home() {
   return (
     <div className="flex min-h-screen">
       {/* Sidebar */}
-      <div className="w-64 bg-gray-100 p-4">
-        <h2 className="text-xl font-bold mb-4">Review Settings</h2>
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">
-            Review Type
-          </label>
-          <select
-            value={reviewType}
-            onChange={(e) => setReviewType(e.target.value)}
-            className="w-full px-3 py-2 border rounded"
-          >
-            <option>Performance Review</option>
-            <option>Self-Review</option>
-          </select>
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">
-            LLM Type
-          </label>
-          <select
-            value={llmType}
-            onChange={(e) => setLlmType(e.target.value)}
-            className="w-full px-3 py-2 border rounded"
-          >
-            <option>openai</option>
-            <option>google</option>
-            <option>anthropic</option>
-            <option>groq</option>
-          </select>
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">
-            Model Size
-          </label>
-          <select
-            value={modelSize}
-            onChange={(e) => setModelSize(e.target.value)}
-            className="w-full px-3 py-2 border rounded"
-          >
-            <option>small</option>
-            <option>medium</option>
-            <option>large</option>
-          </select>
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">
-            Your API Key
-          </label>
-          <input
-            type="password"
-            value={userApiKey}
-            onChange={(e) => setUserApiKey(e.target.value)}
-            className="w-full px-3 py-2 border rounded"
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">
-            Groq API Key (optional)
-          </label>
-          <input
-            type="password"
-            value={groqApiKey}
-            onChange={(e) => setGroqApiKey(e.target.value)}
-            className="w-full px-3 py-2 border rounded"
-          />
-        </div>
-      </div>
+      <Sidebar
+        onReviewTypeChange={(value: string) => setReviewType(value)}
+        onLlmTypeChange={(value: string) => setLlmType(value)}
+        onModelSizeChange={(value: string) => setModelSize(value)}
+        onUserApiKeyChange={(value: string) => setUserApiKey(value)}
+        onGroqApiKeyChange={(value: string) => setGroqApiKey(value)}
+      />
 
       {/* Main content */}
       <div className="flex-1 p-8">

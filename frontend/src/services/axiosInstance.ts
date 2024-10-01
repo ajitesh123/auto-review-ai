@@ -2,8 +2,8 @@ import axios from 'axios';
 
 // Create an Axios instance for client-side API calls
 const axiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || 'https://api.example.com', // Default API URL
-  timeout: 10000, // Timeout after 10 seconds
+  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || 'https://api.example.com', // Default API URL
+  timeout: 30000, // Timeout after 30 seconds
   headers: {
     'Content-Type': 'application/json',
   },
