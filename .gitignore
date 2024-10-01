@@ -10,12 +10,15 @@ build/
 *.log
 .venv/
 .myenv/
+venv/
+venv
 myenv2/
 *.pyc
 .pytest_cache/
 .coverage
 htmlcov/
 backend/__pycache__/
+config.yaml
 
 # ===============================
 # FastAPI
