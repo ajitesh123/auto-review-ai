@@ -125,8 +125,8 @@ def test_transcribe_audio():
         raise
 
 if __name__ == "__main__":
-    # test_generate_review()
-    # print("\n" + "-"*50 + "\n")
-    # test_generate_self_review()
+    test_generate_review()
+    print("\n" + "-"*50 + "\n")
+    test_generate_self_review()
     print("\n" + "-"*50 + "\n")
     test_transcribe_audio()
