@@ -19,9 +19,5 @@ app.mount("/v2", v2)
 async def root():
     return {"message": "Welcome to the Performance Review API"}
 
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
-
 # To run this server, use the following command in the terminal:
 # uvicorn app_fastapi:app --host 0.0.0.0 --port 8000
