@@ -1,16 +1,34 @@
 from fastapi import FastAPI, HTTPException, UploadFile, File, Form
-from backend.review import ReviewRequest, generate_review
-from backend.self_review import SelfReviewRequest, generate_self_review
+from pydantic import BaseModel
+from typing import List, Optional
 from backend.llm import GroqLLM
+from backend.orchestrator import generate_review, generate_self_review, transcribe_audio
 
 v2 = FastAPI()
+
+class ReviewRequestV2(BaseModel):
+    your_role: str
+    candidate_role: str
+    perf_question: Optional[str] = None
+    your_review: str
+    is_paid: bool
+
+class SelfReviewRequestV2(BaseModel):
+    text_dump: str
+    questions: List[str] 
+    instructions: Optional[str] = None
+    is_paid: bool
+
+@v2.get("/")
+async def root():
+    return {"message": "Welcome to the Performance Review API v2"}
 
 @v2.get("/ping")
 async def ping():
     return {"status": "pong"}
 
 @v2.post("/generate_review")
-async def api_generate_review(request: ReviewRequest):
+async def api_generate_review(request: ReviewRequestV2):
     try:
         review = generate_review(**request.model_dump())
         return {"review": review}
@@ -18,7 +36,7 @@ async def api_generate_review(request: ReviewRequest):
         raise HTTPException(status_code=500, detail=str(e))
 
 @v2.post("/generate_self_review")
-async def api_generate_self_review(request: SelfReviewRequest):
+async def api_generate_self_review(request: SelfReviewRequestV2):
     try:
         self_review = generate_self_review(**request.model_dump())
         return {"self_review": self_review}
@@ -26,21 +44,10 @@ async def api_generate_self_review(request: SelfReviewRequest):
         raise HTTPException(status_code=500, detail=str(e))
 
 @v2.post("/transcribe_audio")
-async def transcribe_audio(file: UploadFile = File(...), groq_api_key: str = Form(...)):
-    print(f"Received groq_api_key: {groq_api_key}")
-    print(f"Received file: {file.filename}")
-    
-    if not groq_api_key:
-        raise HTTPException(status_code=400, detail="Groq API key is required for transcription.")
-    
+async def api_transcribe_audio(file: UploadFile = File(...), is_paid: bool = False):
     try:
         audio_bytes = await file.read()
-        groq_llm = GroqLLM(api_key=groq_api_key)
-        transcribed_text = groq_llm.transcribe_audio(audio_bytes)
+        transcribed_text = transcribe_audio(is_paid, audio_bytes)
         return {"transcribed_text": transcribed_text}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-
-@v2.get("/")
-async def root():
-    return {"message": "Welcome to the Performance Review API v2"}
