@@ -1,8 +1,7 @@
-from fastapi import FastAPI, HTTPException, UploadFile, File, Form
-from backend.review import ReviewRequest, generate_review
-from backend.self_review import SelfReviewRequest, generate_self_review
-from backend.llm import GroqLLM
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from backend.app_fastapi_v1 import v1
+from backend.app_fastapi_v2 import v2
 
 app = FastAPI()
 app.add_middleware(
@@ -13,37 +12,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.post("/generate_review")
-async def api_generate_review(request: ReviewRequest):
-    try:
-        review = generate_review(**request.model_dump())
-        return {"review": review}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-@app.post("/generate_self_review")
-async def api_generate_self_review(request: SelfReviewRequest):
-    try:
-        self_review = generate_self_review(**request.model_dump())
-        return {"self_review": self_review}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-@app.post("/transcribe_audio")
-async def transcribe_audio(file: UploadFile = File(...), groq_api_key: str = Form(...)):
-    print(f"Received groq_api_key: {groq_api_key}")
-    print(f"Received file: {file.filename}")
-    
-    if not groq_api_key:
-        raise HTTPException(status_code=400, detail="Groq API key is required for transcription.")
-    
-    try:
-        audio_bytes = await file.read()
-        groq_llm = GroqLLM(api_key=groq_api_key)
-        transcribed_text = groq_llm.transcribe_audio(audio_bytes)
-        return {"transcribed_text": transcribed_text}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+app.mount("/v1", v1)
+app.mount("/v2", v2)
 
 @app.get("/")
 async def root():
