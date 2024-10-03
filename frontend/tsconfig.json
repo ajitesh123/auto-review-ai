@@ -17,8 +17,11 @@
     "baseUrl": ".",
     "paths": {
       "@app/*": ["src/app/*"],
+      "@assets/*": ["src/assets/*"],
       "@components/*": ["src/components/*"],
-      "@services/*": ["src/services/*"]
+      "@constants/*": ["src/constants/*"],
+      "@services/*": ["src/services/*"],
+      "@utils/*": ["src/utils/*"]
     },
     "plugins": [
       {
