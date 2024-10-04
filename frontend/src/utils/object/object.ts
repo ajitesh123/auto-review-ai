@@ -8,3 +8,6 @@ export const isBlankObject = (data: unknown) =>
 
 export const hasOwnProperty = (data: unknown, property: string) =>
   isObject(data) && Object.prototype.hasOwnProperty.call(data, property);
+
+export const isEmptyArray = (array: unknown) =>
+  Array.isArray(array) && array.length === 0;

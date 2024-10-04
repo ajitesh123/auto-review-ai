@@ -1,36 +1,37 @@
-import { generateSelfReview } from '@services/review';
 import { useState } from 'react';
+import { generateSelfReview } from '@services/review';
 import AudioInput from './AudioInput';
 
-const SelfReview = ({ userApiKey, groqApiKey }: any) => {
-  const [reviewType, setReviewType] = useState('Performance Review');
-  const [llmType, setLlmType] = useState('groq');
-  const [modelSize, setModelSize] = useState('small');
-  const [yourRole, setYourRole] = useState('');
-  const [candidateRole, setCandidateRole] = useState('');
-  const [perfQuestion, setPerfQuestion] = useState('');
-  const [yourReview, setYourReview] = useState('');
+const SelfReview = ({
+  llmType,
+  modelSize,
+  userApiKey,
+  groqApiKey,
+  onReviewResultsReceived,
+}: any) => {
   const [textDump, setTextDump] = useState('');
   const [questions, setQuestions] = useState('');
   const [instructions, setInstructions] = useState('');
-  const [review, setReview] = useState<ReviewItem[]>([]);
-  const [transcription, setTranscription] = useState<string>(''); // New state for transcription
-  const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
+  const [transcription, setTranscription] = useState<string>('');
 
   const handleGenerateSelfReview = async () => {
     if (!userApiKey) {
       alert('Please enter your API key.');
       return;
     }
+    if (!questions) {
+      alert('Please provide both the text dump and questions.');
+      return;
+    }
 
-    let transcribedText = '';
-    if (audioBlob) {
-      transcribedText = await transcribeAudio();
+    if (!textDump && !transcription) {
+      alert('Please provide either a text dump or audio input.');
+      return;
     }
 
     try {
       const requestData = {
-        text_dump: textDump + transcribedText,
+        text_dump: textDump + transcription,
         questions: questions
           .split('\n')
           .map((q) => q.trim())
@@ -44,7 +45,7 @@ const SelfReview = ({ userApiKey, groqApiKey }: any) => {
       const response = (await generateSelfReview(requestData)) as {
         self_review: Array<{ question: string; answer: string }>;
       };
-      setReview(response.self_review);
+      onReviewResultsReceived(response.self_review);
     } catch (error) {
       console.error('Error generating self-review:', error);
     }
@@ -98,8 +99,10 @@ const SelfReview = ({ userApiKey, groqApiKey }: any) => {
                   rows={4}
                 />
               </div>
-
-              <AudioInput groqApiKey={groqApiKey} />
+              <AudioInput
+                groqApiKey={groqApiKey}
+                onTranscriptionReceived={setTranscription}
+              />
               <button
                 onClick={handleGenerateSelfReview}
                 className="w-full bg-violet-500 text-white py-2 rounded hover:bg-violet-600"

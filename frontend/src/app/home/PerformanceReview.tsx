@@ -1,15 +1,19 @@
 import { useState } from 'react';
-import AudioInput from './AudioInput';
 import { generateReview } from '@services/review';
+import AudioInput from './AudioInput';
 
-const PerformanceReview = ({ userApiKey, groqApiKey }: any) => {
+const PerformanceReview = ({
+  llmType,
+  modelSize,
+  userApiKey,
+  groqApiKey,
+  onReviewResultsReceived,
+}: any) => {
   const [yourRole, setYourRole] = useState('');
   const [candidateRole, setCandidateRole] = useState('');
   const [perfQuestion, setPerfQuestion] = useState('');
-  const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
   const [yourReview, setYourReview] = useState('');
-  const [llmType, setLlmType] = useState('openai');
-  const [modelSize, setModelSize] = useState('small');
+  const [transcription, setTranscription] = useState<string>('');
 
   const handleGenerateReview = async () => {
     if (!userApiKey) {
@@ -17,9 +21,14 @@ const PerformanceReview = ({ userApiKey, groqApiKey }: any) => {
       return;
     }
 
-    let transcribedText = '';
-    if (audioBlob) {
-      transcribedText = await transcribeAudio();
+    if (!yourRole || !candidateRole) {
+      alert('Please fill in all required fields.');
+      return;
+    }
+
+    if (!yourReview && !transcription) {
+      alert('Please provide either a your review dump or audio input.');
+      return;
     }
 
     try {
@@ -27,7 +36,7 @@ const PerformanceReview = ({ userApiKey, groqApiKey }: any) => {
         your_role: yourRole,
         candidate_role: candidateRole,
         perf_question: perfQuestion,
-        your_review: yourReview + transcribedText,
+        your_review: yourReview + transcription,
         llm_type: llmType,
         user_api_key: userApiKey,
         model_size: modelSize,
@@ -36,7 +45,7 @@ const PerformanceReview = ({ userApiKey, groqApiKey }: any) => {
       const response = (await generateReview(requestData)) as {
         review: Array<{ question: string; answer: string }>;
       };
-      setReview(response.review);
+      onReviewResultsReceived(response.review);
     } catch (error) {
       console.error('Error generating review:', error);
     }
@@ -104,7 +113,10 @@ const PerformanceReview = ({ userApiKey, groqApiKey }: any) => {
                   rows={4}
                 />
               </div>
-              <AudioInput groqApiKey={groqApiKey} />
+              <AudioInput
+                groqApiKey={groqApiKey}
+                onTranscriptionReceived={setTranscription}
+              />
               <button
                 onClick={handleGenerateReview}
                 className="w-full bg-violet-500 text-white py-2 rounded hover:bg-violet-600"

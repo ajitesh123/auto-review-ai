@@ -8,7 +8,7 @@ const DynamicMediaRecorder = dynamic(
   { ssr: false }
 );
 
-const AudioInput = ({ groqApiKey }: any) => {
+const AudioInput = ({ groqApiKey, onTranscriptionReceived }: any) => {
   const [isClient, setIsClient] = useState(false);
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
   const [transcription, setTranscription] = useState<string>(''); // New state for transcription
@@ -18,8 +18,12 @@ const AudioInput = ({ groqApiKey }: any) => {
   }, []);
 
   const transcribeAudio = async () => {
-    if (!audioBlob || !groqApiKey) {
-      alert('Please provide an audio recording and Groq API key.');
+    if (!audioBlob) {
+      alert('Please provide an audio recording.');
+      return '';
+    }
+    if (!groqApiKey) {
+      alert('Please provide Groq API key.');
       return '';
     }
 
@@ -32,11 +36,13 @@ const AudioInput = ({ groqApiKey }: any) => {
         transcribed_text: string;
       };
       console.log('Transcription response:', response);
-      setTranscription(response.transcribed_text); // Set transcription state
-      return response.transcribed_text;
+      const transcribedText = response.transcribed_text;
+      // Set transcription state
+      setTranscription(transcribedText);
+      onTranscriptionReceived(transcribedText);
+      return transcribedText;
     } catch (error: unknown) {
       console.error('Error transcribing audio:', error);
-
       // Check if error is an object and has a 'response' property
       if (
         error &&
@@ -62,7 +68,7 @@ const AudioInput = ({ groqApiKey }: any) => {
         {isClient && (
           <DynamicMediaRecorder
             audio
-            onStop={async (blobUrl, blob) => {
+            onStop={async (_blobUrl, blob) => {
               setAudioBlob(blob);
               await transcribeAudio(); // Transcribe audio on stop
             }}
