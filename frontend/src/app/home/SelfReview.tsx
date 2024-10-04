@@ -13,18 +13,23 @@ const SelfReview = ({
   const [questions, setQuestions] = useState('');
   const [instructions, setInstructions] = useState('');
   const [transcription, setTranscription] = useState<string>('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleGenerateSelfReview = async () => {
+    setIsLoading(true);
     if (!userApiKey) {
+      setIsLoading(false);
       alert('Please enter your API key.');
       return;
     }
     if (!questions) {
+      setIsLoading(false);
       alert('Please provide both the text dump and questions.');
       return;
     }
 
     if (!textDump && !transcription) {
+      setIsLoading(false);
       alert('Please provide either a text dump or audio input.');
       return;
     }
@@ -48,6 +53,8 @@ const SelfReview = ({
       onReviewResultsReceived(response.self_review);
     } catch (error) {
       console.error('Error generating self-review:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -105,9 +112,10 @@ const SelfReview = ({
               />
               <button
                 onClick={handleGenerateSelfReview}
+                disabled={isLoading}
                 className="w-full bg-violet-500 text-white py-2 rounded hover:bg-violet-600"
               >
-                Generate Self-Review
+                 {isLoading ? 'Generating...' : 'Generate Self-Review'}
               </button>
             </div>
           </div>

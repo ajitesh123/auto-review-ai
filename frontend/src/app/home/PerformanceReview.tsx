@@ -14,19 +14,24 @@ const PerformanceReview = ({
   const [perfQuestion, setPerfQuestion] = useState('');
   const [yourReview, setYourReview] = useState('');
   const [transcription, setTranscription] = useState<string>('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleGenerateReview = async () => {
+    setIsLoading(true);
     if (!userApiKey) {
+      setIsLoading(false);
       alert('Please enter your API key.');
       return;
     }
 
     if (!yourRole || !candidateRole) {
+      setIsLoading(false);
       alert('Please fill in all required fields.');
       return;
     }
 
     if (!yourReview && !transcription) {
+      setIsLoading(false);
       alert('Please provide either a your review dump or audio input.');
       return;
     }
@@ -48,6 +53,8 @@ const PerformanceReview = ({
       onReviewResultsReceived(response.review);
     } catch (error) {
       console.error('Error generating review:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -119,9 +126,10 @@ const PerformanceReview = ({
               />
               <button
                 onClick={handleGenerateReview}
+                disabled={isLoading}
                 className="w-full bg-violet-500 text-white py-2 rounded hover:bg-violet-600"
               >
-                Generate Performance Review
+                {isLoading ? 'Generating...' : 'Generate Performance Review'}
               </button>
             </div>
           </div>

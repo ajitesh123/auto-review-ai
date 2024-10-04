@@ -1,5 +1,5 @@
 import dynamic from 'next/dynamic';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { transcribeAudioBlob } from '@services/audio';
 
 // Dynamically import ReactMediaRecorder to avoid server-side rendering issues
@@ -17,7 +17,7 @@ const AudioInput = ({ groqApiKey, onTranscriptionReceived }: any) => {
     setIsClient(true);
   }, []);
 
-  const transcribeAudio = async () => {
+  const transcribeAudio = useCallback(async () => {
     if (!audioBlob) {
       alert('Please provide an audio recording.');
       return '';
@@ -57,7 +57,7 @@ const AudioInput = ({ groqApiKey, onTranscriptionReceived }: any) => {
 
       return '';
     }
-  };
+  }, [audioBlob, groqApiKey, onTranscriptionReceived]);
 
   return (
     <>
