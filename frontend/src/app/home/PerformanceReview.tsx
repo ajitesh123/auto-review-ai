@@ -36,7 +36,7 @@ const PerformanceReview = ({
         your_role: yourRole,
         candidate_role: candidateRole,
         perf_question: perfQuestion,
-        your_review: yourReview + transcription,
+        your_review: `${yourReview}\n\n${transcription}`,
         llm_type: llmType,
         user_api_key: userApiKey,
         model_size: modelSize,
