@@ -47,7 +47,7 @@ export const Switch = ({
 
   const backgroundClassNames = buildClassNames(
     'rounded-full absolute left-[5%] top-[10%] w-[90%] h-4/5 z-[-1]',
-    checked ? 'bg-violet-500' : 'bg-violet-600'
+    checked ? 'bg-teal-500' : 'bg-violet-600'
   );
 
   const pointerClassNames = buildClassNames(
