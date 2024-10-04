@@ -29,7 +29,7 @@ MODEL_MAPPING = {
     },
     "anthropic": {
         "small": "claude-3-haiku-20240307",
-        "medium": "claude-3-sonnet-20240229",
+        "medium": "claude-3-5-sonnet-20240620",
         "large": "claude-3-opus-20240229"
     },
     "groq": {
