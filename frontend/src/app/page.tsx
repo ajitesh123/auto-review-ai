@@ -13,7 +13,8 @@ interface ReviewItem {
   answer: string;
 }
 
-const groqKeyFromEnv = process.env.NEXT_PUBLIC_GROQ_API_KEY || '';
+const groqKeyFromEnv = process.env.NEXT_PUBLIC_GROQ_API_KEY || ''; // remove this one sidebar design is finalised for `keys needed` UI
+const keysNeeded = process.env.NEXT_PUBLIC_KEYS_NEEDED === 'true';
 
 export default function Home() {
   const [reviewType, setReviewType] = useState(ReviewType.perfReview);
@@ -22,6 +23,7 @@ export default function Home() {
   const [userApiKey, _setUserApiKey] = useState<string>(groqKeyFromEnv);
   const [groqApiKey, _setGroqApiKey] = useState<string>(groqKeyFromEnv);
   const [reviewResults, setReviewResults] = useState<ReviewItem[]>([]);
+  const paramsWhenKeysNeeded = keysNeeded ? { llmType, modelSize, userApiKey, groqApiKey } : {};
 
   const onReviewTypeChange = (reviewType: string) => {
     setReviewType(reviewType);
@@ -42,18 +44,12 @@ export default function Home() {
       {/* Performance Review and Self Review */}
       {reviewType === ReviewType.perfReview ? (
         <PerformanceReview
-          llmType={llmType}
-          modelSize={modelSize}
-          userApiKey={userApiKey}
-          groqApiKey={groqApiKey}
+          paramsWhenKeysNeeded={paramsWhenKeysNeeded}
           onReviewResultsReceived={setReviewResults}
         />
       ) : (
         <SelfReview
-          llmType={llmType}
-          modelSize={modelSize}
-          userApiKey={userApiKey}
-          groqApiKey={groqApiKey}
+          paramsWhenKeysNeeded={paramsWhenKeysNeeded}
           onReviewResultsReceived={setReviewResults}
         />
       )}

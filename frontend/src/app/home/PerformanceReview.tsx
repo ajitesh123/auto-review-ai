@@ -1,12 +1,10 @@
 import { useState } from 'react';
 import { generateReview } from '@services/review';
 import AudioInput from './AudioInput';
+import { isBlankObject } from '@utils/object';
 
 const PerformanceReview = ({
-  llmType,
-  modelSize,
-  userApiKey,
-  groqApiKey,
+  paramsWhenKeysNeeded,
   onReviewResultsReceived,
 }: any) => {
   const [yourRole, setYourRole] = useState('');
@@ -18,7 +16,7 @@ const PerformanceReview = ({
 
   const handleGenerateReview = async () => {
     setIsLoading(true);
-    if (!userApiKey) {
+    if (!isBlankObject(paramsWhenKeysNeeded) && !paramsWhenKeysNeeded?.userApiKey) {
       setIsLoading(false);
       alert('Please enter your API key.');
       return;
@@ -41,10 +39,9 @@ const PerformanceReview = ({
         your_role: yourRole,
         candidate_role: candidateRole,
         perf_question: perfQuestion,
-        your_review: `${yourReview}\n\n${transcription}`,
-        llm_type: llmType,
-        user_api_key: userApiKey,
-        model_size: modelSize,
+        your_review: `${yourReview} ${transcription}`,
+        is_paid: false,
+        ...paramsWhenKeysNeeded
       };
 
       const response = (await generateReview(requestData)) as {
@@ -121,7 +118,7 @@ const PerformanceReview = ({
                 />
               </div>
               <AudioInput
-                groqApiKey={groqApiKey}
+                paramsWhenKeysNeeded={paramsWhenKeysNeeded}
                 onTranscriptionReceived={setTranscription}
               />
               <button

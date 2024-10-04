@@ -1,6 +1,7 @@
 import dynamic from 'next/dynamic';
 import { useCallback, useEffect, useState } from 'react';
 import { transcribeAudioBlob } from '@services/audio';
+import { isBlankObject } from '@utils/object';
 
 // Dynamically import ReactMediaRecorder to avoid server-side rendering issues
 const DynamicMediaRecorder = dynamic(
@@ -8,7 +9,7 @@ const DynamicMediaRecorder = dynamic(
   { ssr: false }
 );
 
-const AudioInput = ({ groqApiKey, onTranscriptionReceived }: any) => {
+const AudioInput = ({ paramsWhenKeysNeeded, onTranscriptionReceived }: any) => {
   const [isClient, setIsClient] = useState(false);
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
   const [transcription, setTranscription] = useState<string>(''); // New state for transcription
@@ -22,14 +23,18 @@ const AudioInput = ({ groqApiKey, onTranscriptionReceived }: any) => {
       alert('Please provide an audio recording.');
       return '';
     }
-    if (!groqApiKey) {
+    if (!isBlankObject(paramsWhenKeysNeeded) && !paramsWhenKeysNeeded?.groqApiKey) {
       alert('Please provide Groq API key.');
       return '';
     }
 
     const formData = new FormData();
     formData.append('file', audioBlob, 'audio.wav');
-    formData.append('groq_api_key', groqApiKey);
+    if (!isBlankObject(paramsWhenKeysNeeded)) {
+      formData.append('groq_api_key', paramsWhenKeysNeeded?.groqApiKey);
+    } else {
+      formData.append('is_paid', 'false');
+    }
 
     try {
       const response = (await transcribeAudioBlob(formData)) as {
@@ -57,7 +62,7 @@ const AudioInput = ({ groqApiKey, onTranscriptionReceived }: any) => {
 
       return '';
     }
-  }, [audioBlob, groqApiKey, onTranscriptionReceived]);
+  }, [audioBlob, paramsWhenKeysNeeded, onTranscriptionReceived]);
 
   return (
     <>

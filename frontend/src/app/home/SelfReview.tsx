@@ -1,12 +1,10 @@
 import { useState } from 'react';
 import { generateSelfReview } from '@services/review';
 import AudioInput from './AudioInput';
+import { isBlankObject } from '@utils/object';
 
 const SelfReview = ({
-  llmType,
-  modelSize,
-  userApiKey,
-  groqApiKey,
+  paramsWhenKeysNeeded,
   onReviewResultsReceived,
 }: any) => {
   const [textDump, setTextDump] = useState('');
@@ -17,7 +15,7 @@ const SelfReview = ({
 
   const handleGenerateSelfReview = async () => {
     setIsLoading(true);
-    if (!userApiKey) {
+    if (!isBlankObject(paramsWhenKeysNeeded) && !paramsWhenKeysNeeded?.userApiKey) {
       setIsLoading(false);
       alert('Please enter your API key.');
       return;
@@ -42,9 +40,8 @@ const SelfReview = ({
           .map((q) => q.trim())
           .filter(Boolean),
         instructions: instructions || null,
-        llm_type: llmType,
-        user_api_key: userApiKey,
-        model_size: modelSize,
+        is_paid: false,
+        ...paramsWhenKeysNeeded
       };
 
       const response = (await generateSelfReview(requestData)) as {
@@ -107,7 +104,7 @@ const SelfReview = ({
                 />
               </div>
               <AudioInput
-                groqApiKey={groqApiKey}
+                paramsWhenKeysNeeded={paramsWhenKeysNeeded}
                 onTranscriptionReceived={setTranscription}
               />
               <button
