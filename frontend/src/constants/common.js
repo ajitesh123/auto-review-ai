@@ -3,4 +3,6 @@ const ReviewType = {
   selfReview: 'Self Review',
 };
 
-export { ReviewType };
+const isPerfReviewType = (reviewType) => reviewType === ReviewType.perfReview;
+
+export { ReviewType, isPerfReviewType };

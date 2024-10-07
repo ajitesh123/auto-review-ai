@@ -23,7 +23,10 @@ const AudioInput = ({ paramsWhenKeysNeeded, onTranscriptionReceived }: any) => {
       alert('Please provide an audio recording.');
       return '';
     }
-    if (!isBlankObject(paramsWhenKeysNeeded) && !paramsWhenKeysNeeded?.groqApiKey) {
+    if (
+      !isBlankObject(paramsWhenKeysNeeded) &&
+      !paramsWhenKeysNeeded?.groqApiKey
+    ) {
       alert('Please provide Groq API key.');
       return '';
     }

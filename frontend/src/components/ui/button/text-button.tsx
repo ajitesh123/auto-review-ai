@@ -6,6 +6,7 @@ const sizeConfigs = {
   xs: 'text-xs px-0.5',
   sm: 'text-sm px-1',
   md: 'px-2',
+  lg: 'text-sm px-4',
 };
 
 export interface TxtBtnProps extends BaseBtnProps {
@@ -20,7 +21,7 @@ export const TextButton = forwardRef<HTMLButtonElement, TxtBtnProps>(
       children,
       startIcon,
       endIcon,
-      size = 'md',
+      size = 'lg',
       ...rest
     } = props;
     return (

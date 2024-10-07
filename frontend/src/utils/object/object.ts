@@ -1,7 +1,9 @@
 export const isObject = (data: unknown): data is Record<string, unknown> =>
   typeof data === 'object' && data !== null && !Array.isArray(data);
 
-export const isObjectAndNotBlank = (data: unknown): data is Record<string, unknown> =>
+export const isObjectAndNotBlank = (
+  data: unknown
+): data is Record<string, unknown> =>
   isObject(data) && Object.keys(data).length > 0;
 
 export const isBlankObject = (data: unknown): data is Record<string, never> =>

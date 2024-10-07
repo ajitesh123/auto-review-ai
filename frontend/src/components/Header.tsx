@@ -3,8 +3,13 @@
 import React, { useEffect } from 'react';
 
 import { NAV_LINKS } from '@constants/links';
+import { TextButton } from '@components/ui/button';
+import { useAppContext } from '@contexts/AppContext';
+import { isPerfReviewType } from '@constants/common';
 
 export default function Header() {
+  const { reviewType } = useAppContext();
+
   useEffect(() => {
     const handleScroll = () => {
       const nav = document.querySelector('nav');
@@ -53,7 +58,13 @@ export default function Header() {
                 </li>
               </ul>
             </div>
-            {/* <Button text="Try it Now →" href={NAV_LINKS.Logo} primary /> */}
+            <TextButton
+              variant={`primary-${
+                isPerfReviewType(reviewType) ? 'perf' : 'self'
+              }-review`}
+            >
+              {'Login'}
+            </TextButton>
           </div>
         </div>
       </nav>

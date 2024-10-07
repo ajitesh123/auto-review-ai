@@ -2,7 +2,14 @@ import { ButtonHTMLAttributes, forwardRef } from 'react';
 import { Spinner } from '../spinner/spinner';
 import { buildClassNames } from '@utils/classnames';
 
-type Variant = 'basic' | 'primary' | 'secondary' | 'destructive' | 'custom';
+type Variant =
+  | 'basic'
+  | 'primary-perf-review'
+  | 'primary-self-review'
+  | 'secondary'
+  | 'destructive'
+  | 'custom';
+
 interface ColorConfig {
   default: string;
   disabled?: string;
@@ -15,17 +22,17 @@ const colorConfigs: Record<Variant, ColorConfig> = {
   basic: {
     default: '',
   },
-  primary: {
-    // default:
-    //   'border bg-gradient-to-b bg-elephant from-elephant-800 to-elephant border-elephant text-milk',
-    // disabled: 'from-smoke-300 to-smoke-400 border-smoke-400',
-    default: 'border bg-gradient-to-b bg-violet-500  text-milk',
-    disabled: 'from-violet-300 to-violet-400 ',
+  'primary-perf-review': {
+    default: 'border bg-violet-500 hover:bg-violet-600 text-milk',
+    disabled: 'bg-violet-600 opacity-70 text-gray-400',
+  },
+  'primary-self-review': {
+    default: 'border bg-teal-500 hover:bg-teal-600 text-milk',
+    disabled: 'bg-teal-600 opacity-70 text-gray-400',
   },
   secondary: {
-    default:
-      'border bg-gradient-to-b bg-smoke-25 from-milk to-smoke-25 border-smoke-100 text-elephant',
-    disabled: 'bg-smoke bg-none text-smoke-300',
+    default: 'border border-gray-500 hover:bg-neutral-800 text-milk',
+    disabled: 'opacity-70 border-gray-600 text-gray-600',
   },
   destructive: {
     default: '',
@@ -36,9 +43,10 @@ const sizeConfigs = {
   xs: 'min-h-4 h-4',
   sm: 'min-h-6 h-6',
   md: 'min-h-8 h-8',
+  lg: 'min-h-11 h-11',
 };
 
-export type ButtonSize = 'md' | 'sm' | 'xs';
+export type ButtonSize = 'lg' | 'md' | 'sm' | 'xs';
 
 export interface BaseBtnProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   loading?: boolean;
@@ -49,7 +57,7 @@ export interface BaseBtnProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 export const BaseButton = forwardRef<HTMLButtonElement, BaseBtnProps>(
   function Button(props, ref) {
     const {
-      size = 'md',
+      size = 'lg',
       loading,
       variant = 'basic',
       className,
@@ -59,7 +67,7 @@ export const BaseButton = forwardRef<HTMLButtonElement, BaseBtnProps>(
     } = props;
 
     const buttonClasses = buildClassNames(
-      'relative rounded outline-none focus-visible:shadow-focus-border',
+      'relative rounded-md font-medium',
       colorConfigs[variant].default,
       rest.disabled
         ? `${colorConfigs[variant].disabled || ''} cursor-not-allowed`

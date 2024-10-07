@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { generateReview } from '@services/review';
 import AudioInput from './AudioInput';
 import { isBlankObject } from '@utils/object';
+import { TextButton } from '@components/ui/button';
 
 const PerformanceReview = ({
   paramsWhenKeysNeeded,
@@ -16,7 +17,10 @@ const PerformanceReview = ({
 
   const handleGenerateReview = async () => {
     setIsLoading(true);
-    if (!isBlankObject(paramsWhenKeysNeeded) && !paramsWhenKeysNeeded?.userApiKey) {
+    if (
+      !isBlankObject(paramsWhenKeysNeeded) &&
+      !paramsWhenKeysNeeded?.userApiKey
+    ) {
       setIsLoading(false);
       alert('Please enter your API key.');
       return;
@@ -41,7 +45,7 @@ const PerformanceReview = ({
         perf_question: perfQuestion,
         your_review: `${yourReview} ${transcription}`,
         is_paid: false,
-        ...paramsWhenKeysNeeded
+        ...paramsWhenKeysNeeded,
       };
 
       const response = (await generateReview(requestData)) as {
@@ -56,9 +60,9 @@ const PerformanceReview = ({
   };
 
   return (
-    <section className="relative isolate px-6 py-4 lg:py-8 lg:px-8">
+    <section className="relative isolate px-6 py-4 lg:py-8 lg:px-8 widget-animate animate in-view">
       <div className="flex flex-col mx-auto max-w-5xl justify-between gap-10">
-        <div className="h-full w-full widget-animate animate">
+        <div className="h-full w-full">
           <div className="border-secondary grid max-w-full gap-8 rounded-xl border bg-zinc-800 p-6 sm:p-12 sm:px-12 sm:text-base dark:bg-zinc-900">
             <div>
               <div className="mb-6">

@@ -3,10 +3,7 @@ import { generateSelfReview } from '@services/review';
 import AudioInput from './AudioInput';
 import { isBlankObject } from '@utils/object';
 
-const SelfReview = ({
-  paramsWhenKeysNeeded,
-  onReviewResultsReceived,
-}: any) => {
+const SelfReview = ({ paramsWhenKeysNeeded, onReviewResultsReceived }: any) => {
   const [textDump, setTextDump] = useState('');
   const [questions, setQuestions] = useState('');
   const [instructions, setInstructions] = useState('');
@@ -15,7 +12,10 @@ const SelfReview = ({
 
   const handleGenerateSelfReview = async () => {
     setIsLoading(true);
-    if (!isBlankObject(paramsWhenKeysNeeded) && !paramsWhenKeysNeeded?.userApiKey) {
+    if (
+      !isBlankObject(paramsWhenKeysNeeded) &&
+      !paramsWhenKeysNeeded?.userApiKey
+    ) {
       setIsLoading(false);
       alert('Please enter your API key.');
       return;
@@ -41,7 +41,7 @@ const SelfReview = ({
           .filter(Boolean),
         instructions: instructions || null,
         is_paid: false,
-        ...paramsWhenKeysNeeded
+        ...paramsWhenKeysNeeded,
       };
 
       const response = (await generateSelfReview(requestData)) as {
@@ -56,9 +56,9 @@ const SelfReview = ({
   };
 
   return (
-    <section className="relative isolate px-6 py-4 lg:py-8 lg:px-8">
+    <section className="relative isolate px-6 py-4 lg:py-8 lg:px-8  widget-animate animate in-view">
       <div className="flex flex-col mx-auto max-w-5xl justify-between gap-10">
-        <div className="h-full w-full widget-animate animate">
+        <div className="h-full w-full">
           <div className="border-secondary grid max-w-full gap-8 rounded-xl border bg-zinc-800 p-6 sm:p-12 sm:px-12 sm:text-base dark:bg-zinc-900">
             <div>
               <div className="mb-4">
@@ -112,7 +112,7 @@ const SelfReview = ({
                 disabled={isLoading}
                 className="w-full bg-violet-500 text-white py-2 rounded hover:bg-violet-600"
               >
-                 {isLoading ? 'Generating...' : 'Generate Self-Review'}
+                {isLoading ? 'Generating...' : 'Generate Self-Review'}
               </button>
             </div>
           </div>
