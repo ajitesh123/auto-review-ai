@@ -46,10 +46,15 @@ const AppIntro = ({ reviewType, onReviewTypeChange }: any) => {
       <GradientBackground fromColor={fromColor} toColor={toColor} />
       <div className="mx-auto max-w-6xl pb-12 pt-36">
         <div className="flex flex-col items-center">
-          <div className="mt-10 flex items-center justify-center md:gap-x-16 gap-x-8">
-            {/* <TextButton variant="primary" loading>
+          {/* <div className="mt-10 flex items-center justify-center md:gap-x-16 gap-x-8">
+            <TextButton
+              variant={`primary-${
+                isPerfReviewType(reviewType) ? 'perf' : 'self'
+              }-review`}
+              loading
+            >
               Try Now
-            </TextButton> */}
+            </TextButton>
             <TextButton
               variant={`primary-${
                 isPerfReviewType(reviewType) ? 'perf' : 'self'
@@ -69,7 +74,7 @@ const AppIntro = ({ reviewType, onReviewTypeChange }: any) => {
             <TextButton variant="secondary" disabled>
               Try Now
             </TextButton>
-          </div>
+          </div> */}
           <h1 className="text-4xl font-bold text-center text-gray-200 tracking-tight sm:text-5xl">
             Performance Review Assistant
           </h1>
