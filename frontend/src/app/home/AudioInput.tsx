@@ -11,14 +11,13 @@ const DynamicMediaRecorder = dynamic(
 
 const AudioInput = ({ paramsWhenKeysNeeded, onTranscriptionReceived }: any) => {
   const [isClient, setIsClient] = useState(false);
-  const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
   const [transcription, setTranscription] = useState<string>(''); // New state for transcription
 
   useEffect(() => {
     setIsClient(true);
   }, []);
 
-  const transcribeAudio = useCallback(async () => {
+  const transcribeAudio = useCallback(async (audioBlob: Blob) => {
     if (!audioBlob) {
       alert('Please provide an audio recording.');
       return '';
@@ -65,7 +64,7 @@ const AudioInput = ({ paramsWhenKeysNeeded, onTranscriptionReceived }: any) => {
 
       return '';
     }
-  }, [audioBlob, paramsWhenKeysNeeded, onTranscriptionReceived]);
+  }, [paramsWhenKeysNeeded, onTranscriptionReceived]);
 
   return (
     <>
@@ -77,8 +76,7 @@ const AudioInput = ({ paramsWhenKeysNeeded, onTranscriptionReceived }: any) => {
           <DynamicMediaRecorder
             audio
             onStop={async (_blobUrl, blob) => {
-              setAudioBlob(blob);
-              await transcribeAudio(); // Transcribe audio on stop
+              await transcribeAudio(blob); // Transcribe audio on stop
             }}
             render={({
               status,

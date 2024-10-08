@@ -89,11 +89,11 @@ export const BaseButton = forwardRef<HTMLButtonElement, BaseBtnProps>(
           }
         }}
       >
-        {loading && (
+        {/* {loading && (
           <span className="absolute-center">
             <Spinner size={size} data-testid="spinner-icon" />
           </span>
-        )}
+        )} */}
         <div
           data-testid="button-content"
           className={buildClassNames(

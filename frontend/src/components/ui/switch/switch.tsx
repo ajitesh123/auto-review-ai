@@ -1,4 +1,4 @@
-import CheckIcon from '@assets/icons/spinner.svg';
+// import CheckIcon from '@assets/icons/spinner.svg';
 // import CloseIcon from '@assets/icons/close.svg';
 import { buildClassNames } from 'src/utils/classnames';
 import { SvgIcon } from '../svg-icon';
