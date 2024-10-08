@@ -1,7 +1,8 @@
 import dynamic from 'next/dynamic';
 import { useCallback, useEffect, useState } from 'react';
 import { transcribeAudioBlob } from '@services/audio';
-import { isBlankObject } from '@utils/object';
+import { isBlankObject, isObject } from '@utils/object';
+import { ShimmerText } from 'shimmer-effects-react';
 
 // Dynamically import ReactMediaRecorder to avoid server-side rendering issues
 const DynamicMediaRecorder = dynamic(
@@ -12,59 +13,69 @@ const DynamicMediaRecorder = dynamic(
 const AudioInput = ({ paramsWhenKeysNeeded, onTranscriptionReceived }: any) => {
   const [isClient, setIsClient] = useState(false);
   const [transcription, setTranscription] = useState<string>(''); // New state for transcription
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [isInitiated, setIsInitiated] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
   }, []);
 
-  const transcribeAudio = useCallback(async (audioBlob: Blob) => {
-    if (!audioBlob) {
-      alert('Please provide an audio recording.');
-      return '';
-    }
-    if (
-      !isBlankObject(paramsWhenKeysNeeded) &&
-      !paramsWhenKeysNeeded?.groqApiKey
-    ) {
-      alert('Please provide Groq API key.');
-      return '';
-    }
-
-    const formData = new FormData();
-    formData.append('file', audioBlob, 'audio.wav');
-    if (!isBlankObject(paramsWhenKeysNeeded)) {
-      formData.append('groq_api_key', paramsWhenKeysNeeded?.groqApiKey);
-    } else {
-      formData.append('is_paid', 'false');
-    }
-
-    try {
-      const response = (await transcribeAudioBlob(formData)) as {
-        transcribed_text: string;
-      };
-      console.log('Transcription response:', response);
-      const transcribedText = response.transcribed_text;
-      // Set transcription state
-      setTranscription(transcribedText);
-      onTranscriptionReceived(transcribedText);
-      return transcribedText;
-    } catch (error: unknown) {
-      console.error('Error transcribing audio:', error);
-      // Check if error is an object and has a 'response' property
+  const transcribeAudio = useCallback(
+    async (audioBlob: Blob) => {
+      if (!audioBlob) {
+        alert('Please provide an audio recording.');
+        return '';
+      }
       if (
-        error &&
-        typeof error === 'object' &&
-        'response' in error &&
-        (error as any).response
+        !isBlankObject(paramsWhenKeysNeeded) &&
+        !paramsWhenKeysNeeded?.groqApiKey
       ) {
-        console.error('Server response:', (error as any).response.data);
-      } else {
-        console.error('Unexpected error:', error);
+        alert('Please provide Groq API key.');
+        return '';
       }
 
-      return '';
-    }
-  }, [paramsWhenKeysNeeded, onTranscriptionReceived]);
+      const formData = new FormData();
+      formData.append('file', audioBlob, 'audio.wav');
+      if (!isBlankObject(paramsWhenKeysNeeded)) {
+        formData.append('groq_api_key', paramsWhenKeysNeeded?.groqApiKey);
+      } else {
+        formData.append('is_paid', 'false');
+      }
+
+      try {
+        setIsInitiated(true);
+        setIsLoading(true);
+        const response = (await transcribeAudioBlob(formData)) as {
+          transcribed_text: string;
+        };
+        console.log('Transcription response:', response);
+        const transcribedText = response.transcribed_text;
+        setIsError(false);
+        // Set transcription state
+        setTranscription(transcribedText);
+        onTranscriptionReceived(transcribedText);
+      } catch (error: unknown) {
+        setIsError(true);
+        console.error('Error transcribing audio:', error);
+        // Check if error is an object and has a 'response' property
+        if (
+          error &&
+          isObject(error) &&
+          'response' in error &&
+          (error as any).response
+        ) {
+          console.error('Server response:', (error as any).response.data);
+        } else {
+          console.error('Unexpected error:', error);
+        }
+        setTranscription('Unable to transcribe text');
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [paramsWhenKeysNeeded, onTranscriptionReceived]
+  );
 
   return (
     <>
@@ -108,18 +119,20 @@ const AudioInput = ({ paramsWhenKeysNeeded, onTranscriptionReceived }: any) => {
       </div>
 
       {/* Display Transcribed Text */}
-      {transcription && (
+      {isInitiated && (
         <div className="mb-4">
           <label className="block text-milk text-sm font-medium mb-2">
-            Transcribed Text
+            {isLoading ? 'Transcribing...' : 'Transcribed Text'}
           </label>
-          <textarea
-            value={transcription}
-            readOnly
-            disabled
-            className="w-full px-3 py-2 border rounded bg-background"
-            rows={4}
-          />
+          <div className="w-full md-4 px-3 py-2  border rounded bg-background">
+            {isLoading ? (
+              <ShimmerText className="m-4" mode="dark" line={3} gap={20} />
+            ) : (
+              <p className={`${isError ? 'text-red-400' : ''}`}>
+                {transcription}
+              </p>
+            )}
+          </div>
         </div>
       )}
     </>
