@@ -11,6 +11,16 @@ module.exports = {
         transparent: 'transparent',
         milk: '#fff',
 
+        perfReview: {
+          DEFAULT: '#8b5cf6',
+          500: '#8b5cf6',
+          600: '#7c3aed'
+        },
+        selfReview: {
+          DEFAULT: '#14b8a6',
+          500: '#14b8a6',
+          600: '#0d9488'
+        },
         elephant: {
           DEFAULT: '#12344d',
           900: '#12344d',

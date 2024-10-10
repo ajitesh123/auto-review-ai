@@ -1,25 +1,52 @@
-import dynamic from 'next/dynamic';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { transcribeAudioBlob } from '@services/audio';
 import { isBlankObject, isObject } from '@utils/object';
 import { ShimmerText } from 'shimmer-effects-react';
+import { useWavesurfer } from '@wavesurfer/react';
+// import Timeline from 'wavesurfer.js/dist/plugins/timeline.esm.js';
+import tailwindConfig from '../../../tailwind.config';
+import { useAppContext } from '@contexts/AppContext';
+import { ReviewType } from '@constants/common';
+import  { MediaRecorder } from '@constants/media';
+// import Audio from './Audio';
+import { TextButton } from '@components/ui/button';
+import { useReactMediaRecorder } from "react-media-recorder";
 
-// Dynamically import ReactMediaRecorder to avoid server-side rendering issues
-const DynamicMediaRecorder = dynamic(
-  () => import('react-media-recorder').then((mod) => mod.ReactMediaRecorder),
-  { ssr: false }
-);
+const getColor = (reviewType: string, colorType: string) => {
+  if(reviewType === ReviewType.perfReview) {
+    return tailwindConfig.theme.extend.colors.perfReview[colorType === 'wave' ? 500: 600];
+  }
+  return tailwindConfig.theme.extend.colors.selfReview[colorType === 'wave' ? 500: 600];
+}
+
+const isAudioRecording = (status: string) => {
+  return status === MediaRecorder.RECORDING;
+}
 
 const AudioInput = ({ paramsWhenKeysNeeded, onTranscriptionReceived }: any) => {
-  const [isClient, setIsClient] = useState(false);
+  const { reviewType } = useAppContext();
   const [transcription, setTranscription] = useState<string>(''); // New state for transcription
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [isInitiated, setIsInitiated] = useState(false);
+  const [blobUrl, setBlobUrl] = useState('');
 
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
+  const containerRef = useRef(null);
+
+  const { wavesurfer, isPlaying, currentTime } = useWavesurfer({
+    container: containerRef,
+    height: 30,
+    barHeight: 10,
+    barWidth: 1,
+    waveColor: getColor(reviewType, 'wave'),
+    progressColor: getColor(reviewType, 'progress'),
+    url: blobUrl,
+    // plugins: useMemo(() => [Timeline.create()], []),
+  })
+
+  const onPlayPause = useCallback(() => {
+    wavesurfer && wavesurfer.playPause()
+  }, [wavesurfer])
 
   const transcribeAudio = useCallback(
     async (audioBlob: Blob) => {
@@ -77,50 +104,66 @@ const AudioInput = ({ paramsWhenKeysNeeded, onTranscriptionReceived }: any) => {
     [paramsWhenKeysNeeded, onTranscriptionReceived]
   );
 
+  const { status, startRecording, stopRecording, mediaBlobUrl,  } = useReactMediaRecorder({
+    video: false,
+    audio: true,
+    async onStop(blobUrl, blob) {
+      setBlobUrl(blobUrl);
+      await transcribeAudio(blob); // Transcribe audio on stop
+    },
+  });
+
+  const isRecording = isAudioRecording(status);
+
+  const handleStartRecording = useCallback(() => {
+    startRecording();
+    setBlobUrl('');
+  }, [setBlobUrl, startRecording]);
+
   return (
     <>
       <div className="mb-8">
-        <label className="block text-milk text-sm font-bold mb-2">
+        <label className="block text-milk text-sm font-bold mb-6">
           Record Audio Review (optional)
         </label>
-        {isClient && (
-          <DynamicMediaRecorder
-            audio
-            onStop={async (_blobUrl, blob) => {
-              await transcribeAudio(blob); // Transcribe audio on stop
-            }}
-            render={({
-              status,
-              startRecording,
-              stopRecording,
-              mediaBlobUrl,
-            }) => (
-              <div>
-                <p>{status}</p>
-                <button
-                  onClick={startRecording}
-                  className="mr-2 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700"
-                >
-                  Start Recording
-                </button>
-                <button
-                  onClick={stopRecording}
-                  className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-700"
-                >
-                  Stop Recording
-                </button>
-                {mediaBlobUrl && (
-                  <audio src={mediaBlobUrl} controls className="mt-2" />
-                )}
-              </div>
-            )}
-          />
-        )}
+        <div  className='mb-8 flex justify-center items-center gap-4'>
+          <TextButton
+            variant='secondary'
+            onClick={isRecording ? stopRecording : handleStartRecording}
+            className={`${isRecording ? 'bg-red-500 hover:bg-red-500 text-milk' : ''}`}
+            disabled={isRecording}
+          >
+            {isRecording ? 'Recording...' : 'Record'}
+          </TextButton>
+
+          {isRecording && (
+             <TextButton
+              variant='secondary'
+              onClick={stopRecording}
+            >
+              {'Stop Recording'}
+            </TextButton>
+          )}
+
+          {blobUrl && (
+            <div className='flex flex-1 items-center gap-4'>
+              <TextButton
+                variant='secondary'
+                onClick={onPlayPause}
+              >
+                {isPlaying ? 'Pause' : 'Play'}
+              </TextButton>
+              <div ref={containerRef} className='w-full' />
+            </div>
+          )}
+        </div>
       </div>
+
+      {/* <Audio /> */}
 
       {/* Display Transcribed Text */}
       {isInitiated && (
-        <div className="mb-4">
+        <div className="mb-4 mt-8">
           <label className="block text-milk text-sm font-medium mb-2">
             {isLoading ? 'Transcribing...' : 'Transcribed Text'}
           </label>
