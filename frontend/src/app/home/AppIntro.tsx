@@ -46,7 +46,7 @@ const AppIntro = ({ reviewType, onReviewTypeChange }: any) => {
       <GradientBackground fromColor={fromColor} toColor={toColor} />
       <div className="mx-auto max-w-6xl pb-12 pt-36">
         <div className="flex flex-col items-center">
-          {/* <div className="mt-10 flex items-center justify-center md:gap-x-16 gap-x-8">
+          {/* <div className="my-10 flex items-center justify-center md:gap-x-16 gap-x-8">
             <TextButton
               variant={`primary-${
                 isPerfReviewType(reviewType) ? 'perf' : 'self'

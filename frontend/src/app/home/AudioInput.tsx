@@ -11,6 +11,11 @@ import { MediaRecorder } from '@constants/media';
 // import Audio from './Audio';
 import { TextButton } from '@components/ui/button';
 import { useReactMediaRecorder } from 'react-media-recorder';
+import { SvgIcon } from '@components/ui/svg-icon';
+import Mic from '@assets/icons/mic.svg';
+import Stop from '@assets/icons/stop.svg';
+import Play from '@assets/icons/play.svg';
+import Pause from '@assets/icons/pause.svg';
 
 const getColor = (reviewType: string, colorType: string) => {
   if (reviewType === ReviewType.perfReview) {
@@ -131,29 +136,35 @@ const AudioInput = ({ paramsWhenKeysNeeded, onTranscriptionReceived }: any) => {
         <label className="block text-milk text-sm font-bold mb-6">
           Record Audio Review (optional)
         </label>
-        <div className="mb-8 flex justify-center items-center gap-4">
-          <TextButton
-            variant="secondary"
+        <div className="mb-8 flex justify-center items-center gap-6">
+          <button
             onClick={isRecording ? stopRecording : handleStartRecording}
-            className={`${
-              isRecording ? 'bg-red-500 hover:bg-red-500 text-milk' : ''
-            }`}
+            className={`relative rounded-full w-14 h-14 flex items-center justify-center bg-red-400 hover:bg-red-500 ${isRecording ? 'animation-pulse' : ''}`}
             disabled={isRecording}
           >
-            {isRecording ? 'Recording...' : 'Record'}
-          </TextButton>
+            <SvgIcon svg={Mic} size='xl' />
+          </button>
 
           {isRecording && (
-            <TextButton variant="secondary" onClick={stopRecording}>
-              {'Stop Recording'}
-            </TextButton>
+            <button
+              onClick={stopRecording}
+              className='relative rounded-full w-14 h-14 flex items-center justify-center border border-gray-500 hover:bg-neutral-800'
+            >
+              <SvgIcon svg={Stop} size='lg' />
+            </button>
+          )}
+
+          {blobUrl && (
+            <button
+              onClick={onPlayPause}
+              className='relative rounded-full w-14 h-14 flex items-center justify-center border border-gray-500 hover:bg-neutral-800'
+            >
+              <SvgIcon svg={isPlaying ? Pause : Play} size='lg' />
+            </button>
           )}
 
           {blobUrl && (
             <div className="flex flex-1 items-center gap-4">
-              <TextButton variant="secondary" onClick={onPlayPause}>
-                {isPlaying ? 'Pause' : 'Play'}
-              </TextButton>
               <div ref={containerRef} className="w-full" />
             </div>
           )}

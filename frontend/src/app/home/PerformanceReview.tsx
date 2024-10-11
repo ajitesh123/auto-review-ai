@@ -128,6 +128,7 @@ const PerformanceReview = ({
           onClick={handleGenerateReview}
           variant={`primary-perf-review`}
           disabled={isLoading}
+          className='font-semibold'
         >
           {isLoading ? 'Generating...' : 'Generate Performance Review'}
         </TextButton>
