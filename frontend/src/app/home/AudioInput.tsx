@@ -7,21 +7,25 @@ import { useWavesurfer } from '@wavesurfer/react';
 import tailwindConfig from '../../../tailwind.config';
 import { useAppContext } from '@contexts/AppContext';
 import { ReviewType } from '@constants/common';
-import  { MediaRecorder } from '@constants/media';
+import { MediaRecorder } from '@constants/media';
 // import Audio from './Audio';
 import { TextButton } from '@components/ui/button';
-import { useReactMediaRecorder } from "react-media-recorder";
+import { useReactMediaRecorder } from 'react-media-recorder';
 
 const getColor = (reviewType: string, colorType: string) => {
-  if(reviewType === ReviewType.perfReview) {
-    return tailwindConfig.theme.extend.colors.perfReview[colorType === 'wave' ? 500: 600];
+  if (reviewType === ReviewType.perfReview) {
+    return tailwindConfig.theme.extend.colors.perfReview[
+      colorType === 'wave' ? 500 : 600
+    ];
   }
-  return tailwindConfig.theme.extend.colors.selfReview[colorType === 'wave' ? 500: 600];
-}
+  return tailwindConfig.theme.extend.colors.selfReview[
+    colorType === 'wave' ? 500 : 600
+  ];
+};
 
 const isAudioRecording = (status: string) => {
   return status === MediaRecorder.RECORDING;
-}
+};
 
 const AudioInput = ({ paramsWhenKeysNeeded, onTranscriptionReceived }: any) => {
   const { reviewType } = useAppContext();
@@ -42,11 +46,11 @@ const AudioInput = ({ paramsWhenKeysNeeded, onTranscriptionReceived }: any) => {
     progressColor: getColor(reviewType, 'progress'),
     url: blobUrl,
     // plugins: useMemo(() => [Timeline.create()], []),
-  })
+  });
 
   const onPlayPause = useCallback(() => {
-    wavesurfer && wavesurfer.playPause()
-  }, [wavesurfer])
+    wavesurfer && wavesurfer.playPause();
+  }, [wavesurfer]);
 
   const transcribeAudio = useCallback(
     async (audioBlob: Blob) => {
@@ -104,14 +108,15 @@ const AudioInput = ({ paramsWhenKeysNeeded, onTranscriptionReceived }: any) => {
     [paramsWhenKeysNeeded, onTranscriptionReceived]
   );
 
-  const { status, startRecording, stopRecording, mediaBlobUrl,  } = useReactMediaRecorder({
-    video: false,
-    audio: true,
-    async onStop(blobUrl, blob) {
-      setBlobUrl(blobUrl);
-      await transcribeAudio(blob); // Transcribe audio on stop
-    },
-  });
+  const { status, startRecording, stopRecording, mediaBlobUrl } =
+    useReactMediaRecorder({
+      video: false,
+      audio: true,
+      async onStop(blobUrl, blob) {
+        setBlobUrl(blobUrl);
+        await transcribeAudio(blob); // Transcribe audio on stop
+      },
+    });
 
   const isRecording = isAudioRecording(status);
 
@@ -126,34 +131,30 @@ const AudioInput = ({ paramsWhenKeysNeeded, onTranscriptionReceived }: any) => {
         <label className="block text-milk text-sm font-bold mb-6">
           Record Audio Review (optional)
         </label>
-        <div  className='mb-8 flex justify-center items-center gap-4'>
+        <div className="mb-8 flex justify-center items-center gap-4">
           <TextButton
-            variant='secondary'
+            variant="secondary"
             onClick={isRecording ? stopRecording : handleStartRecording}
-            className={`${isRecording ? 'bg-red-500 hover:bg-red-500 text-milk' : ''}`}
+            className={`${
+              isRecording ? 'bg-red-500 hover:bg-red-500 text-milk' : ''
+            }`}
             disabled={isRecording}
           >
             {isRecording ? 'Recording...' : 'Record'}
           </TextButton>
 
           {isRecording && (
-             <TextButton
-              variant='secondary'
-              onClick={stopRecording}
-            >
+            <TextButton variant="secondary" onClick={stopRecording}>
               {'Stop Recording'}
             </TextButton>
           )}
 
           {blobUrl && (
-            <div className='flex flex-1 items-center gap-4'>
-              <TextButton
-                variant='secondary'
-                onClick={onPlayPause}
-              >
+            <div className="flex flex-1 items-center gap-4">
+              <TextButton variant="secondary" onClick={onPlayPause}>
                 {isPlaying ? 'Pause' : 'Play'}
               </TextButton>
-              <div ref={containerRef} className='w-full' />
+              <div ref={containerRef} className="w-full" />
             </div>
           )}
         </div>

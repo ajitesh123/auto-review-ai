@@ -9,10 +9,10 @@ const ReviewResults = ({ reviews }: any) => {
   const [copyBtnText, setCopyBtnText] = useState('Copy');
 
   const handleCopyClick = useCallback(() => {
-    setCopyBtnText('Copied!')
+    setCopyBtnText('Copied!');
 
     // Get the parent div
-    const parentDiv = document.getElementById("reviews");
+    const parentDiv = document.getElementById('reviews');
 
     // Copy the content (HTML) of the parent div and its children
     const copiedContent = parentDiv?.innerText as string;
@@ -21,7 +21,7 @@ const ReviewResults = ({ reviews }: any) => {
     navigator.clipboard.writeText(copiedContent);
 
     setTimeout(() => {
-      setCopyBtnText('Copy')
+      setCopyBtnText('Copy');
     }, 1500);
   }, [setCopyBtnText]);
 
@@ -43,18 +43,28 @@ const ReviewResults = ({ reviews }: any) => {
                         onClick={handleCopyClick}
                         className="inline-flex space-x-2 text-slate-500 hover:text-slate-300"
                       >
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" aria-hidden="true" className="h-5 w-5">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth="2"
+                          stroke="currentColor"
+                          aria-hidden="true"
+                          className="h-5 w-5"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"
+                          ></path>
                         </svg>
-                        <span className="font-medium">
-                          {copyBtnText}
-                        </span>
+                        <span className="font-medium">{copyBtnText}</span>
                       </button>
                     </span>
                   </div>
                 </div>
 
-                <div id='reviews'>
+                <div id="reviews">
                   {reviews.map((item: ReviewItem, index: Key) => (
                     <div
                       key={index}

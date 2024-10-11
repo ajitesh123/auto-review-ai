@@ -2,7 +2,7 @@ const MediaRecorder = {
   IDLE: 'idle',
   RECORDING: 'recording',
   STOPPING: 'stopping',
-  STOPPED: 'stopped'
-}
+  STOPPED: 'stopped',
+};
 
 export { MediaRecorder };
