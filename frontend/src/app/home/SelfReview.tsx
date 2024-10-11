@@ -111,7 +111,7 @@ const SelfReview = ({ paramsWhenKeysNeeded, onReviewResultsReceived }: any) => {
           onClick={handleGenerateSelfReview}
           variant={`primary-self-review`}
           disabled={isLoading}
-          className='font-semibold'
+          className="font-semibold"
         >
           {isLoading ? 'Generating...' : 'Generate Self Review'}
         </TextButton>

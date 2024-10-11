@@ -26,7 +26,10 @@ interface WaveSurferColorsMap {
 }
 
 // Accessing using a known key
-const getWaveSurferColor = (waveSurferColors: WaveSurferColorsMap, reviewType: string) => {
+const getWaveSurferColor = (
+  waveSurferColors: WaveSurferColorsMap,
+  reviewType: string
+) => {
   return waveSurferColors[reviewType];
 };
 
@@ -43,7 +46,9 @@ const AudioInput = ({ paramsWhenKeysNeeded, onTranscriptionReceived }: any) => {
   const [isInitiated, setIsInitiated] = useState(false);
   const [blobUrl, setBlobUrl] = useState('');
   const containerRef = useRef(null);
-  const [waveSurferColors, setWaveSurferColors] = useState({} as WaveSurferColorsMap);
+  const [waveSurferColors, setWaveSurferColors] = useState(
+    {} as WaveSurferColorsMap
+  );
 
   const transcribeAudio = useCallback(
     async (audioBlob: Blob) => {
@@ -118,7 +123,6 @@ const AudioInput = ({ paramsWhenKeysNeeded, onTranscriptionReceived }: any) => {
     setBlobUrl('');
   }, [setBlobUrl, startRecording]);
 
-
   useEffect(() => {
     // Get the root element (:root in CSS)
     const rootElement = document.documentElement;
@@ -126,11 +130,11 @@ const AudioInput = ({ paramsWhenKeysNeeded, onTranscriptionReceived }: any) => {
     const waveSurferColors: WaveSurferColorsMap = {
       perfReview: {
         wave: computedStyles.getPropertyValue('--perf-review-500').trim(),
-        progress: computedStyles.getPropertyValue('--perf-review-600').trim()
+        progress: computedStyles.getPropertyValue('--perf-review-600').trim(),
       },
       selfReview: {
         wave: computedStyles.getPropertyValue('--self-review-500').trim(),
-        progress: computedStyles.getPropertyValue('--self-review-600').trim()
+        progress: computedStyles.getPropertyValue('--self-review-600').trim(),
       },
     };
     // set the colors
@@ -166,27 +170,29 @@ const AudioInput = ({ paramsWhenKeysNeeded, onTranscriptionReceived }: any) => {
         <div className="mb-8 flex justify-center items-center gap-6">
           <button
             onClick={isRecording ? stopRecording : handleStartRecording}
-            className={`relative rounded-full w-14 h-14 flex items-center justify-center bg-red-400 hover:bg-red-500 ${isRecording ? 'animation-pulse' : ''}`}
+            className={`relative rounded-full w-14 h-14 flex items-center justify-center bg-red-400 hover:bg-red-500 ${
+              isRecording ? 'animation-pulse' : ''
+            }`}
             disabled={isRecording}
           >
-            <SvgIcon svg={Mic} size='xl' />
+            <SvgIcon svg={Mic} size="xl" />
           </button>
 
           {isRecording && (
             <button
               onClick={stopRecording}
-              className='relative rounded-full w-14 h-14 flex items-center justify-center border border-gray-500 hover:bg-neutral-800'
+              className="relative rounded-full w-14 h-14 flex items-center justify-center border border-gray-500 hover:bg-neutral-800"
             >
-              <SvgIcon svg={Stop} size='lg' />
+              <SvgIcon svg={Stop} size="lg" />
             </button>
           )}
 
           {blobUrl && (
             <button
               onClick={onPlayPause}
-              className='relative rounded-full w-14 h-14 flex items-center justify-center border border-gray-500 hover:bg-neutral-800'
+              className="relative rounded-full w-14 h-14 flex items-center justify-center border border-gray-500 hover:bg-neutral-800"
             >
-              <SvgIcon svg={isPlaying ? Pause : Play} size='lg' />
+              <SvgIcon svg={isPlaying ? Pause : Play} size="lg" />
             </button>
           )}
 
