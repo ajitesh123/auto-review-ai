@@ -1,15 +1,11 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { transcribeAudioBlob } from '@services/audio';
 import { isBlankObject, isObject } from '@utils/object';
 import { ShimmerText } from 'shimmer-effects-react';
 import { useWavesurfer } from '@wavesurfer/react';
-// import Timeline from 'wavesurfer.js/dist/plugins/timeline.esm.js';
-import tailwindConfig from '../../../tailwind.config';
 import { useAppContext } from '@contexts/AppContext';
 import { ReviewType } from '@constants/common';
 import { MediaRecorder } from '@constants/media';
-// import Audio from './Audio';
-import { TextButton } from '@components/ui/button';
 import { useReactMediaRecorder } from 'react-media-recorder';
 import { SvgIcon } from '@components/ui/svg-icon';
 import Mic from '@assets/icons/mic.svg';
@@ -17,17 +13,24 @@ import Stop from '@assets/icons/stop.svg';
 import Play from '@assets/icons/play.svg';
 import Pause from '@assets/icons/pause.svg';
 
-const getColor = (reviewType: string, colorType: string) => {
-  if (reviewType === ReviewType.perfReview) {
-    return tailwindConfig.theme.extend.colors.perfReview[
-      colorType === 'wave' ? 500 : 600
-    ];
-  }
-  return tailwindConfig.theme.extend.colors.selfReview[
-    colorType === 'wave' ? 500 : 600
-  ];
+// Define valid review types as literal types
+type ReviewType = 'perfReview' | 'selfReview';
+
+interface WaveSurferColors {
+  wave: string;
+  progress: string;
+}
+
+interface WaveSurferColorsMap {
+  [key: string]: WaveSurferColors;
+}
+
+// Accessing using a known key
+const getWaveSurferColor = (waveSurferColors: WaveSurferColorsMap, reviewType: string) => {
+  return waveSurferColors[reviewType];
 };
 
+// check if audio recording is on
 const isAudioRecording = (status: string) => {
   return status === MediaRecorder.RECORDING;
 };
@@ -39,23 +42,8 @@ const AudioInput = ({ paramsWhenKeysNeeded, onTranscriptionReceived }: any) => {
   const [isError, setIsError] = useState(false);
   const [isInitiated, setIsInitiated] = useState(false);
   const [blobUrl, setBlobUrl] = useState('');
-
   const containerRef = useRef(null);
-
-  const { wavesurfer, isPlaying, currentTime } = useWavesurfer({
-    container: containerRef,
-    height: 30,
-    barHeight: 10,
-    barWidth: 1,
-    waveColor: getColor(reviewType, 'wave'),
-    progressColor: getColor(reviewType, 'progress'),
-    url: blobUrl,
-    // plugins: useMemo(() => [Timeline.create()], []),
-  });
-
-  const onPlayPause = useCallback(() => {
-    wavesurfer && wavesurfer.playPause();
-  }, [wavesurfer]);
+  const [waveSurferColors, setWaveSurferColors] = useState({} as WaveSurferColorsMap);
 
   const transcribeAudio = useCallback(
     async (audioBlob: Blob) => {
@@ -113,15 +101,15 @@ const AudioInput = ({ paramsWhenKeysNeeded, onTranscriptionReceived }: any) => {
     [paramsWhenKeysNeeded, onTranscriptionReceived]
   );
 
-  const { status, startRecording, stopRecording, mediaBlobUrl } =
-    useReactMediaRecorder({
-      video: false,
-      audio: true,
-      async onStop(blobUrl, blob) {
-        setBlobUrl(blobUrl);
-        await transcribeAudio(blob); // Transcribe audio on stop
-      },
-    });
+  // media recorder
+  const { status, startRecording, stopRecording } = useReactMediaRecorder({
+    video: false,
+    audio: true,
+    async onStop(blobUrl, blob) {
+      setBlobUrl(blobUrl);
+      await transcribeAudio(blob); // Transcribe audio on stop
+    },
+  });
 
   const isRecording = isAudioRecording(status);
 
@@ -129,6 +117,45 @@ const AudioInput = ({ paramsWhenKeysNeeded, onTranscriptionReceived }: any) => {
     startRecording();
     setBlobUrl('');
   }, [setBlobUrl, startRecording]);
+
+
+  useEffect(() => {
+    // Get the root element (:root in CSS)
+    const rootElement = document.documentElement;
+    const computedStyles = getComputedStyle(rootElement);
+    const waveSurferColors: WaveSurferColorsMap = {
+      perfReview: {
+        wave: computedStyles.getPropertyValue('--perf-review-500').trim(),
+        progress: computedStyles.getPropertyValue('--perf-review-600').trim()
+      },
+      selfReview: {
+        wave: computedStyles.getPropertyValue('--self-review-500').trim(),
+        progress: computedStyles.getPropertyValue('--self-review-600').trim()
+      },
+    };
+    // set the colors
+    setWaveSurferColors(waveSurferColors);
+  }, []);
+
+  const color = getWaveSurferColor(
+    waveSurferColors,
+    reviewType === ReviewType.perfReview ? 'perfReview' : 'selfReview'
+  );
+
+  // wave surfer
+  const { wavesurfer, isPlaying } = useWavesurfer({
+    container: containerRef,
+    height: 30,
+    barHeight: 10,
+    barWidth: 1,
+    waveColor: color?.wave,
+    progressColor: color?.progress,
+    url: blobUrl,
+  });
+
+  const onPlayPause = useCallback(() => {
+    wavesurfer && wavesurfer.playPause();
+  }, [wavesurfer]);
 
   return (
     <>
@@ -170,8 +197,6 @@ const AudioInput = ({ paramsWhenKeysNeeded, onTranscriptionReceived }: any) => {
           )}
         </div>
       </div>
-
-      {/* <Audio /> */}
 
       {/* Display Transcribed Text */}
       {isInitiated && (
