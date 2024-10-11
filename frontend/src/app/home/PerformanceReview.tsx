@@ -1,8 +1,12 @@
 import { useState } from 'react';
+import dynamic from 'next/dynamic';
 import { generateReview } from '@services/review';
-import AudioInput from './AudioInput';
 import { isBlankObject } from '@utils/object';
 import { TextButton } from '@components/ui/button';
+
+const AudioInputComponent = dynamic(() => import('./AudioInput'), {
+  ssr: false,
+});
 
 const PerformanceReview = ({
   paramsWhenKeysNeeded,
@@ -119,7 +123,7 @@ const PerformanceReview = ({
           />
         </div>
         <div className="w-full">
-          <AudioInput
+          <AudioInputComponent
             paramsWhenKeysNeeded={paramsWhenKeysNeeded}
             onTranscriptionReceived={setTranscription}
           />

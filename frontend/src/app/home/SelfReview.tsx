@@ -1,8 +1,12 @@
 import { useState } from 'react';
+import dynamic from 'next/dynamic';
 import { generateSelfReview } from '@services/review';
-import AudioInput from './AudioInput';
 import { isBlankObject } from '@utils/object';
 import { TextButton } from '@components/ui/button';
+
+const AudioInputComponent = dynamic(() => import('./AudioInput'), {
+  ssr: false,
+});
 
 const SelfReview = ({ paramsWhenKeysNeeded, onReviewResultsReceived }: any) => {
   const [textDump, setTextDump] = useState('');
@@ -102,7 +106,7 @@ const SelfReview = ({ paramsWhenKeysNeeded, onReviewResultsReceived }: any) => {
           />
         </div>
         <div className="w-full">
-          <AudioInput
+          <AudioInputComponent
             paramsWhenKeysNeeded={paramsWhenKeysNeeded}
             onTranscriptionReceived={setTranscription}
           />
