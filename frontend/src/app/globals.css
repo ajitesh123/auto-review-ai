@@ -8,6 +8,12 @@
     --background: 240 1.5% 12%;
     --foreground: 0 0% 98%;
     --border: 240 3.7% 15.9%;
+
+    --perf-review-500: #8b5cf6;
+    --perf-review-600: #7c3aed;
+
+    --self-review-500: #14b8a6;
+    --self-review-600: #0d9488;
   }
 }
 
