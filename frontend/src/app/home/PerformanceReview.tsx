@@ -8,46 +8,69 @@ const AudioInputComponent = dynamic(() => import('./AudioInput'), {
   ssr: false,
 });
 
+interface PerformanceReviewProps {
+  paramsWhenKeysNeeded: {
+    userApiKey?: string;
+    // Add other properties as needed
+  };
+  onReviewResultsReceived: (
+    review: Array<{ question: string; answer: string }>
+  ) => void;
+}
+
+interface FormState {
+  yourRole: string;
+  candidateRole: string;
+  perfQuestion: string;
+  yourReview: string;
+}
+
 const PerformanceReview = ({
   paramsWhenKeysNeeded,
   onReviewResultsReceived,
-}: any) => {
-  const [yourRole, setYourRole] = useState('');
-  const [candidateRole, setCandidateRole] = useState('');
-  const [perfQuestion, setPerfQuestion] = useState('');
-  const [yourReview, setYourReview] = useState('');
+}: PerformanceReviewProps) => {
+  const [formState, setFormState] = useState<FormState>({
+    yourRole: '',
+    candidateRole: '',
+    perfQuestion: '',
+    yourReview: '',
+  });
   const [transcription, setTranscription] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleGenerateReview = async () => {
-    setIsLoading(true);
+  // Use this to update form fields:
+  const updateFormField =
+    (field: keyof typeof formState) =>
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      setFormState((prev) => ({ ...prev, [field]: e.target.value }));
+    };
+
+  const validateForm = () => {
     if (
       !isBlankObject(paramsWhenKeysNeeded) &&
       !paramsWhenKeysNeeded?.userApiKey
     ) {
-      setIsLoading(false);
-      alert('Please enter your API key.');
-      return;
+      throw new Error('Please enter your API key.');
     }
+    if (!formState.yourRole || !formState.candidateRole) {
+      throw new Error('Please fill in all required fields.');
+    }
+    if (!formState.yourReview && !transcription) {
+      throw new Error('Please provide either a review dump or audio input.');
+    }
+  };
 
-    if (!yourRole || !candidateRole) {
-      setIsLoading(false);
-      alert('Please fill in all required fields.');
-      return;
-    }
-
-    if (!yourReview && !transcription) {
-      setIsLoading(false);
-      alert('Please provide either a your review dump or audio input.');
-      return;
-    }
+  const handleGenerateReview = async () => {
+    setIsLoading(true);
 
     try {
+      validateForm();
+
       const requestData = {
-        your_role: yourRole,
-        candidate_role: candidateRole,
-        perf_question: perfQuestion,
-        your_review: `${yourReview} ${transcription}`,
+        your_role: formState.yourRole,
+        candidate_role: formState.candidateRole,
+        perf_question: formState.perfQuestion,
+        your_review: `${formState.yourReview} ${transcription}`.trim(),
         is_paid: false,
         ...paramsWhenKeysNeeded,
       };
@@ -56,8 +79,9 @@ const PerformanceReview = ({
         review: Array<{ question: string; answer: string }>;
       };
       onReviewResultsReceived(response.review);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error generating review:', error);
+      alert(error?.message || 'An error occurred while generating the review.');
     } finally {
       setIsLoading(false);
     }
@@ -72,8 +96,8 @@ const PerformanceReview = ({
           </label>
           <input
             type="text"
-            value={yourRole}
-            onChange={(e) => setYourRole(e.target.value)}
+            value={formState.yourRole}
+            onChange={updateFormField('yourRole')}
             placeholder="Please enter your role"
             className="w-full px-3 py-2 border rounded
               bg-background border-gray-700 text-gray-300
@@ -86,8 +110,8 @@ const PerformanceReview = ({
           </label>
           <input
             type="text"
-            value={candidateRole}
-            onChange={(e) => setCandidateRole(e.target.value)}
+            value={formState.candidateRole}
+            onChange={updateFormField('candidateRole')}
             placeholder="Please enter candidate role"
             className="w-full px-3 py-2 border rounded
               bg-background border-gray-700 text-gray-300
@@ -99,8 +123,8 @@ const PerformanceReview = ({
             Performance Review Questions (one per line)
           </label>
           <textarea
-            value={perfQuestion}
-            onChange={(e) => setPerfQuestion(e.target.value)}
+            value={formState.perfQuestion}
+            onChange={updateFormField('perfQuestion')}
             placeholder="Please enter questions..."
             className="w-full px-3 py-2 border rounded
               bg-background border-gray-700 text-gray-300
@@ -113,8 +137,8 @@ const PerformanceReview = ({
             Your Review
           </label>
           <textarea
-            value={yourReview}
-            onChange={(e) => setYourReview(e.target.value)}
+            value={formState.yourReview}
+            onChange={updateFormField('yourReview')}
             placeholder="Please enter your review..."
             className="w-full px-3 py-2 border rounded
               bg-background border-gray-700 text-gray-300

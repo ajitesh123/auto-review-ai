@@ -8,43 +8,63 @@ const AudioInputComponent = dynamic(() => import('./AudioInput'), {
   ssr: false,
 });
 
-const SelfReview = ({ paramsWhenKeysNeeded, onReviewResultsReceived }: any) => {
-  const [textDump, setTextDump] = useState('');
-  const [questions, setQuestions] = useState('');
-  const [instructions, setInstructions] = useState('');
+interface SelfReviewProps {
+  paramsWhenKeysNeeded: {
+    userApiKey?: string;
+    // Add other properties as needed
+  };
+  onReviewResultsReceived: (
+    self_review: Array<{ question: string; answer: string }>
+  ) => void;
+}
+
+const SelfReview = ({
+  paramsWhenKeysNeeded,
+  onReviewResultsReceived,
+}: SelfReviewProps) => {
+  const [formState, setFormState] = useState({
+    textDump: '',
+    questions: '',
+    instructions: '',
+  });
   const [transcription, setTranscription] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleGenerateSelfReview = async () => {
-    setIsLoading(true);
+  // Use this to update form fields:
+  const updateFormField =
+    (field: keyof typeof formState) =>
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      setFormState((prev) => ({ ...prev, [field]: e.target.value }));
+    };
+
+  const validateForm = () => {
     if (
       !isBlankObject(paramsWhenKeysNeeded) &&
       !paramsWhenKeysNeeded?.userApiKey
     ) {
-      setIsLoading(false);
-      alert('Please enter your API key.');
-      return;
+      throw new Error('Please enter your API key.');
     }
-    if (!questions) {
-      setIsLoading(false);
-      alert('Please provide both the text dump and questions.');
-      return;
+    if (!formState.questions) {
+      throw new Error('Please provide both the text dump and questions.');
     }
+    if (!formState.textDump && !transcription) {
+      throw new Error('Please provide either a text dump or audio input.');
+    }
+  };
 
-    if (!textDump && !transcription) {
-      setIsLoading(false);
-      alert('Please provide either a text dump or audio input.');
-      return;
-    }
+  const handleGenerateSelfReview = async () => {
+    setIsLoading(true);
 
     try {
+      validateForm();
+
       const requestData = {
-        text_dump: textDump + transcription,
-        questions: questions
+        text_dump: formState.textDump + transcription,
+        questions: formState.questions
           .split('\n')
           .map((q) => q.trim())
           .filter(Boolean),
-        instructions: instructions || null,
+        instructions: formState.instructions || null,
         is_paid: false,
         ...paramsWhenKeysNeeded,
       };
@@ -53,8 +73,11 @@ const SelfReview = ({ paramsWhenKeysNeeded, onReviewResultsReceived }: any) => {
         self_review: Array<{ question: string; answer: string }>;
       };
       onReviewResultsReceived(response.self_review);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error generating self-review:', error);
+      alert(
+        error?.message || 'An error occurred while generating the self review.'
+      );
     } finally {
       setIsLoading(false);
     }
@@ -68,8 +91,8 @@ const SelfReview = ({ paramsWhenKeysNeeded, onReviewResultsReceived }: any) => {
             Text Dump (information about your performance)
           </label>
           <textarea
-            value={textDump}
-            onChange={(e) => setTextDump(e.target.value)}
+            value={formState.textDump}
+            onChange={updateFormField('textDump')}
             placeholder="Please enter your inputs..."
             className="w-full px-3 py-2 border rounded
               bg-background border-gray-700 text-gray-300
@@ -82,8 +105,8 @@ const SelfReview = ({ paramsWhenKeysNeeded, onReviewResultsReceived }: any) => {
             Questions to Answer in Self-Review (one per line)
           </label>
           <textarea
-            value={questions}
-            onChange={(e) => setQuestions(e.target.value)}
+            value={formState.questions}
+            onChange={updateFormField('questions')}
             placeholder="Please enter questions..."
             className="w-full px-3 py-2 border rounded
               bg-background border-gray-700 text-gray-300
@@ -96,8 +119,8 @@ const SelfReview = ({ paramsWhenKeysNeeded, onReviewResultsReceived }: any) => {
             Additional Instructions (optional)
           </label>
           <textarea
-            value={instructions}
-            onChange={(e) => setInstructions(e.target.value)}
+            value={formState.instructions}
+            onChange={updateFormField('instructions')}
             placeholder="Please enter additional instructions..."
             className="w-full px-3 py-2 border rounded
               bg-background border-gray-700 text-gray-300

@@ -13,9 +13,6 @@ import Stop from '@assets/icons/stop.svg';
 import Play from '@assets/icons/play.svg';
 import Pause from '@assets/icons/pause.svg';
 
-// Define valid review types as literal types
-type ReviewType = 'perfReview' | 'selfReview';
-
 interface WaveSurferColors {
   wave: string;
   progress: string;
@@ -174,6 +171,7 @@ const AudioInput = ({ paramsWhenKeysNeeded, onTranscriptionReceived }: any) => {
               isRecording ? 'animation-pulse' : ''
             }`}
             disabled={isRecording}
+            aria-label={isRecording ? 'Stop recording' : 'Start recording'}
           >
             <SvgIcon svg={Mic} size="xl" />
           </button>

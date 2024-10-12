@@ -29,15 +29,15 @@ const ReviewResults = ({ reviews }: any) => {
   const handleCopyClick = useCallback(async () => {
     setCopyBtnText('Copied!');
     // Get the parent div
-    const parentDiv = document.getElementById('reviews');
+    const parentDiv = document.getElementById('reviews') || new HTMLElement();
     // Get the formatted content
     const copiedContent = formatText(parentDiv);
     try {
       // copy to clipboard
       await navigator.clipboard.write([
         new ClipboardItem({
-          'text/html': new Blob([copiedContent], { type: 'text/html' })
-        })
+          'text/html': new Blob([copiedContent], { type: 'text/html' }),
+        }),
       ]);
     } catch (err) {
       console.error('Failed to copy: ', err);
