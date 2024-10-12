@@ -2,9 +2,32 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@layer base {
+  :root {
+    /* 240 1.5% 12% */
+    --background: 240 1.5% 12%;
+    --foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+
+    --perf-review-500: #8b5cf6;
+    --perf-review-600: #7c3aed;
+
+    --self-review-500: #14b8a6;
+    --self-review-600: #0d9488;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    /* font-feature-settings: "rlig" 1, "calt" 1; */
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+    font-family: Arial, Helvetica, sans-serif;
+  }
 }
 
 @media (prefers-color-scheme: dark) {
@@ -14,14 +37,43 @@
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-}
-
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+}
+
+@keyframes translateAnim {
+  from {
+    opacity: 0;
+    transform: translateX(0px) translateY(24px) scale(1) translateZ(0px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.widget-animate.in-view {
+  animation: translateAnim 1s ease;
+}
+
+.animation-pulse {
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.8);
+    box-shadow: 0 0 0 0 #f87171;
+  }
+
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 20px rgba(229, 62, 62, 0);
+  }
+
+  100% {
+    transform: scale(0.8);
   }
 }
