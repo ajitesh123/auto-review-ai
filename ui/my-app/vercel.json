@@ -1,6 +1,0 @@
-{
-  "outputDirectory": ".next",
-  "rewrites":  [
-    {"source": "/app/(.*)", "destination": "/"}
-  ]
-}
