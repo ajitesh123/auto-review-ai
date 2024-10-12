@@ -5,20 +5,43 @@ interface ReviewItem {
   answer: string;
 }
 
+function formatText(element: any) {
+  let result = '';
+  element.childNodes.forEach((node: any) => {
+    if (node.nodeType === Node.TEXT_NODE) {
+      result += node.textContent;
+    } else if (node.nodeType === Node.ELEMENT_NODE) {
+      if (node.tagName === 'H3') {
+        result += '<b>' + node.innerText + '</b>' + '\n'; // Convert H2 to bold state
+      } else if (node.tagName === 'P') {
+        result += node.innerText + '\n\n'; // Add double BR
+      } else {
+        result += formatText(node); // Recursively format child elements
+      }
+    }
+  });
+  return result;
+}
+
 const ReviewResults = ({ reviews }: any) => {
   const [copyBtnText, setCopyBtnText] = useState('Copy');
 
-  const handleCopyClick = useCallback(() => {
+  const handleCopyClick = useCallback(async () => {
     setCopyBtnText('Copied!');
-
     // Get the parent div
     const parentDiv = document.getElementById('reviews');
-
-    // Copy the content (HTML) of the parent div and its children
-    const copiedContent = parentDiv?.innerText as string;
-
-    // copy to clipboard
-    navigator.clipboard.writeText(copiedContent);
+    // Get the formatted content
+    const copiedContent = formatText(parentDiv);
+    try {
+      // copy to clipboard
+      await navigator.clipboard.write([
+        new ClipboardItem({
+          'text/html': new Blob([copiedContent], { type: 'text/html' })
+        })
+      ]);
+    } catch (err) {
+      console.error('Failed to copy: ', err);
+    }
 
     setTimeout(() => {
       setCopyBtnText('Copy');
@@ -68,9 +91,9 @@ const ReviewResults = ({ reviews }: any) => {
                   {reviews.map((item: ReviewItem, index: Key) => (
                     <div
                       key={index}
-                      className="mb-12  border-b pb-8 border-gray-600"
+                      className="mb-12 border-b pb-8 border-gray-600"
                     >
-                      <h3 className="text-milk text-lg font-medium mb-2">
+                      <h3 className="text-milk font-semibold mb-2">
                         {item.question}
                       </h3>
                       <p className="text-gray-300 leading-6 text-sm font-medium">
