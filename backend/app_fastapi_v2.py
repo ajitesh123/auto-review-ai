@@ -6,6 +6,7 @@ from typing import List, Optional
 from backend.llm import GroqLLM
 from backend.orchestrator import generate_review, generate_self_review, transcribe_audio
 from backend.kindle_auth import kinde_client, CONFIG, kinde_configuration
+from backend.supabase_client import create_user, get_user, update_user, create_review, get_user_reviews
 from loguru import logger
 
 v2 = FastAPI()
