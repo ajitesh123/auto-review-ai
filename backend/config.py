@@ -41,6 +41,9 @@ class Config:
         URL = os.getenv("SUPABASE_URL")
         KEY = os.getenv("SUPABASE_KEY")
 
+    class MongoDB:
+        URL = os.getenv("MONGODB_URL")
+
 # Usage example:
 if __name__ == "__main__":
     print(f"OpenAI API Key: {Config.APIKeys.OPENAI}")

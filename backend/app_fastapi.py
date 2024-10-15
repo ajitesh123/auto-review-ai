@@ -25,5 +25,5 @@ app.mount("/v2", v2)
 async def root():
     return {"message": "Welcome to the Performance Review API"}
 
-# To run this server, use the following command in the terminal:
-# uvicorn backend.app_fastapi:app --port 8003 --log-level debug
+# To run this server with automatic reload on save, use the following command in the terminal:
+# uvicorn backend.app_fastapi:app --port 8003 --reload

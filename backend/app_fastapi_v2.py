@@ -8,8 +8,12 @@ from backend.llm import GroqLLM
 from backend.orchestrator import generate_review, generate_self_review, transcribe_audio
 from backend.config import Config
 from backend.kindle_auth import kinde_client, kinde_configuration
-from backend.supabase_client import create_user, get_user, update_user, create_review, get_user_reviews
+from backend.db.operations import create_user, get_reviews_by_user, get_user_by_email, get_user_by_id, update_user, create_review
+from backend.models.user import User, Review
+from bson import ObjectId
 from loguru import logger
+
+from backend.tests.test_data.test_review_data import TEST_DATA_REVIEW
 
 v2 = FastAPI()
 
@@ -53,7 +57,19 @@ async def ping():
 @v2.post("/generate_review")
 async def api_generate_review(request: ReviewRequestV2, current_user: dict = Depends(get_current_user)):
     try:
-        review = generate_review(**request.model_dump())
+        review =  TEST_DATA_REVIEW
+        # review = generate_review(**request.model_dump())
+        logger.info(f"Generated review: {review}")
+
+        # Save the review to the database
+        review_obj = Review(
+            user_id=current_user["id"],
+            review_type="performance",
+            review_details=review
+        )
+        review_id = await create_review(review_obj)
+        logger.info(f"Review created with ID: {review_id}")
+
         return {"review": review}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -62,9 +78,34 @@ async def api_generate_review(request: ReviewRequestV2, current_user: dict = Dep
 async def api_generate_self_review(request: SelfReviewRequestV2, current_user: dict = Depends(get_current_user)):
     try:
         self_review = generate_self_review(**request.model_dump())
+
+        # Save the review to the database
+        review_obj = Review(
+            user_id=current_user["id"],
+            review_type="self",
+            review_details=self_review
+        )
+        review_id = await create_review(review_obj)
+        logger.info(f"Review created with ID: {review_id}")
+
         return {"self_review": self_review}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+@v2.get("/reviews", response_model=List[Review])
+async def get_past_reviews(current_user: dict = Depends(get_current_user)):
+    """
+    Fetches all past reviews for the authenticated user.
+
+    - **current_user**: The authenticated user's details.
+    - **returns**: A list of Review objects.
+    """
+    try:
+        reviews = await get_reviews_by_user(current_user["id"])
+        return reviews
+    except Exception as e:
+        logger.error(f"Error fetching reviews for user {current_user['id']}: {e}")
+        raise HTTPException(status_code=500, detail="Failed to fetch reviews.")
 
 @v2.post("/transcribe_audio")
 async def api_transcribe_audio(file: UploadFile = File(...), is_paid: bool = False, current_user: dict = Depends(get_current_user)):
@@ -94,15 +135,32 @@ async def callback(code: str, state: str):
         logger.info(f"Access token: {kinde_configuration.access_token}")
         logger.info(f"User details: {kinde_client.get_user_details()}")
         logger.info(f"Callback called with FE url {Config.FRONTEND_BASE_URL}/login/callback")
-        # logger.info("Now redirecting to /dashboard")
+
+        user_details = kinde_client.get_user_details()
+        logger.info(f"User details: {user_details}")
+        
+        # Check if user exists in the database, if not create a new user
+        user = await get_user_by_email(user_details["email"])
+        if not user:
+            logger.info(f"Creating new user with email: {user_details['email']}")
+            user = User(
+                id=user_details["id"],  # Use the Kinde-provided ID
+                email=user_details["email"],
+                name=user_details.get("given_name", "") + " " + user_details.get("family_name", ""),
+                is_paid=False
+            )
+            await create_user(user)
+        else:
+            logger.info(f"Existing user found with email: {user_details['email']}")
+
         params = {
             "token": kinde_configuration.access_token,
-            "user": kinde_client.get_user_details(),
+            "user": user_details,
             "route": "home"
         }
         query_string = urlencode(params)
         return RedirectResponse(url=f"{Config.FRONTEND_BASE_URL}/login/callback/?{query_string}")
-        # return {"message": "Callback successful"}
+
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Authentication failed: {str(e)}")
     
@@ -129,6 +187,30 @@ async def get_user(current_user: dict = Depends(get_current_user)):
 async def is_authenticated():
     return {"is_authenticated": kinde_client.is_authenticated()}
 
+@v2.get("/user_details", response_model=User)
+async def get_user_details(current_user: dict = Depends(get_current_user)):
+    """
+    Fetches detailed information about the authenticated user.
+
+    - **current_user**: The authenticated user's details.
+    - **returns**: A User object with detailed information.
+    """
+    try:
+        user = await get_user_by_id(current_user["id"])
+        if user is None:
+            # If user is not found, we'll create a new user with basic information
+            new_user = User(
+                id=current_user["id"],
+                email=current_user.get("email", ""),
+                name=f"{current_user.get('given_name', '')} {current_user.get('family_name', '')}".strip(),
+                is_paid=False
+            )
+            await create_user(new_user)
+            user = new_user
+        return user
+    except Exception as e:
+        logger.error(f"Error fetching or creating user details for user {current_user['id']}: {e}")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to fetch or create user details.")
 
 """
 Some other useful settings from Kindle Dashboard:
