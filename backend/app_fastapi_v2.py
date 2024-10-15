@@ -1,18 +1,29 @@
+# Standard library imports
+from typing import List, Optional
+
+# Third-party imports
 from fastapi import FastAPI, HTTPException, UploadFile, File, Form, Depends, status, Response
 from fastapi.security import OAuth2AuthorizationCodeBearer
 from fastapi.responses import RedirectResponse
 from urllib.parse import urlencode
 from pydantic import BaseModel
-from typing import List, Optional
+from bson import ObjectId
+from loguru import logger
+
+# Local application imports
 from backend.llm import GroqLLM
 from backend.orchestrator import generate_review, generate_self_review, transcribe_audio
 from backend.config import Config
 from backend.kindle_auth import kinde_client, kinde_configuration
-from backend.db.operations import create_user, get_reviews_by_user, get_user_by_email, get_user_by_id, update_user, create_review
+from backend.db.operations import (
+    create_user,
+    get_reviews_by_user,
+    get_user_by_email,
+    get_user_by_id,
+    update_user,
+    create_review
+)
 from backend.models.user import User, Review
-from bson import ObjectId
-from loguru import logger
-
 from backend.tests.test_data.test_review_data import TEST_DATA_REVIEW
 
 v2 = FastAPI()
@@ -36,8 +47,8 @@ oauth2_scheme = OAuth2AuthorizationCodeBearer(
     tokenUrl=f"{Config.Kinde.DOMAIN}/oauth2/token",
 )
 
-# Dependency to check if user is authenticated
 async def get_current_user(token: str = Depends(oauth2_scheme)):
+    """Dependency to check if user is authenticated."""
     if not kinde_client.is_authenticated():
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -52,13 +63,14 @@ async def root():
 
 @v2.get("/ping")
 async def ping():
+    """Health check endpoint."""
     return {"status": "pong"}
 
 @v2.post("/generate_review")
 async def api_generate_review(request: ReviewRequestV2, current_user: dict = Depends(get_current_user)):
     try:
-        review =  TEST_DATA_REVIEW
-        # review = generate_review(**request.model_dump())
+        # review =  TEST_DATA_REVIEW #Uncomment this for running tests to avoid LLM calls
+        review = generate_review(**request.model_dump())
         logger.info(f"Generated review: {review}")
 
         # Save the review to the database
@@ -94,12 +106,7 @@ async def api_generate_self_review(request: SelfReviewRequestV2, current_user: d
 
 @v2.get("/reviews", response_model=List[Review])
 async def get_past_reviews(current_user: dict = Depends(get_current_user)):
-    """
-    Fetches all past reviews for the authenticated user.
-
-    - **current_user**: The authenticated user's details.
-    - **returns**: A list of Review objects.
-    """
+    """Fetch all past reviews for the authenticated user."""
     try:
         reviews = await get_reviews_by_user(current_user["id"])
         return reviews
@@ -131,11 +138,13 @@ async def callback(code: str, state: str):
     try:
         logger.info(f"Callback called with code: {code} and state: {state}")
         kinde_client.fetch_token(authorization_response=f"{Config.Kinde.CALLBACK_URL}?code={code}&state={state}")
-        # Redirect to a success page or dashboard
+        
+        # Access token
         logger.info(f"Access token: {kinde_configuration.access_token}")
         logger.info(f"User details: {kinde_client.get_user_details()}")
         logger.info(f"Callback called with FE url {Config.FRONTEND_BASE_URL}/login/callback")
 
+        #user details
         user_details = kinde_client.get_user_details()
         logger.info(f"User details: {user_details}")
         
@@ -189,12 +198,7 @@ async def is_authenticated():
 
 @v2.get("/user_details", response_model=User)
 async def get_user_details(current_user: dict = Depends(get_current_user)):
-    """
-    Fetches detailed information about the authenticated user.
-
-    - **current_user**: The authenticated user's details.
-    - **returns**: A User object with detailed information.
-    """
+    """Fetches detailed information about the authenticated user."""
     try:
         user = await get_user_by_id(current_user["id"])
         if user is None:
