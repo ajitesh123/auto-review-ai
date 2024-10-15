@@ -2,8 +2,13 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from backend.app_fastapi_v1 import v1
 from backend.app_fastapi_v2 import v2
+import logfire
 
 app = FastAPI()
+
+logfire.configure()
+logfire.instrument_fastapi(app)
+
 
 app.add_middleware(
     CORSMiddleware,
