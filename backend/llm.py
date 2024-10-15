@@ -13,13 +13,12 @@ import anthropic
 import google.generativeai as genai
 
 # Environment setup
-dotenv_path = find_dotenv()
-load_dotenv(dotenv_path)
+from backend.config import Config
 
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", None)
-GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY", None)
-ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", None)
-GROQ_API_KEY = os.getenv("GROQ_API_KEY", None)
+OPENAI_API_KEY = Config.APIKeys.OPENAI
+GOOGLE_API_KEY = Config.APIKeys.GOOGLE
+ANTHROPIC_API_KEY = Config.APIKeys.ANTHROPIC
+GROQ_API_KEY = Config.APIKeys.GROQ
 
 MODEL_MAPPING = {
     "openai": {

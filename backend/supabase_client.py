@@ -1,13 +1,15 @@
 from supabase import create_client, Client
-import yaml
 from typing import Dict, Any
+from backend.config import Config
 
-# Load configuration
-with open('backend/config.yaml', 'r') as file:
-    config = yaml.safe_load(file)
+supabase_url = Config.Supabase.URL
+supabase_key = Config.Supabase.KEY
 
-supabase_url = config['supabase']['url']
-supabase_key = config['supabase']['key']
+if not supabase_url:
+    raise ValueError("SUPABASE_URL is not set in the environment variables")
+if not supabase_key:
+    raise ValueError("SUPABASE_KEY is not set in the environment variables")
+
 
 supabase: Client = create_client(supabase_url, supabase_key)
 
