@@ -5,7 +5,8 @@ from pydantic import BaseModel
 from typing import List, Optional
 from backend.llm import GroqLLM
 from backend.orchestrator import generate_review, generate_self_review, transcribe_audio
-from backend.kindle_auth import kinde_client, CONFIG, kinde_configuration
+from backend.config import Config
+from backend.kindle_auth import kinde_client, kinde_configuration
 from backend.supabase_client import create_user, get_user, update_user, create_review, get_user_reviews
 from loguru import logger
 
@@ -26,8 +27,8 @@ class SelfReviewRequestV2(BaseModel):
 
 # OAuth2 scheme for FastAPI
 oauth2_scheme = OAuth2AuthorizationCodeBearer(
-    authorizationUrl=f"{CONFIG['kinde']['domain']}/oauth2/auth",
-    tokenUrl=f"{CONFIG['kinde']['domain']}/oauth2/token",
+    authorizationUrl=f"{Config.Kinde.DOMAIN}/oauth2/auth",
+    tokenUrl=f"{Config.Kinde.DOMAIN}/oauth2/token",
 )
 
 # Dependency to check if user is authenticated
@@ -87,7 +88,7 @@ async def register():
 async def callback(code: str, state: str):
     try:
         logger.info(f"Callback called with code: {code} and state: {state}")
-        kinde_client.fetch_token(authorization_response=f"{CONFIG['kinde']['callback_url']}?code={code}&state={state}")
+        kinde_client.fetch_token(authorization_response=f"{Config.Kinde.CALLBACK_URL}?code={code}&state={state}")
         # Redirect to a success page or dashboard
         logger.info(f"Access token: {kinde_configuration.access_token}")
         logger.info(f"User details: {kinde_client.get_user_details()}")
@@ -103,7 +104,7 @@ async def dashboard(current_user: dict = Depends(get_current_user)):
 
 @v2.get("/logout")
 async def logout():
-    logout_url = kinde_client.logout(redirect_to=CONFIG['kinde']['logout_url'])
+    logout_url = kinde_client.logout(redirect_to=Config.Kinde.LOGOUT_URL)
     return {"logout_url": logout_url}
 
 @v2.get("/user")

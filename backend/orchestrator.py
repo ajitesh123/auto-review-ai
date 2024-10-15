@@ -2,16 +2,11 @@ import yaml
 from backend.review import generate_review as generate_review_v1
 from backend.self_review import generate_self_review as generate_self_review_v1
 from backend.llm import AnthropicLLM, GroqLLM, GoogleLLM
+from backend.config import Config
 
-
-def load_config():
-    with open('backend/config.yaml', 'r') as file:
-        return yaml.safe_load(file)
-
-CONFIG = load_config()
 
 def get_api_key(service):
-    return CONFIG['api_keys'].get(service)
+    return getattr(Config.APIKeys, service.upper(), None)
 
 def get_llm_config(is_paid, service):
     if is_paid:
