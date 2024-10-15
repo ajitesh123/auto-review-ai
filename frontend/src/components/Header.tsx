@@ -6,9 +6,12 @@ import { NAV_LINKS } from '@constants/links';
 import { TextButton } from '@components/ui/button';
 import { useAppContext } from '@contexts/AppContext';
 import { isPerfReviewType } from '@constants/common';
+import { login, logout, register } from '@services/auth';
+import { useRouter } from "next/navigation";
 
 export default function Header() {
   const { reviewType } = useAppContext();
+  const router = useRouter();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -28,6 +31,28 @@ export default function Header() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const handleLogin = async () => {
+    const response = (await login()) as {
+      login_url: string;
+    };
+    
+    router.push(response.login_url);
+
+    // const response = (await register()) as {
+    //   register_url: string;
+    // };
+    
+    // router.push(response.register_url);
+  }
+
+  const hndleLogout = async () => {
+    const response = (await logout()) as {
+      logout_url: string;
+    };
+    
+    router.push(response.logout_url);
+  }
 
   return (
     <header className="bg-neutral-white relative z-10">
@@ -62,8 +87,15 @@ export default function Header() {
               variant={`primary-${
                 isPerfReviewType(reviewType) ? 'perf' : 'self'
               }-review`}
+              onClick={handleLogin}
             >
               {'Login'}
+            </TextButton>
+            <TextButton
+              variant={`secondary`}
+              onClick={hndleLogout}
+            >
+              {'Logout'}
             </TextButton>
           </div>
         </div>
