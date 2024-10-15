@@ -6,6 +6,7 @@ from loguru import logger
 
 v1 = FastAPI()
 
+
 @v1.get("/ping")
 async def ping():
     logger.info("Health endpoint called")

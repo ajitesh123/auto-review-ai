@@ -12,13 +12,20 @@ sys.path.append(project_root)
 
 # Base URL for the FastAPI server
 BASE_URL = "http://localhost:8003/v2"
+#BASE_URL = "https://auto-review-ai-doc-478427299327.us-west4.run.app/v2" #PROD testing
 
 """
 Refresh this token everytime to run the test
 TODO: Automate generation of this token
-"""
-ACCESS_TOKEN = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjM0OjFjOmM5OjVlOjJlOmNmOmE4OmYzOmI3Ojg5OjBmOmY0OjA1OjI2OjkxOjE2IiwidHlwIjoiSldUIn0.eyJhdWQiOltdLCJhenAiOiI5ZDY3Yjg3ODBkNWU0NTJkODM0MDc5N2YyZDJlYThjMyIsImV4cCI6MTcyOTgyNzgzMywiaWF0IjoxNzI4OTYzODMyLCJpc3MiOiJodHRwczovL2FyY2hpZWFpLmtpbmRlLmNvbSIsImp0aSI6ImMxMmYwY2Y0LWJmNzktNGIyYy1iNzQ5LWNlMWYwYjc4YWQ5ZCIsIm9yZ19jb2RlIjoib3JnX2UyZWI2NzE1MzE5IiwicGVybWlzc2lvbnMiOltdLCJzY3AiOlsib3BlbmlkIiwicHJvZmlsZSIsImVtYWlsIiwib2ZmbGluZSJdLCJzdWIiOiJrcF9iNWJkMzI3YmRkOGU0Mjg2OTAzMzk5M2I4NjU4NzBiOCJ9.YbPJDnPEgEfL93Z6gXSrjJruXY0KVWREihWysvBwfPe0SRhtwoadLn_5swLgrMuFQhKru3AI0x2-jaZaEESGb-UX1itYkkuC7VGrEeTggQPxdxclXS2duh1pnwu2Uu0o6kBwcfMavfOsTmk8ppYaX9tC5d4ltW-s1ZpotjmFbFtA_Rry79VgoSaHCSdWlvMzRZYO9-ESFylXteC0xCWwiP4kFikPiG8PAZbjvyOCViai0VeNJ1vyIWsBsVH9kvEDSfI09rX1J8rHkdtBQttkkqd9ds5wBcDmVI6n91Ek28Mkm2HAS8HKuRRTSzHvfT1DSse9AQEuHhzA5Ss8nne5nw"
 
+To fetch access token: 
+1. Prod: curl https://auto-review-ai-doc-478427299327.us-west4.run.app/v2/login
+2. Dev: curl http://localhost:8003/v2/login
+
+"""
+
+ACCESS_TOKEN = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjM0OjFjOmM5OjVlOjJlOmNmOmE4OmYzOmI3Ojg5OjBmOmY0OjA1OjI2OjkxOjE2IiwidHlwIjoiSldUIn0.eyJhdWQiOltdLCJhenAiOiI5ZDY3Yjg3ODBkNWU0NTJkODM0MDc5N2YyZDJlYThjMyIsImV4cCI6MTcyOTg4MDQ5OSwiaWF0IjoxNzI5MDE2NDk5LCJpc3MiOiJodHRwczovL2FyY2hpZWFpLmtpbmRlLmNvbSIsImp0aSI6IjUyMTI1OGNjLWYzOGUtNDAyNC1hNWFjLWM5NmE2OTA2Y2ZjMCIsIm9yZ19jb2RlIjoib3JnX2UyZWI2NzE1MzE5IiwicGVybWlzc2lvbnMiOltdLCJzY3AiOlsib3BlbmlkIiwicHJvZmlsZSIsImVtYWlsIiwib2ZmbGluZSJdLCJzdWIiOiJrcF9iNWJkMzI3YmRkOGU0Mjg2OTAzMzk5M2I4NjU4NzBiOCJ9.PstQ035gZaUqEB1PsFIG7bmsEHWV8-Z3sH_HhWijfpd2_R-c5wri22nEcrCPJQQmVZIkLZ-UUxyR4SvmuosasuPux4zKYuUM-oWK1PPEPMkp2UK5ICfH9p225Qzl8t-_kfwjtVfxjNyRzpNcuF01jKy2kZwkQhPt8s7oY5ADq22pEGi1Sj7Uo-RSBPNxHyMf4bAqqDtFcOpJ6ogYMEatdN5QRMTzqV0-ixzuJEFPYDDCBTdRcl_ScVgDTQI5eb3kMMqmouMszFAoq7eaECrfkoIJDlZVqoD4TaDXHjPN32qeuk_fDF6B3CDAY4-joo0aCs07gAC-sva0LS9W8cN9JA"
+        
 def test_server_home():
     """Test the /ping endpoint."""
     response = requests.get(f"{BASE_URL}")
@@ -114,9 +121,7 @@ def test_transcribe_audio():
 if __name__ == "__main__":
     test_server_home()
     test_generate_review()
-    # print("\n" + "-"*50 + "\n")
     test_generate_self_review()
-    # print("\n" + "-"*50 + "\n")
     test_transcribe_audio()
 
 #path: backend/tests/app_fastapi_v2.py
