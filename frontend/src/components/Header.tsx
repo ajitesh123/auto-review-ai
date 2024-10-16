@@ -46,7 +46,7 @@ export default function Header() {
     // router.push(response.register_url);
   }
 
-  const hndleLogout = async () => {
+  const handleLogout = async () => {
     const response = (await logout()) as {
       logout_url: string;
     };
@@ -93,7 +93,7 @@ export default function Header() {
             </TextButton>
             <TextButton
               variant={`secondary`}
-              onClick={hndleLogout}
+              onClick={handleLogout}
             >
               {'Logout'}
             </TextButton>
