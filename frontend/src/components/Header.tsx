@@ -1,16 +1,16 @@
 'use client';
 
 import React, { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 import { NAV_LINKS } from '@constants/links';
 import { TextButton } from '@components/ui/button';
 import { useAppContext } from '@contexts/AppContext';
 import { isPerfReviewType } from '@constants/common';
 import { login, logout, register } from '@services/auth';
-import { useRouter } from "next/navigation";
 
 export default function Header() {
-  const { reviewType } = useAppContext();
+  const { reviewType, accessToken } = useAppContext();
   const router = useRouter();
 
   useEffect(() => {
@@ -36,23 +36,17 @@ export default function Header() {
     const response = (await login()) as {
       login_url: string;
     };
-    
+    // login redirection
     router.push(response.login_url);
-
-    // const response = (await register()) as {
-    //   register_url: string;
-    // };
-    
-    // router.push(response.register_url);
-  }
+  };
 
   const handleLogout = async () => {
     const response = (await logout()) as {
       logout_url: string;
     };
-    
+    console.log('logout url ', response.logout_url);
     router.push(response.logout_url);
-  }
+  };
 
   return (
     <header className="bg-neutral-white relative z-10">
@@ -83,20 +77,20 @@ export default function Header() {
                 </li>
               </ul>
             </div>
-            <TextButton
-              variant={`primary-${
-                isPerfReviewType(reviewType) ? 'perf' : 'self'
-              }-review`}
-              onClick={handleLogin}
-            >
-              {'Login'}
-            </TextButton>
-            <TextButton
-              variant={`secondary`}
-              onClick={handleLogout}
-            >
-              {'Logout'}
-            </TextButton>
+            {!accessToken ? (
+              <TextButton
+                variant={`primary-${
+                  isPerfReviewType(reviewType) ? 'perf' : 'self'
+                }-review`}
+                onClick={handleLogin}
+              >
+                {'Login'}
+              </TextButton>
+            ) : (
+              <TextButton variant={`secondary`} onClick={handleLogout}>
+                {'Logout'}
+              </TextButton>
+            )}
           </div>
         </div>
       </nav>

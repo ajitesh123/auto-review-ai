@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException, UploadFile, File, Form, Depends, status, Response
 from fastapi.security import OAuth2AuthorizationCodeBearer
 from fastapi.responses import RedirectResponse
+from urllib.parse import urlencode
 from pydantic import BaseModel
 from typing import List, Optional
 from backend.llm import GroqLLM
@@ -92,8 +93,15 @@ async def callback(code: str, state: str):
         # Redirect to a success page or dashboard
         logger.info(f"Access token: {kinde_configuration.access_token}")
         logger.info(f"User details: {kinde_client.get_user_details()}")
+        logger.info(f"Callback called with FE url {Config.FRONTEND_BASE_URL}/login/callback")
         # logger.info("Now redirecting to /dashboard")
-        return RedirectResponse(url="http://localhost:3000")
+        params = {
+            "token": kinde_configuration.access_token,
+            "user": kinde_client.get_user_details(),
+            "route": "home"
+        }
+        query_string = urlencode(params)
+        return RedirectResponse(url=f"{Config.FRONTEND_BASE_URL}/login/callback/?{query_string}")
         # return {"message": "Callback successful"}
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Authentication failed: {str(e)}")
@@ -105,7 +113,13 @@ async def dashboard(current_user: dict = Depends(get_current_user)):
 @v2.get("/logout")
 async def logout():
     logout_url = kinde_client.logout(redirect_to=Config.Kinde.LOGOUT_URL)
+    logger.info(f"Logout url token: {logout_url}")
     return {"logout_url": logout_url}
+
+@v2.get("/callback-logout")
+async def callback_logout():
+    logger.info(f"Callback logout called ")
+    return RedirectResponse(url=f"{Config.FRONTEND_BASE_URL}/logout/callback")
 
 @v2.get("/user")
 async def get_user(current_user: dict = Depends(get_current_user)):

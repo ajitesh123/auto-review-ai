@@ -1,6 +1,5 @@
 import axiosInstance from './axiosInstance';
 
-
 // Function to login
 export const login = async () => {
   try {
@@ -31,5 +30,15 @@ export const logout = async () => {
   } catch (error) {
     console.error('Error fetching logout url:', error);
     throw error;
+  }
+};
+
+// Function to check isAuthenticated
+export const isAuthenticated = async () => {
+  try {
+    const response = await axiosInstance.get('/is_authenticated');
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching is_authenticated status:', error);
   }
 };
