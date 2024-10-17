@@ -9,17 +9,14 @@ const axiosInstance = axios.create({
   },
 });
 
-// Optional: Set up rewuest interceptor to handle authentication
-/**
- * Uncomment when needed
+// Optional: Set up request interceptor to handle authentication
 axiosInstance.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('perf_review_token');
   if (token && config && config.headers) {
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
 });
-*/
 
 // Optional: Set up response interceptor to handle errors globally
 axiosInstance.interceptors.response.use(

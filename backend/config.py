@@ -12,6 +12,9 @@ class Config:
     # Development
     NEXT_PUBLIC_API_BASE_URL_DEV = os.getenv("NEXT_PUBLIC_API_BASE_URL_DEV")
 
+    # Frontend base url
+    FRONTEND_BASE_URL=os.getenv("FRONTEND_BASE_URL")
+
     # API Keys
     class APIKeys:
         OPENAI = os.getenv("OPENAI_API_KEY")
