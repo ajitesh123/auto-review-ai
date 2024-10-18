@@ -1,8 +1,9 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ReviewType } from '@constants/common';
 import { createContext, useContext, useState, ReactNode } from 'react';
+import type { User } from '../types/user';
 
 // Define the context shape
 interface AppContextType {
@@ -14,32 +15,35 @@ interface AppContextType {
   setUser: (newKeyValue: User) => void;
 }
 
-interface User {
-  id: string;
-  given_name: string;
-  family_name: string;
-  email: string;
-  picture: string;
-}
-
 // Create the context
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 // Create the provider component
 export function AppProvider({ children }: { children: ReactNode }) {
-  const token = localStorage.getItem('perf_review_token') || '';
-  const id = localStorage.getItem('user_id');
-  const given_name = localStorage.getItem('given_name');
-  const family_name = localStorage.getItem('family_name');
-  const email = localStorage.getItem('email');
-  const picture = localStorage.getItem('picture');
-  const user = { id, given_name, family_name, email, picture };
-
   const [state, setState] = useState({
     reviewType: ReviewType.perfReview,
-    accessToken: token,
-    user: user as User,
+    accessToken: '',
+    user: {} as User,
   });
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const token = localStorage.getItem('perf_review_token') || '';
+        const id = localStorage.getItem('user_id') || '';
+        const given_name = localStorage.getItem('given_name') || '';
+        const family_name = localStorage.getItem('family_name') || '';
+        const email = localStorage.getItem('email') || '';
+        const picture = localStorage.getItem('picture') || '';
+        const user = { id, given_name, family_name, email, picture };
+
+        setAccessToken(token);
+        setUser(user);
+      } catch (e) {
+        console.log('error ', e);
+      }
+    }
+  }, []);
 
   // Function to update the reviewType
   const updateReviewType = (reviewType: string) => {

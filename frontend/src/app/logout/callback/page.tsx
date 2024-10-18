@@ -2,7 +2,10 @@
 
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAppContext } from '@contexts/AppContext';
+
+// relative imports are used, facing some issues with absolute imports
+import { useAppContext } from '../../../contexts/AppContext';
+import type { User } from '../../../types/user';
 
 export default function LogoutCallback() {
   const { setAccessToken, setUser } = useAppContext();
@@ -19,7 +22,7 @@ export default function LogoutCallback() {
 
     // removing data from context api
     setAccessToken('');
-    setUser({});
+    setUser({} as User);
 
     router.push('/');
   }, []);

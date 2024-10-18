@@ -2,19 +2,10 @@
 
 import React, { useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useAppContext } from '@contexts/AppContext';
-
-interface User {
-  [x: string]: any;
-  id: string;
-  given_name: string;
-  family_name: string;
-  email: string;
-  picture: string;
-}
+import { useAppContext } from '../../../contexts/AppContext';
 
 export default function LoginCallback() {
-  const { accessToken, setAccessToken, user, setUser } = useAppContext();
+  const { accessToken, setAccessToken, setUser } = useAppContext();
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -48,6 +39,7 @@ export default function LoginCallback() {
     localStorage.setItem('picture', userDetails['picture']);
 
     setAccessToken(token);
+    setUser(userDetails);
     router.push('/');
   }, []);
 
