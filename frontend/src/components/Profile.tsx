@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 import { SvgIcon } from '@components/ui/svg-icon';
 import Logout from '@assets/icons/logout.svg';
@@ -63,13 +64,16 @@ export default function Profile({ user }: ProfileProps) {
             <div
               ref={trigger}
               onClick={() => setDropdownOpen(!dropdownOpen)}
-              className="cursor-pointer relative aspect-square w-11 rounded-full"
+              className="cursor-pointer relative w-12 lg:w-14 h-12 lg:h-14 rounded-full overflow-hidden border-2 border-gray-900"
             >
-              <img
-                // src={user.picture}
-                src="https://cdn.tailgrids.com/2.2/assets/core-components/images/account-dropdowns/image-1.jpg"
-                alt="profile picture"
-                className="w-full rounded-full object-cover object-center"
+              <Image
+                src={user.picture}
+                // src="https://cdn.tailgrids.com/2.2/assets/core-components/images/account-dropdowns/image-1.jpg"
+                alt="profile image"
+                width={12}
+                height={12}
+                loading={'lazy'}
+                className="w-full h-full object-cover object-center"
               />
             </div>
             <div
