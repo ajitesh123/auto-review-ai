@@ -1,14 +1,18 @@
 'use client';
 
 import React, { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 import { NAV_LINKS } from '@constants/links';
 import { TextButton } from '@components/ui/button';
+import Profile from '@components/Profile';
 import { useAppContext } from '@contexts/AppContext';
 import { isPerfReviewType } from '@constants/common';
+import { login } from '@services/auth';
 
 export default function Header() {
-  const { reviewType } = useAppContext();
+  const { reviewType, accessToken, user, isAuthorizing } = useAppContext();
+  const router = useRouter();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -29,6 +33,14 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const handleLogin = async () => {
+    const response = (await login()) as {
+      login_url: string;
+    };
+    // login redirection
+    router.push(response.login_url);
+  };
+
   return (
     <header className="bg-neutral-white relative z-10">
       <nav className="fixed w-full z-20 top-0 start-0">
@@ -41,31 +53,40 @@ export default function Header() {
               Perf Review AI
             </span>
           </a>
-          <div className="flex flex-wrap items-center gap-3 md:gap-6">
-            <div
-              className="items-center justify-between  flex w-auto"
-              id="navbar-sticky"
-            >
-              <ul className="flex flex-row p-0 font-normal gap-3 md:gap-6 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0">
-                <li className="hidden md:block">
-                  <a
-                    href={NAV_LINKS.Pricing}
-                    target="_blank"
-                    className="block rounded text-gray-300 md:hover:text-white"
+          {!isAuthorizing && (
+            <div className="flex flex-wrap items-center gap-3 md:gap-6">
+              {!accessToken ? (
+                <>
+                  <div
+                    className="items-center justify-between flex w-auto"
+                    id="navbar-sticky"
                   >
-                    Pricing
-                  </a>
-                </li>
-              </ul>
+                    <ul className="flex flex-row p-0 font-normal gap-3 md:gap-6 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0">
+                      <li className="hidden md:block">
+                        <a
+                          href={NAV_LINKS.Pricing}
+                          target="_blank"
+                          className="block rounded text-gray-300 md:hover:text-white"
+                        >
+                          Pricing
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                  <TextButton
+                    variant={`primary-${
+                      isPerfReviewType(reviewType) ? 'perf' : 'self'
+                    }-review`}
+                    onClick={handleLogin}
+                  >
+                    {'Login'}
+                  </TextButton>
+                </>
+              ) : (
+                <Profile user={user} />
+              )}
             </div>
-            <TextButton
-              variant={`primary-${
-                isPerfReviewType(reviewType) ? 'perf' : 'self'
-              }-review`}
-            >
-              {'Login'}
-            </TextButton>
-          </div>
+          )}
         </div>
       </nav>
     </header>

@@ -12,6 +12,7 @@ import Mic from '@assets/icons/mic.svg';
 import Stop from '@assets/icons/stop.svg';
 import Play from '@assets/icons/play.svg';
 import Pause from '@assets/icons/pause.svg';
+import { useFlashMessage } from '@components/ui/flash-messages';
 
 interface WaveSurferColors {
   wave: string;
@@ -36,7 +37,8 @@ const isAudioRecording = (status: string) => {
 };
 
 const AudioInput = ({ paramsWhenKeysNeeded, onTranscriptionReceived }: any) => {
-  const { reviewType } = useAppContext();
+  const { addInfoMessage, addFailureMessage } = useFlashMessage();
+  const { reviewType, accessToken } = useAppContext();
   const [transcription, setTranscription] = useState<string>(''); // New state for transcription
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
@@ -50,14 +52,20 @@ const AudioInput = ({ paramsWhenKeysNeeded, onTranscriptionReceived }: any) => {
   const transcribeAudio = useCallback(
     async (audioBlob: Blob) => {
       if (!audioBlob) {
-        alert('Please provide an audio recording.');
+        addFailureMessage({
+          message: 'Please provide an audio recording.',
+          autoClose: false,
+        });
         return '';
       }
       if (
         !isBlankObject(paramsWhenKeysNeeded) &&
         !paramsWhenKeysNeeded?.groqApiKey
       ) {
-        alert('Please provide Groq API key.');
+        addFailureMessage({
+          message: 'Please provide Groq API key.',
+          autoClose: false,
+        });
         return '';
       }
 
@@ -96,11 +104,15 @@ const AudioInput = ({ paramsWhenKeysNeeded, onTranscriptionReceived }: any) => {
           console.error('Unexpected error:', error);
         }
         setTranscription('Unable to transcribe text');
+        addFailureMessage({
+          message: 'Error in transcribing audio',
+          autoClose: false,
+        });
       } finally {
         setIsLoading(false);
       }
     },
-    [paramsWhenKeysNeeded, onTranscriptionReceived]
+    [paramsWhenKeysNeeded, onTranscriptionReceived, addFailureMessage]
   );
 
   // media recorder
@@ -116,9 +128,13 @@ const AudioInput = ({ paramsWhenKeysNeeded, onTranscriptionReceived }: any) => {
   const isRecording = isAudioRecording(status);
 
   const handleStartRecording = useCallback(() => {
+    if (!accessToken) {
+      addInfoMessage({ message: 'Please login to use this feature' });
+      return;
+    }
     startRecording();
     setBlobUrl('');
-  }, [setBlobUrl, startRecording]);
+  }, [setBlobUrl, startRecording, accessToken, addInfoMessage]);
 
   useEffect(() => {
     // Get the root element (:root in CSS)
