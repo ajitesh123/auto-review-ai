@@ -3,6 +3,7 @@ import dynamic from 'next/dynamic';
 import { generateSelfReview } from '@services/review';
 import { isBlankObject } from '@utils/object';
 import { TextButton } from '@components/ui/button';
+import { useFlashMessage } from '@components/ui/flash-messages';
 
 const AudioInputComponent = dynamic(() => import('./AudioInput'), {
   ssr: false,
@@ -22,6 +23,7 @@ const SelfReview = ({
   paramsWhenKeysNeeded,
   onReviewResultsReceived,
 }: SelfReviewProps) => {
+  const { addFailureMessage } = useFlashMessage();
   const [formState, setFormState] = useState({
     textDump: '',
     questions: '',
@@ -75,9 +77,10 @@ const SelfReview = ({
       onReviewResultsReceived(response.self_review);
     } catch (error: any) {
       console.error('Error generating self-review:', error);
-      alert(
-        error?.message || 'An error occurred while generating the self review.'
-      );
+
+      const errMsg =
+        error?.message || 'An error occurred while generating the self review.';
+      addFailureMessage({ message: errMsg, autoClose: false });
     } finally {
       setIsLoading(false);
     }
@@ -85,7 +88,7 @@ const SelfReview = ({
 
   return (
     <section className="relative isolate px-6 py-4 lg:py-8 lg:px-8 widget-animate animate in-view">
-      <div className="flex flex-col mx-auto max-w-5xl justify-between gap-8 border-secondary items-center rounded-xl border bg-zinc-800 p-6 sm:p-12 sm:px-12  dark:bg-zinc-900">
+      <div className="flex flex-col shadow-2xl mx-auto max-w-5xl justify-between gap-8 border-secondary items-center rounded-xl border bg-zinc-800 p-6 sm:p-12 sm:px-12  dark:bg-zinc-900">
         <div className="w-full">
           <label className="block text-milk text-sm font-medium mb-2">
             Text Dump (information about your performance)
