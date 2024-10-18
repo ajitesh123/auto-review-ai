@@ -11,7 +11,7 @@ import { isPerfReviewType } from '@constants/common';
 import { login } from '@services/auth';
 
 export default function Header() {
-  const { reviewType, accessToken, user } = useAppContext();
+  const { reviewType, accessToken, user, isAuthorizing } = useAppContext();
   const router = useRouter();
 
   useEffect(() => {
@@ -53,38 +53,40 @@ export default function Header() {
               Perf Review AI
             </span>
           </a>
-          <div className="flex flex-wrap items-center gap-3 md:gap-6">
-            {!accessToken ? (
-              <>
-                <div
-                  className="items-center justify-between  flex w-auto"
-                  id="navbar-sticky"
-                >
-                  <ul className="flex flex-row p-0 font-normal gap-3 md:gap-6 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0">
-                    <li className="hidden md:block">
-                      <a
-                        href={NAV_LINKS.Pricing}
-                        target="_blank"
-                        className="block rounded text-gray-300 md:hover:text-white"
-                      >
-                        Pricing
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-                <TextButton
-                  variant={`primary-${
-                    isPerfReviewType(reviewType) ? 'perf' : 'self'
-                  }-review`}
-                  onClick={handleLogin}
-                >
-                  {'Login'}
-                </TextButton>
-              </>
-            ) : (
-              <Profile user={user} />
-            )}
-          </div>
+          {!isAuthorizing && (
+            <div className="flex flex-wrap items-center gap-3 md:gap-6">
+              {!accessToken ? (
+                <>
+                  <div
+                    className="items-center justify-between flex w-auto"
+                    id="navbar-sticky"
+                  >
+                    <ul className="flex flex-row p-0 font-normal gap-3 md:gap-6 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0">
+                      <li className="hidden md:block">
+                        <a
+                          href={NAV_LINKS.Pricing}
+                          target="_blank"
+                          className="block rounded text-gray-300 md:hover:text-white"
+                        >
+                          Pricing
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                  <TextButton
+                    variant={`primary-${
+                      isPerfReviewType(reviewType) ? 'perf' : 'self'
+                    }-review`}
+                    onClick={handleLogin}
+                  >
+                    {'Login'}
+                  </TextButton>
+                </>
+              ) : (
+                <Profile user={user} />
+              )}
+            </div>
+          )}
         </div>
       </nav>
     </header>

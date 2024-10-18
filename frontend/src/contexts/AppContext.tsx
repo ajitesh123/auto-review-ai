@@ -13,6 +13,7 @@ interface AppContextType {
   setAccessToken: (newKeyValue: string) => void;
   user: User;
   setUser: (newKeyValue: User) => void;
+  isAuthorizing: boolean;
 }
 
 // Create the context
@@ -24,6 +25,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     reviewType: ReviewType.perfReview,
     accessToken: '',
     user: {} as User,
+    isAuthorizing: true, //setting initial value as true
   });
 
   useEffect(() => {
@@ -41,6 +43,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
         setUser(user);
       } catch (e) {
         console.log('error ', e);
+      } finally {
+        setIsAuthorizing(false);
       }
     }
   }, []);
@@ -67,6 +71,13 @@ export function AppProvider({ children }: { children: ReactNode }) {
     }));
   };
 
+  const setIsAuthorizing = (isAuthorizing: boolean) => {
+    setState((prevState) => ({
+      ...prevState,
+      isAuthorizing,
+    }));
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -76,6 +87,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         setAccessToken,
         user: state.user,
         setUser,
+        isAuthorizing: state.isAuthorizing,
       }}
     >
       {children}
