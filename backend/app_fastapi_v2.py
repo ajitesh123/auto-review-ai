@@ -24,7 +24,7 @@ from backend.db.operations import (
     create_review
 )
 from backend.models.user import User, Review
-from backend.tests.test_data.test_review_data import TEST_DATA_REVIEW
+from tests_backend.test_data.test_review_data import TEST_DATA_REVIEW
 
 v2 = FastAPI()
 
