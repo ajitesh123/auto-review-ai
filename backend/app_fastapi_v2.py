@@ -216,6 +216,7 @@ async def get_user_details(current_user: dict = Depends(get_current_user)):
         logger.error(f"Error fetching or creating user details for user {current_user['id']}: {e}")
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to fetch or create user details.")
 
+
 """
 Some other useful settings from Kindle Dashboard:
 - To use own signup/login screen: go to "Details" and select "user your own signup/login screen"

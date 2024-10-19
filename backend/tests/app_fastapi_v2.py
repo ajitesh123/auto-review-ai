@@ -121,6 +121,8 @@ def test_transcribe_audio():
         assert len(response_json["transcribed_text"]) > 0, "Transcribed text is empty"
 
 if __name__ == "__main__":
+    # Refresh the access token before running tests
+    ACCESS_TOKEN = get_access_token()
     test_server_home()
     test_generate_review()
     test_generate_self_review()
