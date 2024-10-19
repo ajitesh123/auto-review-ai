@@ -62,6 +62,7 @@ hyperframe==6.0.1
 idna==3.10
 importlib_metadata==8.4.0
 importlib_resources==6.4.5
+iniconfig==2.0.0
 invoke==1.7.3
 jaraco.classes==3.4.0
 jaraco.context==6.0.1
@@ -100,6 +101,7 @@ packaging==23.2
 pandas==2.2.3
 pillow==10.4.0
 pkginfo==1.11.2
+pluggy==1.5.0
 postgrest==0.10.7
 propcache==0.2.0
 proto-plus==1.24.0
@@ -118,6 +120,7 @@ PyJWT==2.8.0
 pymongo==4.9.2
 pyparsing==3.1.4
 PySocks==1.7.1
+pytest==8.3.3
 python-dateutil==2.9.0.post0
 python-dotenv==1.0.1
 python-gitlab==3.15.0
