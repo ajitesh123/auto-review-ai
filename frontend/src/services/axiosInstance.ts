@@ -1,4 +1,5 @@
 import axios from 'axios';
+import Router from 'next/router';
 
 // Create an Axios instance for client-side API calls
 const axiosInstance = axios.create({
@@ -23,6 +24,13 @@ axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response) {
+      if (typeof window !== 'undefined') {
+        // Client-side only: check for a 401 status code
+        if (error.status === 401) {
+          // Redirect using window.location to the logout callback page
+          window.location.href = '/logout/callback';
+        }
+      }
       console.error('API Error Response:', error.response);
     } else if (error.request) {
       console.error('No Response from API:', error.request);
