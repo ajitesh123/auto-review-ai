@@ -1,7 +1,27 @@
 import React from 'react';
+import { isPerfReviewType } from '@constants/common';
+
+const GradientColor = {
+  perfReview: {
+    fromColor: '#ff80b5',
+    toColor: '#9089fc',
+  },
+  selfReview: {
+    fromColor: '#bbf7d0',
+    toColor: '#166534',
+  },
+};
 
 const GradientBackground = React.memo(
-  ({ fromColor, toColor }: { fromColor: string; toColor: string }) => {
+  ({ reviewType }: { reviewType: string }) => {
+    const fromColor = isPerfReviewType(reviewType)
+      ? GradientColor.perfReview.fromColor
+      : GradientColor.selfReview.fromColor;
+
+    const toColor = isPerfReviewType(reviewType)
+      ? GradientColor.perfReview.toColor
+      : GradientColor.selfReview.toColor;
+
     const gradientStyle = React.useMemo(
       () => ({
         backgroundImage: `linear-gradient(to right, ${fromColor}, ${toColor})`,

@@ -48,16 +48,16 @@ export const Switch = ({
   const backgroundClassNames = buildClassNames(
     'rounded-full absolute left-[5%] top-[10%] w-[90%] h-4/5 z-[-1]',
     checked
-      ? 'bg-teal-500' // for self review theme
-      : 'bg-violet-600' // for perf review theme
+      ? 'bg-selfReview-600' // for self review theme
+      : 'bg-perfReview-600' // for perf review theme
   );
 
   const pointerClassNames = buildClassNames(
     'w-1/2 h-full bg-milk flex items-center justify-center',
     'border rounded-full transition duration-200 ease-in-out hover:shadow-[0_0_0_2px]',
     checked
-      ? 'rtl:-translate-x-full translate-x-full border-azure hover:shadow-azure/50'
-      : 'border-elephant-400 hover:shadow-elephant-400/50',
+      ? 'rtl:-translate-x-full translate-x-full border-selfReview-400 hover:shadow-sfShadowColor-400/50'
+      : 'border-perfReview-400 hover:shadow-pfShadowColor-400/50',
     disabled ? 'hover:shadow-none' : ''
   );
 

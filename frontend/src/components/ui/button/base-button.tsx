@@ -23,12 +23,12 @@ const colorConfigs: Record<Variant, ColorConfig> = {
     default: '',
   },
   'primary-perf-review': {
-    default: 'border bg-violet-500 hover:bg-violet-600 text-milk',
-    disabled: 'bg-violet-600 opacity-70 text-gray-400',
+    default: 'border bg-perfReview-500 hover:bg-perfReview-600 text-milk',
+    disabled: 'bg-perfReview-600 opacity-70 text-gray-400',
   },
   'primary-self-review': {
-    default: 'border bg-teal-500 hover:bg-teal-600 text-milk',
-    disabled: 'bg-teal-600 opacity-70 text-gray-400',
+    default: 'border bg-selfReview-500 hover:bg-selfReview-600 text-milk',
+    disabled: 'bg-selfReview-600 opacity-70 text-gray-400',
   },
   secondary: {
     default: 'border border-gray-500 hover:bg-neutral-800 text-milk',
