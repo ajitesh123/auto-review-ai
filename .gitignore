@@ -19,7 +19,9 @@ myenv2/
 htmlcov/
 backend/__pycache__/
 config.yaml
-
+*.pyc
+*.pyo
+*.pyd
 # ===============================
 # FastAPI
 # ===============================

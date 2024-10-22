@@ -26,7 +26,7 @@ To fetch access token:
 
 """
 
-ACCESS_TOKEN = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjM0OjFjOmM5OjVlOjJlOmNmOmE4OmYzOmI3Ojg5OjBmOmY0OjA1OjI2OjkxOjE2IiwidHlwIjoiSldUIn0.eyJhdWQiOltdLCJhenAiOiI5ZDY3Yjg3ODBkNWU0NTJkODM0MDc5N2YyZDJlYThjMyIsImV4cCI6MTczMDA5ODUzNywiaWF0IjoxNzI5MjM0NTM3LCJpc3MiOiJodHRwczovL2FyY2hpZWFpLmtpbmRlLmNvbSIsImp0aSI6IjcxMjI2YTY3LTI0YTEtNGUzOS1iMTQ3LWM0NzZlN2JhYTMxNyIsIm9yZ19jb2RlIjoib3JnX2UyZWI2NzE1MzE5IiwicGVybWlzc2lvbnMiOltdLCJzY3AiOlsib3BlbmlkIiwicHJvZmlsZSIsImVtYWlsIiwib2ZmbGluZSJdLCJzdWIiOiJrcF9iNWJkMzI3YmRkOGU0Mjg2OTAzMzk5M2I4NjU4NzBiOCJ9.nXiTYGvkNMEGXn4FPTmvqxUCPK9tnmLo3oHtUI1_vBdNTfB3L1XsbHZh0WaxujGkuQomzuZVL1LtXXLE9-XUPuC_nZqjreNwxUcVH2p6XHKYGPHN0NSkc_k3bKJfrsNxTIX6CrwBS1fMd9-62JOgIvd9iik1oXET51-8ssHSMT70LYWVGfNupZ8nPMXfjjkgBsvwliYRLwzhhlkZKAfYsjyVBoXTILdPJKvtRUQthVUqPtv11asDBNrwa_84mrJ-gC4zyKW1kXppkeqoNeKzLBuThoEiPixUPi2jvetFJFP5IPCeH0DVSEUBr_984UInZ9Bg5FBZVJR7U10vg8iuRg"
+ACCESS_TOKEN = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjM0OjFjOmM5OjVlOjJlOmNmOmE4OmYzOmI3Ojg5OjBmOmY0OjA1OjI2OjkxOjE2IiwidHlwIjoiSldUIn0.eyJhdWQiOltdLCJhenAiOiI5ZDY3Yjg3ODBkNWU0NTJkODM0MDc5N2YyZDJlYThjMyIsImV4cCI6MTczMDQ4NDk1NiwiaWF0IjoxNzI5NjIwOTU2LCJpc3MiOiJodHRwczovL2FyY2hpZWFpLmtpbmRlLmNvbSIsImp0aSI6ImJlN2M2YTExLTAyMjMtNGIwNy1hZTg1LTJjNGE1OWMzMDg0NyIsIm9yZ19jb2RlIjoib3JnX2UyZWI2NzE1MzE5IiwicGVybWlzc2lvbnMiOltdLCJzY3AiOlsib3BlbmlkIiwicHJvZmlsZSIsImVtYWlsIiwib2ZmbGluZSJdLCJzdWIiOiJrcF9iNWJkMzI3YmRkOGU0Mjg2OTAzMzk5M2I4NjU4NzBiOCJ9.CJPPIeZKCxP9b9RQmVf1tZzLFryD0iPcbW4Yw6xEwDidaohYLfkGJi3uh2H6wFyeKR2IVZp0y7e3fNo8QzmToFMgJkTo51Ve_mtXuCguZSx9zfCeFxLybbsoyn2C3MCFD7XCBdPO277rXmbpheIncFdLZGwfdEDakulgdh0B5oqFoigejIqSBtwy010Kp4K2mV8ZU66aYKcG9xWtpxkQL4pq89rT2vUYRBctTndOfBNvqXOMtd9y57ENSt3ErQ-Oqk6YWpndTerfBdefBLsSPqfTQTq2GQ8q80jpjaZ_Cfdk2iEdATAykfBjNp7Fmf3sCV_pi8x8J7XnqDJZinY15w"
         
 def test_server_home():
     """Test the /ping endpoint."""
@@ -94,7 +94,7 @@ def test_transcribe_audio():
     url = f"{BASE_URL}/transcribe_audio"
     
     # Path to the audio file
-    audio_file_path = "backend/tests/test_data/file_example_MP3_700KB.mp3"
+    audio_file_path = "tests_backend/test_data/file_example_MP3_700KB.mp3"
     
     # Prepare the files for the request
     with open(audio_file_path, 'rb') as audio_file:
@@ -122,10 +122,9 @@ def test_transcribe_audio():
 
 if __name__ == "__main__":
     # Refresh the access token before running tests
-    ACCESS_TOKEN = get_access_token()
     test_server_home()
     test_generate_review()
     test_generate_self_review()
     test_transcribe_audio()
 
-#path: backend/tests/app_fastapi_v2.py
+#path: tests_backend/app_fastapi_v2.py
