@@ -9,6 +9,7 @@ import AppIntro from './home/AppIntro';
 import PerformanceReview from './home/PerformanceReview';
 import SelfReview from './home/SelfReview';
 import ReviewResults from './home/ReviewResults';
+import Pricing from '@components/Pricing';
 
 interface ReviewItem {
   question: string;
@@ -80,6 +81,8 @@ export default function Home() {
       {!isEmptyArray(reviewResults) && (
         <ReviewResults reviews={reviewResults} />
       )}
+
+      <Pricing />
     </div>
   );
 }
