@@ -1,4 +1,5 @@
 import plugin from 'tailwindcss/plugin';
+import colors from 'tailwindcss/colors';
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -9,6 +10,8 @@ module.exports = {
         border: 'hsl(var(--border))',
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
+
+        cardBg: colors.zinc,
 
         transparent: 'transparent',
         milk: '#fff',
