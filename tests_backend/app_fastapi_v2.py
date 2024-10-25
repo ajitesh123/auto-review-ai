@@ -26,7 +26,7 @@ To fetch access token:
 
 """
 
-ACCESS_TOKEN = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjM0OjFjOmM5OjVlOjJlOmNmOmE4OmYzOmI3Ojg5OjBmOmY0OjA1OjI2OjkxOjE2IiwidHlwIjoiSldUIn0.eyJhdWQiOltdLCJhenAiOiI5ZDY3Yjg3ODBkNWU0NTJkODM0MDc5N2YyZDJlYThjMyIsImV4cCI6MTczMDQ4NDk1NiwiaWF0IjoxNzI5NjIwOTU2LCJpc3MiOiJodHRwczovL2FyY2hpZWFpLmtpbmRlLmNvbSIsImp0aSI6ImJlN2M2YTExLTAyMjMtNGIwNy1hZTg1LTJjNGE1OWMzMDg0NyIsIm9yZ19jb2RlIjoib3JnX2UyZWI2NzE1MzE5IiwicGVybWlzc2lvbnMiOltdLCJzY3AiOlsib3BlbmlkIiwicHJvZmlsZSIsImVtYWlsIiwib2ZmbGluZSJdLCJzdWIiOiJrcF9iNWJkMzI3YmRkOGU0Mjg2OTAzMzk5M2I4NjU4NzBiOCJ9.CJPPIeZKCxP9b9RQmVf1tZzLFryD0iPcbW4Yw6xEwDidaohYLfkGJi3uh2H6wFyeKR2IVZp0y7e3fNo8QzmToFMgJkTo51Ve_mtXuCguZSx9zfCeFxLybbsoyn2C3MCFD7XCBdPO277rXmbpheIncFdLZGwfdEDakulgdh0B5oqFoigejIqSBtwy010Kp4K2mV8ZU66aYKcG9xWtpxkQL4pq89rT2vUYRBctTndOfBNvqXOMtd9y57ENSt3ErQ-Oqk6YWpndTerfBdefBLsSPqfTQTq2GQ8q80jpjaZ_Cfdk2iEdATAykfBjNp7Fmf3sCV_pi8x8J7XnqDJZinY15w"
+ACCESS_TOKEN = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjM0OjFjOmM5OjVlOjJlOmNmOmE4OmYzOmI3Ojg5OjBmOmY0OjA1OjI2OjkxOjE2IiwidHlwIjoiSldUIn0.eyJhdWQiOltdLCJhenAiOiI5ZDY3Yjg3ODBkNWU0NTJkODM0MDc5N2YyZDJlYThjMyIsImV4cCI6MTczMDY4NTU4MywiaWF0IjoxNzI5ODIxNTgyLCJpc3MiOiJodHRwczovL2FyY2hpZWFpLmtpbmRlLmNvbSIsImp0aSI6ImM5MDcxYTMzLTdmNWQtNDBiYy05YTZlLTg5ZGY2MTRjMmM1YSIsIm9yZ19jb2RlIjoib3JnX2UyZWI2NzE1MzE5IiwicGVybWlzc2lvbnMiOltdLCJzY3AiOlsib3BlbmlkIiwicHJvZmlsZSIsImVtYWlsIiwib2ZmbGluZSJdLCJzdWIiOiJrcF9iNWJkMzI3YmRkOGU0Mjg2OTAzMzk5M2I4NjU4NzBiOCJ9.GahrgYsq8DKyCN9ZNy55gMpZV7NUSYEox6rj5rboHgXi_6RnFBLf_nUz8tqddoCqlXpflgQFJweKrIIBA1fDASJzb4yVt4BnU6vGNTLYdq8buxswz7_qSYzmI8W0JQ4lj4F0QvhhuEPpxlcdyT8EqLI6Xlqjk61P0MBp4_twfEMASaSGu4yO4w4JXKLLs8PvA48nCQ6UTBUX3MRMM5SSVuczEJY8KUf8hAuYNJJwBoQGF2rF5fGDPLbVnUZ8xipCo_Z56Sy7yh8S2-irRkV1ck7qD2A5PYoF9w-EgP_yAOjHfWy8zkQt2JAnsFO8ONgBp6zwSn8cp4PWIokuYaIKZQ"
         
 def test_server_home():
     """Test the /ping endpoint."""
@@ -44,7 +44,7 @@ def test_generate_review():
         "your_role": "PM",
         "candidate_role": "software developer",
         "your_review": "test - But please generate a detailed OUTPUT FOR TESTING",
-        "is_paid":True
+        "is_paid":False
     }
     headers = {
         "accept": "application/json",
