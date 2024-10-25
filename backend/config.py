@@ -44,9 +44,13 @@ class Config:
     class MongoDB:
         URL = os.getenv("MONGODB_URL")
 
+    class Helicone:
+        API_KEY = os.getenv("HELIECONE_API_KEY")
+
 # Usage example:
 if __name__ == "__main__":
     print(f"OpenAI API Key: {Config.APIKeys.OPENAI}")
     print(f"Logfire Project Name: {Config.Logfire.PROJECT_NAME}")
     print(f"Kinde Domain: {Config.Kinde.DOMAIN}")
     print(f"Supabase URL: {Config.Supabase.URL}")
+    print(f"Helicone API Key: {Config.Helicone.API_KEY}")

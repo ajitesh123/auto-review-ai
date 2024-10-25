@@ -26,7 +26,7 @@ To fetch access token:
 
 """
 
-ACCESS_TOKEN = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjM0OjFjOmM5OjVlOjJlOmNmOmE4OmYzOmI3Ojg5OjBmOmY0OjA1OjI2OjkxOjE2IiwidHlwIjoiSldUIn0.eyJhdWQiOltdLCJhenAiOiI5ZDY3Yjg3ODBkNWU0NTJkODM0MDc5N2YyZDJlYThjMyIsImV4cCI6MTczMDA5ODUzNywiaWF0IjoxNzI5MjM0NTM3LCJpc3MiOiJodHRwczovL2FyY2hpZWFpLmtpbmRlLmNvbSIsImp0aSI6IjcxMjI2YTY3LTI0YTEtNGUzOS1iMTQ3LWM0NzZlN2JhYTMxNyIsIm9yZ19jb2RlIjoib3JnX2UyZWI2NzE1MzE5IiwicGVybWlzc2lvbnMiOltdLCJzY3AiOlsib3BlbmlkIiwicHJvZmlsZSIsImVtYWlsIiwib2ZmbGluZSJdLCJzdWIiOiJrcF9iNWJkMzI3YmRkOGU0Mjg2OTAzMzk5M2I4NjU4NzBiOCJ9.nXiTYGvkNMEGXn4FPTmvqxUCPK9tnmLo3oHtUI1_vBdNTfB3L1XsbHZh0WaxujGkuQomzuZVL1LtXXLE9-XUPuC_nZqjreNwxUcVH2p6XHKYGPHN0NSkc_k3bKJfrsNxTIX6CrwBS1fMd9-62JOgIvd9iik1oXET51-8ssHSMT70LYWVGfNupZ8nPMXfjjkgBsvwliYRLwzhhlkZKAfYsjyVBoXTILdPJKvtRUQthVUqPtv11asDBNrwa_84mrJ-gC4zyKW1kXppkeqoNeKzLBuThoEiPixUPi2jvetFJFP5IPCeH0DVSEUBr_984UInZ9Bg5FBZVJR7U10vg8iuRg"
+ACCESS_TOKEN = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjM0OjFjOmM5OjVlOjJlOmNmOmE4OmYzOmI3Ojg5OjBmOmY0OjA1OjI2OjkxOjE2IiwidHlwIjoiSldUIn0.eyJhdWQiOltdLCJhenAiOiI5ZDY3Yjg3ODBkNWU0NTJkODM0MDc5N2YyZDJlYThjMyIsImV4cCI6MTczMDY4NTU4MywiaWF0IjoxNzI5ODIxNTgyLCJpc3MiOiJodHRwczovL2FyY2hpZWFpLmtpbmRlLmNvbSIsImp0aSI6ImM5MDcxYTMzLTdmNWQtNDBiYy05YTZlLTg5ZGY2MTRjMmM1YSIsIm9yZ19jb2RlIjoib3JnX2UyZWI2NzE1MzE5IiwicGVybWlzc2lvbnMiOltdLCJzY3AiOlsib3BlbmlkIiwicHJvZmlsZSIsImVtYWlsIiwib2ZmbGluZSJdLCJzdWIiOiJrcF9iNWJkMzI3YmRkOGU0Mjg2OTAzMzk5M2I4NjU4NzBiOCJ9.GahrgYsq8DKyCN9ZNy55gMpZV7NUSYEox6rj5rboHgXi_6RnFBLf_nUz8tqddoCqlXpflgQFJweKrIIBA1fDASJzb4yVt4BnU6vGNTLYdq8buxswz7_qSYzmI8W0JQ4lj4F0QvhhuEPpxlcdyT8EqLI6Xlqjk61P0MBp4_twfEMASaSGu4yO4w4JXKLLs8PvA48nCQ6UTBUX3MRMM5SSVuczEJY8KUf8hAuYNJJwBoQGF2rF5fGDPLbVnUZ8xipCo_Z56Sy7yh8S2-irRkV1ck7qD2A5PYoF9w-EgP_yAOjHfWy8zkQt2JAnsFO8ONgBp6zwSn8cp4PWIokuYaIKZQ"
         
 def test_server_home():
     """Test the /ping endpoint."""
@@ -44,7 +44,7 @@ def test_generate_review():
         "your_role": "PM",
         "candidate_role": "software developer",
         "your_review": "test - But please generate a detailed OUTPUT FOR TESTING",
-        "is_paid":True
+        "is_paid":False
     }
     headers = {
         "accept": "application/json",
@@ -94,7 +94,7 @@ def test_transcribe_audio():
     url = f"{BASE_URL}/transcribe_audio"
     
     # Path to the audio file
-    audio_file_path = "backend/tests/test_data/file_example_MP3_700KB.mp3"
+    audio_file_path = "tests_backend/test_data/file_example_MP3_700KB.mp3"
     
     # Prepare the files for the request
     with open(audio_file_path, 'rb') as audio_file:
@@ -122,10 +122,9 @@ def test_transcribe_audio():
 
 if __name__ == "__main__":
     # Refresh the access token before running tests
-    ACCESS_TOKEN = get_access_token()
     test_server_home()
     test_generate_review()
     test_generate_self_review()
     test_transcribe_audio()
 
-#path: backend/tests/app_fastapi_v2.py
+#path: tests_backend/app_fastapi_v2.py
