@@ -112,13 +112,14 @@ class AnthropicLLM(LLM):
             messages=[{"role": "user", "content": prompt}]
         )
         return response.content[0].text
+    
     def stream_text(self, prompt: str, model: str = "large", **kwargs):
-        model_name = MODEL_MAPPING["anthropic"][model]
+        model_name = self.get_model_name(model)
         messages = [{"role": "user", "content": prompt}]
         with self.client.messages.stream(
             model=model_name,
             temperature=kwargs.get("temperature", 0.0),
-            max_tokens=kwargs.get("max_tokens", 2048),
+            max_tokens=kwargs.get("max_tokens", 4096),
             messages=messages,
         ) as stream:
             for chunk in stream.text_stream:
