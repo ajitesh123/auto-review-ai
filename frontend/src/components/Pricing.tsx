@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useAppContext } from "@contexts/AppContext";
 import GradientBackground from "./GradientBackground";
 import { TextButton } from "./ui/button";
@@ -5,9 +6,49 @@ import TickIcon from '@assets/icons/tick.svg';
 import PopularIcon from '@assets/icons/popular.svg';
 import { SvgIcon } from "./ui/svg-icon";
 import { isPerfReviewType } from "@constants/common";
+import { loadStripe } from "@stripe/stripe-js";
+import { fetchStripeCheckoutSession } from "@services/billing";
+
+const Plans = {
+  BASIC: process.env.NEXT_PUBLIC_STRIPE_BASIC_PLAN,
+  PRO: process.env.NEXT_PUBLIC_STRIPE_PRO_PLAN,
+};
 
 const Pricing = () => {
   const { reviewType } = useAppContext();
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
+
+
+  const buyPlanClick = async (planId = '') => {
+    console.log('buy plan clicked');
+
+    try {
+      setIsCheckingOut(true);
+      const stripe = await loadStripe(
+        process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string,
+      );
+
+      const requestData = {
+        price_id: planId,
+        success_url: 'http://localhost:8003/v2',
+        cancel_url: 'http://localhost:8003/v2'
+      };
+
+      const sessionResponse = await fetchStripeCheckoutSession(
+        requestData
+      ) as any;
+
+      console.log('sessionResponse ', sessionResponse);
+      await stripe?.redirectToCheckout({
+        sessionId: sessionResponse.session_id,
+      });
+    } catch (err) {
+      console.log({ err });
+    } finally {
+      setIsCheckingOut(false);
+    }
+  }
+
   return (
     <section id="pricing" className="relative isolate px-6 lg:px-8 widget-animate animate">
       <div className="mx-auto max-w-4xl py-12 sm:py-18 lg:py-24">
@@ -56,7 +97,10 @@ const Pricing = () => {
                       variant={`primary-${
                         isPerfReviewType(reviewType) ? 'perf' : 'self'
                       }-review`}
-                     className="font-semibold">
+                     className="font-semibold"
+                     onClick={() => buyPlanClick(Plans.BASIC)}
+                     disabled={isCheckingOut}
+                    >
                       Get Started
                     </TextButton>
                   </div>
@@ -108,7 +152,10 @@ const Pricing = () => {
                       variant={`primary-${
                         isPerfReviewType(reviewType) ? 'perf' : 'self'
                       }-review`}
-                     className="font-semibold">
+                     className="font-semibold"
+                     onClick={() => buyPlanClick(Plans.PRO)}
+                     disabled={isCheckingOut}
+                    >
                       Get Started
                     </TextButton>
                   </div>

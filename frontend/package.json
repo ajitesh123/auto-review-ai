@@ -9,6 +9,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@stripe/stripe-js": "^4.9.0",
     "@svgr/webpack": "^8.1.0",
     "@wavesurfer/react": "^1.0.7",
     "axios": "^1.7.7",

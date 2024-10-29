@@ -9,6 +9,7 @@ from urllib.parse import urlencode
 from pydantic import BaseModel
 from bson import ObjectId
 from loguru import logger
+import stripe
 
 # Local application imports
 from backend.llm import GroqLLM
@@ -217,6 +218,33 @@ async def get_user_details(current_user: dict = Depends(get_current_user)):
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to fetch or create user details.")
 
 
+# Set up your Stripe secret key
+stripe.api_key = Config.Stripe.SECRET_KEY
+
+class CheckoutSessionRequest(BaseModel):
+    price_id: str
+    success_url: str
+    cancel_url: str
+
+@v2.post("/stripe/create_checkout_session")
+async def create_checkout_session(request: CheckoutSessionRequest):
+    try:
+        # Create a new checkout session
+        session = stripe.checkout.Session.create(
+            payment_method_types=['card'],
+            mode='subscription',
+            line_items=[{
+                'price': request.price_id,
+                'quantity': 1,
+            }],
+            success_url=request.success_url,
+            cancel_url=request.cancel_url,
+        )
+        # Return the session ID
+        return {"session_id": session.id}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    
 """
 Some other useful settings from Kindle Dashboard:
 - To use own signup/login screen: go to "Details" and select "user your own signup/login screen"

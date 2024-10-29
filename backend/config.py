@@ -47,6 +47,10 @@ class Config:
     class Helicone:
         API_KEY = os.getenv("HELIECONE_API_KEY")
 
+    #Stripe
+    class Stripe:
+        SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
+
 # Usage example:
 if __name__ == "__main__":
     print(f"OpenAI API Key: {Config.APIKeys.OPENAI}")
@@ -54,3 +58,4 @@ if __name__ == "__main__":
     print(f"Kinde Domain: {Config.Kinde.DOMAIN}")
     print(f"Supabase URL: {Config.Supabase.URL}")
     print(f"Helicone API Key: {Config.Helicone.API_KEY}")
+    print(f"Stripe Secret Key: {Config.Stripe.SECRET_KEY}")

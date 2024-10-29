@@ -177,3 +177,4 @@ wrapt==1.16.0
 wsproto==1.2.0
 yarl==1.14.0
 zipp==3.20.2
+stripe==8.9.0

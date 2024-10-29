@@ -64,7 +64,7 @@ export default function Profile({ user }: ProfileProps) {
             <div
               ref={trigger}
               onClick={() => setDropdownOpen(!dropdownOpen)}
-              className="cursor-pointer relative w-12 lg:w-14 h-12 lg:h-14 rounded-full overflow-hidden border-2 border-gray-900"
+              className="cursor-pointer relative w-12 h-12 rounded-full overflow-hidden border-2 border-gray-900"
             >
               <Image
                 src={user.picture}
