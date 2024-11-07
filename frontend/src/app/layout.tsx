@@ -21,7 +21,7 @@ export default function RootLayout({
         <FlashMessagesProvider>
           <AppProvider>
             <Header />
-            <main className="flex-grow">{children}</main>
+            <main className="flex-grow mt-[75px]">{children}</main>
             <Footer />
           </AppProvider>
         </FlashMessagesProvider>

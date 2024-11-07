@@ -227,7 +227,7 @@ class CheckoutSessionRequest(BaseModel):
     cancel_url: str
 
 @v2.post("/stripe/create_checkout_session")
-async def create_checkout_session(request: CheckoutSessionRequest):
+async def create_checkout_session(request: CheckoutSessionRequest, current_user: dict = Depends(get_current_user)):
     try:
         # Create a new checkout session
         session = stripe.checkout.Session.create(

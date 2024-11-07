@@ -43,8 +43,8 @@ export default function Header() {
   };
 
   return (
-    <header className="bg-neutral-white relative z-10">
-      <nav className="fixed w-full z-20 top-0 start-0">
+    <header className="bg-neutral-white relative z-10 flex-shrink-0">
+      <nav className="fixed w-full z-20 top-0 start-0 h-[75px]">
         <div className="max-w-7xl flex flex-wrap items-center justify-between mx-auto p-4">
           <a
             href={NAV_LINKS.Logo}

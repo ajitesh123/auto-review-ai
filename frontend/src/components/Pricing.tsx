@@ -22,6 +22,10 @@ const Pricing = () => {
   const buyPlanClick = async (planId = '') => {
     console.log('buy plan clicked');
 
+    /**
+     *  Put Login before Checkout page
+     */
+
     try {
       setIsCheckingOut(true);
       const stripe = await loadStripe(
