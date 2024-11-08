@@ -1,13 +1,13 @@
-import { useState } from "react";
-import { useAppContext } from "@contexts/AppContext";
-import GradientBackground from "./GradientBackground";
-import { TextButton } from "./ui/button";
+import { useState } from 'react';
+import { useAppContext } from '@contexts/AppContext';
+import GradientBackground from './GradientBackground';
+import { TextButton } from './ui/button';
 import TickIcon from '@assets/icons/tick.svg';
 import PopularIcon from '@assets/icons/popular.svg';
-import { SvgIcon } from "./ui/svg-icon";
-import { isPerfReviewType } from "@constants/common";
-import { loadStripe } from "@stripe/stripe-js";
-import { fetchStripeCheckoutSession } from "@services/billing";
+import { SvgIcon } from './ui/svg-icon';
+import { isPerfReviewType } from '@constants/common';
+import { loadStripe } from '@stripe/stripe-js';
+import { fetchStripeCheckoutSession } from '@services/billing';
 
 const Plans = {
   BASIC: process.env.NEXT_PUBLIC_STRIPE_BASIC_PLAN,
@@ -17,7 +17,6 @@ const Plans = {
 const Pricing = () => {
   const { reviewType } = useAppContext();
   const [isCheckingOut, setIsCheckingOut] = useState(false);
-
 
   const buyPlanClick = async (planId = '') => {
     console.log('buy plan clicked');
@@ -29,18 +28,18 @@ const Pricing = () => {
     try {
       setIsCheckingOut(true);
       const stripe = await loadStripe(
-        process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string,
+        process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string
       );
 
       const requestData = {
         price_id: planId,
         success_url: 'http://localhost:8003/v2',
-        cancel_url: 'http://localhost:8003/v2'
+        cancel_url: 'http://localhost:8003/v2',
       };
 
-      const sessionResponse = await fetchStripeCheckoutSession(
+      const sessionResponse = (await fetchStripeCheckoutSession(
         requestData
-      ) as any;
+      )) as any;
 
       console.log('sessionResponse ', sessionResponse);
       await stripe?.redirectToCheckout({
@@ -51,10 +50,13 @@ const Pricing = () => {
     } finally {
       setIsCheckingOut(false);
     }
-  }
+  };
 
   return (
-    <section id="pricing" className="relative isolate px-6 lg:px-8 widget-animate animate">
+    <section
+      id="pricing"
+      className="relative isolate px-6 lg:px-8 widget-animate animate"
+    >
       <div className="mx-auto max-w-4xl py-12 sm:py-18 lg:py-24">
         <div className="text-center">
           <h1 className="text-4xl font-bold tracking-tight  sm:text-5xl">
@@ -97,13 +99,13 @@ const Pricing = () => {
                     <b>Voice Enabled</b>
                   </p>
                   <div className="flex justify-center mt-8 ">
-                    <TextButton 
+                    <TextButton
                       variant={`primary-${
                         isPerfReviewType(reviewType) ? 'perf' : 'self'
                       }-review`}
-                     className="font-semibold"
-                     onClick={() => buyPlanClick(Plans.BASIC)}
-                     disabled={isCheckingOut}
+                      className="font-semibold"
+                      onClick={() => buyPlanClick(Plans.BASIC)}
+                      disabled={isCheckingOut}
                     >
                       Get Started
                     </TextButton>
@@ -111,8 +113,8 @@ const Pricing = () => {
                 </div>
               </div>
               <div className="flex flex-col items-center bg-cardBg-800 p-8 rounded-lg shadow-lg relative border-8 border-orange-200 max-w-sm transition-transform duration-300 hover:scale-105">
-              {/* <div className="flex flex-col items-center bg-gradient-to-br from-blue-100 via-orange-100 to-purple-100 p-8 rounded-lg shadow-lg relative border-8 border-orange-200 max-w-sm"> */}
-                <SvgIcon 
+                {/* <div className="flex flex-col items-center bg-gradient-to-br from-blue-100 via-orange-100 to-purple-100 p-8 rounded-lg shadow-lg relative border-8 border-orange-200 max-w-sm"> */}
+                <SvgIcon
                   svg={PopularIcon}
                   className="w-20 h-20 absolute -top-11 -left-11 fill-red-400"
                 />
@@ -121,7 +123,9 @@ const Pricing = () => {
                 </p>
                 <div>
                   <div className="flex gap-4 justify-center">
-                    <p className="font-extrabold text-milk text-3xl mb-2">Pro</p>
+                    <p className="font-extrabold text-milk text-3xl mb-2">
+                      Pro
+                    </p>
                   </div>
                   <p className="opacity-60 text-gray-300 text-center">
                     For agencies and businesses
@@ -135,7 +139,7 @@ const Pricing = () => {
                   </div>
                 </div>
                 <div className="flex flex-col gap-1">
-                <p className="flex items-center gap-2 text-sm text-gray-300">
+                  <p className="flex items-center gap-2 text-sm text-gray-300">
                     <SvgIcon svg={TickIcon} size="md" />
                     <b>15 Performance Reviews</b>
                   </p>
@@ -152,13 +156,13 @@ const Pricing = () => {
                     <b>AI Voice Enabled</b>
                   </p>
                   <div className="flex justify-center mt-8 ">
-                    <TextButton 
+                    <TextButton
                       variant={`primary-${
                         isPerfReviewType(reviewType) ? 'perf' : 'self'
                       }-review`}
-                     className="font-semibold"
-                     onClick={() => buyPlanClick(Plans.PRO)}
-                     disabled={isCheckingOut}
+                      className="font-semibold"
+                      onClick={() => buyPlanClick(Plans.PRO)}
+                      disabled={isCheckingOut}
                     >
                       Get Started
                     </TextButton>
@@ -173,6 +177,6 @@ const Pricing = () => {
       {/* <GradientBackground reviewType={reviewType} /> */}
     </section>
   );
-}
+};
 
 export default Pricing;

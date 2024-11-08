@@ -4,7 +4,6 @@ import { isPerfReviewType, ReviewType } from '@constants/common';
 import GradientBackground from '@components/GradientBackground';
 import { TextButton } from '@components/ui/button';
 
-
 const AppIntro = ({ reviewType, onReviewTypeChange }: any) => {
   const [isChecked, setIsChecked] = useState(!isPerfReviewType(reviewType));
 

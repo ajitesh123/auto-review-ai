@@ -46,14 +46,15 @@ export default function Header() {
     <header className="bg-neutral-white relative z-10 flex-shrink-0">
       <nav className="fixed w-full z-20 top-0 start-0 h-[75px]">
         <div className="max-w-7xl flex flex-wrap items-center justify-between mx-auto p-4">
-          <a
+          <Link
             href={NAV_LINKS.Logo}
+            passHref
             className="flex items-center space-x-3 rtl:space-x-reverse"
           >
             <span className="self-center md:text-2xl text-xl font-bold whitespace-nowrap dark:text-white">
               Perf Review AI
             </span>
-          </a>
+          </Link>
           {!isAuthorizing && (
             <div className="flex flex-wrap items-center gap-3 md:gap-6">
               {!accessToken ? (

@@ -10,7 +10,7 @@
     --border: 240 3.7% 15.9%;
 
     /* perf review theme color */
-    --perf-review-50:  #f5f3ff;
+    --perf-review-50: #f5f3ff;
     --perf-review-100: #ede9fe;
     --perf-review-200: #ddd6fe;
     --perf-review-300: #c4b5fd;
@@ -22,7 +22,7 @@
     --perf-review-900: #4c1d95;
 
     /* self review theme color */
-    --self-review-50:  #f0fdfa;
+    --self-review-50: #f0fdfa;
     --self-review-100: #ccfbf1;
     --self-review-200: #99f6e4;
     --self-review-300: #5eead4;
