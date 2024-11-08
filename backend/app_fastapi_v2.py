@@ -168,7 +168,7 @@ async def callback(code: str, state: str):
             "route": "home"
         }
         query_string = urlencode(params)
-        return RedirectResponse(url=f"{Config.FRONTEND_BASE_URL}/login/callback/?{query_string}")
+        return RedirectResponse(url=f"{Config.FRONTEND_BASE_URL}/login/callback?{query_string}")
 
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Authentication failed: {str(e)}")
