@@ -17,10 +17,9 @@ const Plans = {
 const Pricing = () => {
   const { reviewType } = useAppContext();
   const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const stripeCallbackUrl = process.env.NEXT_PUBLIC_STRIPE_CALLBACK_URL;
 
   const buyPlanClick = async (planId = '') => {
-    console.log('buy plan clicked');
-
     /**
      *  Put Login before Checkout page
      */
@@ -33,8 +32,8 @@ const Pricing = () => {
 
       const requestData = {
         price_id: planId,
-        success_url: 'http://localhost:8003/v2',
-        cancel_url: 'http://localhost:8003/v2',
+        success_url: `${stripeCallbackUrl}?subscription_success=1`,
+        cancel_url: `${stripeCallbackUrl}?subscription_success=0`,
       };
 
       const sessionResponse = (await fetchStripeCheckoutSession(

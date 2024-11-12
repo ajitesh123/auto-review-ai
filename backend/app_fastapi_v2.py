@@ -229,6 +229,8 @@ class CheckoutSessionRequest(BaseModel):
 @v2.post("/stripe/create_checkout_session")
 async def create_checkout_session(request: CheckoutSessionRequest, current_user: dict = Depends(get_current_user)):
     try:
+        logger.info(f"request: {request}")
+        logger.info(f"current_user: {current_user}")
         # Create a new checkout session
         session = stripe.checkout.Session.create(
             payment_method_types=['card'],
@@ -239,6 +241,12 @@ async def create_checkout_session(request: CheckoutSessionRequest, current_user:
             }],
             success_url=request.success_url,
             cancel_url=request.cancel_url,
+            metadata= {
+                'customer_name': f"{current_user.get('given_name', '')} {current_user.get('family_name', '')}".strip(),
+                'customer_email': current_user.get("email", ""),
+                'customer_id' : current_user["id"],
+                'product_id' : request.price_id
+            },
         )
         # Return the session ID
         return {"session_id": session.id}
