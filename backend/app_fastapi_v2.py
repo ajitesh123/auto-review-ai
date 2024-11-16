@@ -126,6 +126,7 @@ async def api_transcribe_audio(file: UploadFile = File(...), is_paid: bool = Fal
 @v2.get("/login")
 async def login():
     login_url = kinde_client.get_login_url()
+    logger.info(f"Login url: {login_url}")
     return {"login_url": login_url}
 
 @v2.get("/register")
@@ -168,7 +169,9 @@ async def callback(code: str, state: str):
             "route": "home"
         }
         query_string = urlencode(params)
-        return RedirectResponse(url=f"{Config.FRONTEND_BASE_URL}/login/callback?{query_string}")
+        URL=f"{Config.FRONTEND_BASE_URL}/login/callback?{query_string}"
+        logger.info(f"Redirecting to: {URL}")
+        return RedirectResponse(url=URL)
 
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Authentication failed: {str(e)}")
