@@ -229,10 +229,16 @@ class CheckoutSessionRequest(BaseModel):
 @v2.post("/stripe/create_checkout_session")
 async def create_checkout_session(request: CheckoutSessionRequest, current_user: dict = Depends(get_current_user)):
     try:
-        logger.info(f"request: {request}")
-        logger.info(f"current_user: {current_user}")
+        logger.info(f"Creating checkout session with request: {request}")
+        logger.info(f"User details: {current_user}")
+        
+        # Validate the price_id
+        if not request.price_id.startswith('price_'):
+            raise ValueError("Invalid price ID format")
+
         # Create a new checkout session
         session = stripe.checkout.Session.create(
+            customer_email=current_user.get("email"),  # Pre-fill customer email
             payment_method_types=['card'],
             mode='subscription',
             line_items=[{
@@ -241,17 +247,33 @@ async def create_checkout_session(request: CheckoutSessionRequest, current_user:
             }],
             success_url=request.success_url,
             cancel_url=request.cancel_url,
-            metadata= {
+            metadata={
                 'customer_name': f"{current_user.get('given_name', '')} {current_user.get('family_name', '')}".strip(),
                 'customer_email': current_user.get("email", ""),
-                'customer_id' : current_user["id"],
-                'product_id' : request.price_id
+                'customer_id': current_user["id"],
+                'product_id': request.price_id
             },
         )
-        # Return the session ID
-        return {"session_id": session.id}
+        
+        return {"session_id": session.id, "url": session.url}
+    except stripe.error.StripeError as e:
+        logger.error(f"Stripe error: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Stripe error: {str(e)}"
+        )
+    except ValueError as e:
+        logger.error(f"Validation error: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e)
+        )
     except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        logger.error(f"Unexpected error: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="An unexpected error occurred"
+        )
     
 """
 Some other useful settings from Kindle Dashboard:
