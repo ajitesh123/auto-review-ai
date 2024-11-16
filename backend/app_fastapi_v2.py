@@ -1,8 +1,9 @@
 # Standard library imports
+from datetime import datetime, timedelta
 from typing import List, Optional
 
 # Third-party imports
-from fastapi import FastAPI, HTTPException, UploadFile, File, Form, Depends, status, Response
+from fastapi import FastAPI, HTTPException, Request, UploadFile, File, Form, Depends, status, Response
 from fastapi.security import OAuth2AuthorizationCodeBearer
 from fastapi.responses import RedirectResponse
 from urllib.parse import urlencode
@@ -10,6 +11,7 @@ from pydantic import BaseModel
 from bson import ObjectId
 from loguru import logger
 import stripe
+import hashlib
 
 # Local application imports
 from backend.llm import GroqLLM
@@ -22,7 +24,8 @@ from backend.db.operations import (
     get_user_by_email,
     get_user_by_id,
     update_user,
-    create_review
+    create_review,
+    update_user_subscription
 )
 from backend.models.user import User, Review
 from tests_backend.test_data.test_review_data import TEST_DATA_REVIEW
@@ -274,7 +277,81 @@ async def create_checkout_session(request: CheckoutSessionRequest, current_user:
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="An unexpected error occurred"
         )
+# Store processed event IDs (you might want to use Redis or a database for production)
+processed_events = set()
+
+@v2.post("/webhook/stripe")
+async def stripe_webhook(request: Request):
+    """Handle Stripe webhook events"""
+    try:
+        # Get the webhook data
+        payload = await request.body()
+        sig_header = request.headers.get('stripe-signature')
+        
+        # Verify webhook signature
+        try:
+            event = stripe.Webhook.construct_event(
+                payload, sig_header, Config.Stripe.WEBHOOK_SECRET
+            )
+        except ValueError as e:
+            logger.error(f"Invalid payload: {e}")
+            return Response(status_code=400)
+        except stripe.error.SignatureVerificationError as e:
+            logger.error(f"Invalid signature: {e}")
+            return Response(status_code=400)
+
+        # Check for duplicate events
+        event_id = event['id']
+        if event_id in processed_events:
+            logger.info(f"Skipping duplicate event: {event_id}")
+            return Response(status_code=200)
+        
+        event_type = event['type']
+        logger.info(f"Received Stripe event: {event_type} (ID: {event_id})")
+
+        # Only process specific events we care about
+        if event_type == 'checkout.session.completed':
+            session = event['data']['object']
+            customer_id = session.get('metadata', {}).get('customer_id')
+            
+            if not customer_id:
+                logger.error("No customer_id found in session metadata")
+                return Response(status_code=400)
+            
+            subscription_data = {
+                "tier": "pro",
+                "start_date": datetime.utcnow(),
+                "end_date": None,
+                "stripe_customer_id": session['customer'],
+                "stripe_subscription_id": session.get('subscription')
+            }
+            
+            await update_user_subscription(customer_id, subscription_data)
+            logger.info(f"Successfully updated subscription for user {customer_id}")
+        
+        elif event_type == 'customer.subscription.deleted':
+            # Handle subscription cancellation
+            subscription = event['data']['object']
+            customer_id = subscription.get('metadata', {}).get('customer_id')
+            if customer_id:
+                subscription_data = {
+                    "tier": "free",
+                    "start_date": None,
+                    "end_date": datetime.utcnow(),
+                    "stripe_customer_id": None
+                }
+                await update_user_subscription(customer_id, subscription_data)
+                logger.info(f"Subscription cancelled for user {customer_id}")
+        
+        # Add event to processed set
+        processed_events.add(event_id)
+        
+        return Response(status_code=200)
     
+    except Exception as e:
+        logger.error(f"Error processing webhook: {e}")
+        return Response(status_code=500)
+
 """
 Some other useful settings from Kindle Dashboard:
 - To use own signup/login screen: go to "Details" and select "user your own signup/login screen"

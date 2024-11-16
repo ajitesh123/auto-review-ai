@@ -50,6 +50,8 @@ class Config:
     #Stripe
     class Stripe:
         SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
+        PUBLISHABLE_KEY = os.getenv("STRIPE_PUBLISHABLE_KEY")
+        WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET")  
 
 # Usage example:
 if __name__ == "__main__":
@@ -59,3 +61,4 @@ if __name__ == "__main__":
     print(f"Supabase URL: {Config.Supabase.URL}")
     print(f"Helicone API Key: {Config.Helicone.API_KEY}")
     print(f"Stripe Secret Key: {Config.Stripe.SECRET_KEY}")
+
