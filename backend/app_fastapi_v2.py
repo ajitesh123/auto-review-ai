@@ -23,6 +23,7 @@ from backend.db.operations import (
     get_reviews_by_user,
     get_user_by_email,
     get_user_by_id,
+    increment_api_calls,
     update_user,
     create_review,
     update_user_subscription
@@ -73,6 +74,18 @@ async def ping():
 @v2.post("/generate_review")
 async def api_generate_review(request: ReviewRequestV2, current_user: dict = Depends(get_current_user)):
     try:
+        # Increment API calls
+        await increment_api_calls(current_user["id"])
+        
+        #TODO: Maintain quota and simplify the is_paid logic. Quote likely needs to be store seperately for each subscription id in DB
+        # Get user details to check subscription status
+        user = await get_user_by_id(current_user["id"])
+        if not user.is_paid and not request.is_paid:
+            raise HTTPException(
+                status_code=403,
+                detail="Please upgrade to access this feature"
+            )
+        
         # review =  TEST_DATA_REVIEW #Uncomment this for running tests to avoid LLM calls
         review = generate_review(**request.model_dump())
         logger.info(f"Generated review: {review}")
@@ -93,6 +106,17 @@ async def api_generate_review(request: ReviewRequestV2, current_user: dict = Dep
 @v2.post("/generate_self_review")
 async def api_generate_self_review(request: SelfReviewRequestV2, current_user: dict = Depends(get_current_user)):
     try:
+        # Increment API calls
+        await increment_api_calls(current_user["id"])
+        
+        # Get user details to check subscription status
+        user = await get_user_by_id(current_user["id"])
+        if not user.is_paid and not request.is_paid:
+            raise HTTPException(
+                status_code=403,
+                detail="Please upgrade to access this feature"
+            )
+        
         self_review = generate_self_review(**request.model_dump())
 
         # Save the review to the database
