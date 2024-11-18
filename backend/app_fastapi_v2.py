@@ -3,14 +3,11 @@ from datetime import datetime, timedelta
 from typing import List, Optional
 
 # Third-party imports
-from fastapi import FastAPI, HTTPException, Request, UploadFile, File, Form, Depends, Response
+from fastapi import FastAPI, HTTPException, Request, UploadFile, File, Form, Depends, Response, status
 from fastapi.security import OAuth2AuthorizationCodeBearer
 from fastapi.responses import RedirectResponse
 from urllib.parse import urlencode
-from bson import ObjectId
 from loguru import logger
-import stripe
-import hashlib
 
 # Local application imports
 from backend.llm import GroqLLM
@@ -29,13 +26,12 @@ from backend.db.operations import (
 )
 from backend.models.user import User, Review
 from backend.routers import billing
-from backend.schemas.review import ReviewRequestV2, SelfReviewRequestV2
+from backend.schemas.review import ReviewRequestV2
 from tests_backend.test_data.test_review_data import TEST_DATA_REVIEW
 from backend.middleware.check_auth import get_current_user
+from backend.schemas.review import SelfReviewRequestV2, ReviewRequestV2
 
 v2 = FastAPI()
-
-# Include the billing router with prefix
 v2.include_router(billing.router, prefix="/billing", tags=["billing"])
 
 @v2.get("/")
