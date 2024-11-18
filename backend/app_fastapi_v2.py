@@ -3,11 +3,10 @@ from datetime import datetime, timedelta
 from typing import List, Optional
 
 # Third-party imports
-from fastapi import FastAPI, HTTPException, Request, UploadFile, File, Form, Depends, status, Response
+from fastapi import FastAPI, HTTPException, Request, UploadFile, File, Form, Depends, Response
 from fastapi.security import OAuth2AuthorizationCodeBearer
 from fastapi.responses import RedirectResponse
 from urllib.parse import urlencode
-from pydantic import BaseModel
 from bson import ObjectId
 from loguru import logger
 import stripe
@@ -29,38 +28,15 @@ from backend.db.operations import (
     update_user_subscription
 )
 from backend.models.user import User, Review
+from backend.routers import billing
+from backend.schemas.review import ReviewRequestV2, SelfReviewRequestV2
 from tests_backend.test_data.test_review_data import TEST_DATA_REVIEW
+from backend.middleware.check_auth import get_current_user
 
 v2 = FastAPI()
 
-class ReviewRequestV2(BaseModel):
-    your_role: str
-    candidate_role: str
-    perf_question: Optional[str] = None
-    your_review: str
-    is_paid: bool
-
-class SelfReviewRequestV2(BaseModel):
-    text_dump: str
-    questions: List[str] 
-    instructions: Optional[str] = None
-    is_paid: bool
-
-# OAuth2 scheme for FastAPI
-oauth2_scheme = OAuth2AuthorizationCodeBearer(
-    authorizationUrl=f"{Config.Kinde.DOMAIN}/oauth2/auth",
-    tokenUrl=f"{Config.Kinde.DOMAIN}/oauth2/token",
-)
-
-async def get_current_user(token: str = Depends(oauth2_scheme)):
-    """Dependency to check if user is authenticated."""
-    if not kinde_client.is_authenticated():
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Not authenticated",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    return kinde_client.get_user_details()
+# Include the billing router with prefix
+v2.include_router(billing.router, prefix="/billing", tags=["billing"])
 
 @v2.get("/")
 async def root():
@@ -239,165 +215,6 @@ async def get_user_details(current_user: dict = Depends(get_current_user)):
         logger.error(f"Error fetching or creating user details for user {current_user['id']}: {e}")
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to fetch or create user details.")
 
-
-# Set up your Stripe secret key
-stripe.api_key = Config.Stripe.SECRET_KEY
-
-class CheckoutSessionRequest(BaseModel):
-    price_id: str
-    success_url: str
-    cancel_url: str
-
-@v2.post("/stripe/create_checkout_session")
-async def create_checkout_session(request: CheckoutSessionRequest, current_user: dict = Depends(get_current_user)):
-    try:
-        logger.info(f"Creating checkout session with request: {request}")
-        logger.info(f"User details: {current_user}")
-        
-        # Validate the price_id
-        if not request.price_id.startswith('price_'):
-            raise ValueError("Invalid price ID format")
-
-        # Create a new checkout session
-        session = stripe.checkout.Session.create(
-            customer_email=current_user.get("email"),  # Pre-fill customer email
-            payment_method_types=['card'],
-            mode='subscription',
-            line_items=[{
-                'price': request.price_id,
-                'quantity': 1,
-            }],
-            success_url=request.success_url,
-            cancel_url=request.cancel_url,
-            metadata={
-                'customer_name': f"{current_user.get('given_name', '')} {current_user.get('family_name', '')}".strip(),
-                'customer_email': current_user.get("email", ""),
-                'customer_id': current_user["id"],
-                'product_id': request.price_id
-            },
-        )
-        
-        return {"session_id": session.id, "url": session.url}
-    except stripe.error.StripeError as e:
-        logger.error(f"Stripe error: {str(e)}")
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Stripe error: {str(e)}"
-        )
-    except ValueError as e:
-        logger.error(f"Validation error: {str(e)}")
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=str(e)
-        )
-    except Exception as e:
-        logger.error(f"Unexpected error: {str(e)}")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="An unexpected error occurred"
-        )
-# Store processed event IDs (you might want to use Redis or a database for production)
-processed_events = set()
-
-@v2.post("/webhook/stripe")
-async def stripe_webhook(request: Request):
-    """Handle Stripe webhook events"""
-    try:
-        # Get the webhook data
-        payload = await request.body()
-        sig_header = request.headers.get('stripe-signature')
-        
-        # Verify webhook signature
-        try:
-            event = stripe.Webhook.construct_event(
-                payload, sig_header, Config.Stripe.WEBHOOK_SECRET
-            )
-        except ValueError as e:
-            logger.error(f"Invalid payload: {e}")
-            return Response(status_code=400)
-        except stripe.error.SignatureVerificationError as e:
-            logger.error(f"Invalid signature: {e}")
-            return Response(status_code=400)
-
-        # Check for duplicate events
-        event_id = event['id']
-        if event_id in processed_events:
-            logger.info(f"Skipping duplicate event: {event_id}")
-            return Response(status_code=200)
-        
-        event_type = event['type']
-        logger.info(f"Received Stripe event: {event_type} (ID: {event_id})")
-
-        # Mapping of product IDs to tiers
-        PRODUCT_TIER_MAP = {
-            'prod_R7V2wtWtiVBcyv': "starter",
-            'prod_R717pPAun9k0s9': "pro"
-        }
-
-        # Only process specific events we care about
-        if event_type == 'checkout.session.completed':
-            session = event['data']['object']
-            customer_id = session.get('metadata', {}).get('customer_id')
-            
-            if not customer_id:
-                logger.error("No customer_id found in session metadata")
-                return Response(status_code=400)
-            
-            # Determine tier based on product ID
-            line_items = stripe.checkout.Session.retrieve(
-                session['id'], 
-                expand=['line_items']
-            ).line_items.data
-            
-            product_id = line_items[0].price.product if line_items else None
-            tier = PRODUCT_TIER_MAP.get(product_id, 'free')
-            
-            subscription_data = {
-                "tier": tier, 
-                "start_date": datetime.utcnow(),
-                "end_date": None,
-                "stripe_customer_id": session['customer'],
-                "stripe_subscription_id": session.get('subscription')
-            }
-            
-            await update_user_subscription(customer_id, subscription_data)
-            logger.info(f"Successfully updated subscription for user {customer_id}")
-        
-        elif event_type == 'customer.subscription.deleted':
-            # Handle subscription cancellation
-            subscription = event['data']['object']
-            customer_id = subscription.get('metadata', {}).get('customer_id')
-            if customer_id:
-                subscription_data = {
-                    "tier": "free",
-                    "start_date": None,
-                    "end_date": datetime.utcnow(),
-                    "stripe_customer_id": None
-                }
-                await update_user_subscription(customer_id, subscription_data)
-                logger.info(f"Subscription cancelled for user {customer_id}")
-        
-        # Add event to processed set
-        processed_events.add(event_id)
-        
-        return Response(status_code=200)
-    
-    except Exception as e:
-        logger.error(f"Error processing webhook: {e}")
-        return Response(status_code=500)
-
-@v2.get("/credits")
-async def get_credits(current_user: dict = Depends(get_current_user)):
-    """Get user's credit information"""
-    try:
-        user = await get_user_by_id(current_user["id"])
-        return {
-            "remaining_credits": user.remaining_credits,
-            "total_purchased": user.total_credits_purchased,
-            "total_used": user.api_calls_count
-        }
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
 
 """
 Some other useful settings from Kindle Dashboard:

@@ -4,7 +4,7 @@ import axiosInstance from './axiosInstance';
 export const fetchStripeCheckoutSession = async (data: any) => {
   try {
     const response = await axiosInstance.post(
-      '/stripe/create_checkout_session',
+      '/billing/create_checkout_session',
       data
     );
     return response.data;
