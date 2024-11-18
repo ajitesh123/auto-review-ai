@@ -1,15 +1,13 @@
 # Standard library imports
+from datetime import datetime, timedelta
 from typing import List, Optional
 
 # Third-party imports
-from fastapi import FastAPI, HTTPException, UploadFile, File, Form, Depends, status, Response
+from fastapi import FastAPI, HTTPException, Request, UploadFile, File, Form, Depends, Response, status
 from fastapi.security import OAuth2AuthorizationCodeBearer
 from fastapi.responses import RedirectResponse
 from urllib.parse import urlencode
-from pydantic import BaseModel
-from bson import ObjectId
 from loguru import logger
-import stripe
 
 # Local application imports
 from backend.llm import GroqLLM
@@ -17,46 +15,24 @@ from backend.orchestrator import generate_review, generate_self_review, transcri
 from backend.config import Config
 from backend.kindle_auth import kinde_client, kinde_configuration
 from backend.db.operations import (
+    check_and_decrement_credits,
     create_user,
     get_reviews_by_user,
     get_user_by_email,
     get_user_by_id,
     update_user,
-    create_review
+    create_review,
+    update_user_subscription
 )
 from backend.models.user import User, Review
+from backend.routers import billing
+from backend.schemas.review import ReviewRequestV2
 from tests_backend.test_data.test_review_data import TEST_DATA_REVIEW
+from backend.middleware.check_auth import get_current_user
+from backend.schemas.review import SelfReviewRequestV2, ReviewRequestV2
 
 v2 = FastAPI()
-
-class ReviewRequestV2(BaseModel):
-    your_role: str
-    candidate_role: str
-    perf_question: Optional[str] = None
-    your_review: str
-    is_paid: bool
-
-class SelfReviewRequestV2(BaseModel):
-    text_dump: str
-    questions: List[str] 
-    instructions: Optional[str] = None
-    is_paid: bool
-
-# OAuth2 scheme for FastAPI
-oauth2_scheme = OAuth2AuthorizationCodeBearer(
-    authorizationUrl=f"{Config.Kinde.DOMAIN}/oauth2/auth",
-    tokenUrl=f"{Config.Kinde.DOMAIN}/oauth2/token",
-)
-
-async def get_current_user(token: str = Depends(oauth2_scheme)):
-    """Dependency to check if user is authenticated."""
-    if not kinde_client.is_authenticated():
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Not authenticated",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    return kinde_client.get_user_details()
+v2.include_router(billing.router, prefix="/billing", tags=["billing"])
 
 @v2.get("/")
 async def root():
@@ -70,6 +46,15 @@ async def ping():
 @v2.post("/generate_review")
 async def api_generate_review(request: ReviewRequestV2, current_user: dict = Depends(get_current_user)):
     try:
+        # Check and decrement credits
+        credits_available = await check_and_decrement_credits(current_user["id"])
+
+        if not credits_available:
+            raise HTTPException(
+                status_code=403,
+                detail="No credits remaining. Please purchase more credits to continue using this feature."
+            )
+
         # review =  TEST_DATA_REVIEW #Uncomment this for running tests to avoid LLM calls
         review = generate_review(**request.model_dump())
         logger.info(f"Generated review: {review}")
@@ -90,6 +75,15 @@ async def api_generate_review(request: ReviewRequestV2, current_user: dict = Dep
 @v2.post("/generate_self_review")
 async def api_generate_self_review(request: SelfReviewRequestV2, current_user: dict = Depends(get_current_user)):
     try:
+        # Check and decrement credits
+        credits_available = await check_and_decrement_credits(current_user["id"])
+
+        if not credits_available:
+            raise HTTPException(
+                status_code=403,
+                detail="No credits remaining. Please purchase more credits to continue using this feature."
+            )
+        
         self_review = generate_self_review(**request.model_dump())
 
         # Save the review to the database
@@ -218,51 +212,11 @@ async def get_user_details(current_user: dict = Depends(get_current_user)):
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to fetch or create user details.")
 
 
-# Set up your Stripe secret key
-stripe.api_key = Config.Stripe.SECRET_KEY
-
-class CheckoutSessionRequest(BaseModel):
-    price_id: str
-    success_url: str
-    cancel_url: str
-
-@v2.post("/stripe/create_checkout_session")
-async def create_checkout_session(request: CheckoutSessionRequest, current_user: dict = Depends(get_current_user)):
-    try:
-        logger.info(f"request: {request}")
-        logger.info(f"current_user: {current_user}")
-        # Create a new checkout session
-        session = stripe.checkout.Session.create(
-            payment_method_types=['card'],
-            mode='subscription',
-            line_items=[{
-                'price': request.price_id,
-                'quantity': 1,
-            }],
-            success_url=request.success_url,
-            cancel_url=request.cancel_url,
-            metadata= {
-                'customer_name': f"{current_user.get('given_name', '')} {current_user.get('family_name', '')}".strip(),
-                'customer_email': current_user.get("email", ""),
-                'customer_id' : current_user["id"],
-                'product_id' : request.price_id
-            },
-        )
-        # Return the session ID
-        return {"session_id": session.id}
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
-    
 """
 Some other useful settings from Kindle Dashboard:
 - To use own signup/login screen: go to "Details" and select "user your own signup/login screen"
 - Make sure prod callback urls and logout urls are set in Details
 - To not use email and code: we can switch off from "Authentication" tab
-
-TODO: 
-- Integerate with Supabase to store # of use of API per users and whether paid or not
-- Figure out what API to called to put user details from Kindle to Supabase
-- Integeration with Stripe - should we handle in backend or frontend?
 
 
 To test the API:
