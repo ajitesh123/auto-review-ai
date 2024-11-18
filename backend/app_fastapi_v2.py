@@ -19,11 +19,11 @@ from backend.orchestrator import generate_review, generate_self_review, transcri
 from backend.config import Config
 from backend.kindle_auth import kinde_client, kinde_configuration
 from backend.db.operations import (
+    check_and_decrement_credits,
     create_user,
     get_reviews_by_user,
     get_user_by_email,
     get_user_by_id,
-    increment_api_calls,
     update_user,
     create_review,
     update_user_subscription
@@ -74,18 +74,15 @@ async def ping():
 @v2.post("/generate_review")
 async def api_generate_review(request: ReviewRequestV2, current_user: dict = Depends(get_current_user)):
     try:
-        # Increment API calls
-        await increment_api_calls(current_user["id"])
-        
-        #TODO: Maintain quota and simplify the is_paid logic. Quote likely needs to be store seperately for each subscription id in DB
-        # Get user details to check subscription status
-        user = await get_user_by_id(current_user["id"])
-        if not user.is_paid and not request.is_paid:
+        # Check and decrement credits
+        credits_available = await check_and_decrement_credits(current_user["id"])
+
+        if not credits_available:
             raise HTTPException(
                 status_code=403,
-                detail="Please upgrade to access this feature"
+                detail="No credits remaining. Please purchase more credits to continue using this feature."
             )
-        
+
         # review =  TEST_DATA_REVIEW #Uncomment this for running tests to avoid LLM calls
         review = generate_review(**request.model_dump())
         logger.info(f"Generated review: {review}")
@@ -106,15 +103,13 @@ async def api_generate_review(request: ReviewRequestV2, current_user: dict = Dep
 @v2.post("/generate_self_review")
 async def api_generate_self_review(request: SelfReviewRequestV2, current_user: dict = Depends(get_current_user)):
     try:
-        # Increment API calls
-        await increment_api_calls(current_user["id"])
-        
-        # Get user details to check subscription status
-        user = await get_user_by_id(current_user["id"])
-        if not user.is_paid and not request.is_paid:
+        # Check and decrement credits
+        credits_available = await check_and_decrement_credits(current_user["id"])
+
+        if not credits_available:
             raise HTTPException(
                 status_code=403,
-                detail="Please upgrade to access this feature"
+                detail="No credits remaining. Please purchase more credits to continue using this feature."
             )
         
         self_review = generate_self_review(**request.model_dump())
@@ -333,6 +328,12 @@ async def stripe_webhook(request: Request):
         event_type = event['type']
         logger.info(f"Received Stripe event: {event_type} (ID: {event_id})")
 
+        # Mapping of product IDs to tiers
+        PRODUCT_TIER_MAP = {
+            'prod_R7V2wtWtiVBcyv': "starter",
+            'prod_R717pPAun9k0s9': "pro"
+        }
+
         # Only process specific events we care about
         if event_type == 'checkout.session.completed':
             session = event['data']['object']
@@ -342,8 +343,17 @@ async def stripe_webhook(request: Request):
                 logger.error("No customer_id found in session metadata")
                 return Response(status_code=400)
             
+            # Determine tier based on product ID
+            line_items = stripe.checkout.Session.retrieve(
+                session['id'], 
+                expand=['line_items']
+            ).line_items.data
+            
+            product_id = line_items[0].price.product if line_items else None
+            tier = PRODUCT_TIER_MAP.get(product_id, 'free')
+            
             subscription_data = {
-                "tier": "pro",
+                "tier": tier, 
                 "start_date": datetime.utcnow(),
                 "end_date": None,
                 "stripe_customer_id": session['customer'],
@@ -376,16 +386,24 @@ async def stripe_webhook(request: Request):
         logger.error(f"Error processing webhook: {e}")
         return Response(status_code=500)
 
+@v2.get("/credits")
+async def get_credits(current_user: dict = Depends(get_current_user)):
+    """Get user's credit information"""
+    try:
+        user = await get_user_by_id(current_user["id"])
+        return {
+            "remaining_credits": user.remaining_credits,
+            "total_purchased": user.total_credits_purchased,
+            "total_used": user.api_calls_count
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 """
 Some other useful settings from Kindle Dashboard:
 - To use own signup/login screen: go to "Details" and select "user your own signup/login screen"
 - Make sure prod callback urls and logout urls are set in Details
 - To not use email and code: we can switch off from "Authentication" tab
-
-TODO: 
-- Integerate with Supabase to store # of use of API per users and whether paid or not
-- Figure out what API to called to put user details from Kindle to Supabase
-- Integeration with Stripe - should we handle in backend or frontend?
 
 
 To test the API:
