@@ -19,6 +19,7 @@ export default function LogoutCallback() {
     localStorage.removeItem('family_name');
     localStorage.removeItem('email');
     localStorage.removeItem('picture');
+    localStorage.removeItem('resume_billing_with_plan_id');
 
     // removing data from context api
     setAccessToken('');
