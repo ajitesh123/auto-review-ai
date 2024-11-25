@@ -3,11 +3,13 @@
 import React, { useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAppContext } from '../../../contexts/AppContext';
+import useStripeCheckout from 'src/hooks/useStripeCheckout';
 
 function LoginCallback() {
   const { setAccessToken, setUser } = useAppContext();
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { redirectToCheckout } = useStripeCheckout();
 
   useEffect(() => {
     console.log('In LoginCallback useEffect', searchParams);
@@ -38,10 +40,29 @@ function LoginCallback() {
     localStorage.setItem('email', userDetails['email']);
     localStorage.setItem('picture', userDetails['picture']);
 
+    // setting data in context provider
     setAccessToken(token);
     setUser(userDetails);
-    router.push('/');
-  }, [searchParams]);
+
+    const resumeBillingWithPlanId =
+      localStorage.getItem('resume_billing_with_plan_id') || null;
+    if (!resumeBillingWithPlanId) {
+      // redirect to dashboard
+      router.push('/');
+    } else {
+      try {
+        const doStartBillingProcess = async (planId = '') => {
+          // redirect to stripe checkout
+          await redirectToCheckout(planId);
+        };
+        doStartBillingProcess(resumeBillingWithPlanId);
+      } catch (err) {
+        console.log({ err });
+        // redirect to dashboard
+        router.push('/');
+      }
+    }
+  }, [searchParams, redirectToCheckout]);
 
   return (
     <div className="bg-background flex justify-center items-center h-[100vh] w-[100vw]">

@@ -6,8 +6,11 @@ import TickIcon from '@assets/icons/tick.svg';
 import PopularIcon from '@assets/icons/popular.svg';
 import { SvgIcon } from './ui/svg-icon';
 import { isPerfReviewType } from '@constants/common';
-import { loadStripe } from '@stripe/stripe-js';
-import { fetchStripeCheckoutSession } from '@services/billing';
+import { login } from '@services/auth';
+import { useRouter } from 'next/navigation';
+import useStripeCheckout from 'src/hooks/useStripeCheckout';
+import { useFlashMessage } from './ui/flash-messages';
+import { SUBSCRIPTION_TIER } from '@constants/billing';
 
 const Plans = {
   BASIC: process.env.NEXT_PUBLIC_STRIPE_BASIC_PLAN,
@@ -15,41 +18,42 @@ const Plans = {
 };
 
 const Pricing = () => {
-  const { reviewType } = useAppContext();
+  const { reviewType, accessToken } = useAppContext();
   const [isCheckingOut, setIsCheckingOut] = useState(false);
-  const stripeCallbackUrl = process.env.NEXT_PUBLIC_STRIPE_CALLBACK_URL;
+  const router = useRouter();
+  const { redirectToCheckout, error } = useStripeCheckout();
+  const { addFailureMessage } = useFlashMessage();
 
   const buyPlanClick = async (planId = '') => {
-    /**
-     *  Put Login before Checkout page
-     */
+    if (!accessToken) {
+      // user not logged in
+      localStorage.setItem('resume_billing_with_plan_id', planId);
 
+      const response = (await login()) as {
+        login_url: string;
+      };
+      // login redirection
+      router.push(response.login_url);
+      return;
+    }
+
+    // start the billing process
     try {
       setIsCheckingOut(true);
-      const stripe = await loadStripe(
-        process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string
-      );
-
-      const requestData = {
-        price_id: planId,
-        success_url: `${stripeCallbackUrl}?subscription_success=1`,
-        cancel_url: `${stripeCallbackUrl}?subscription_success=0`,
-      };
-
-      const sessionResponse = (await fetchStripeCheckoutSession(
-        requestData
-      )) as any;
-
-      console.log('sessionResponse ', sessionResponse);
-      await stripe?.redirectToCheckout({
-        sessionId: sessionResponse.session_id,
-      });
+      await redirectToCheckout(planId);
     } catch (err) {
       console.log({ err });
     } finally {
       setIsCheckingOut(false);
     }
   };
+
+  if (error) {
+    addFailureMessage({ message: error, autoClose: false });
+  }
+
+  const starterPlan = SUBSCRIPTION_TIER['starter'];
+  const proPlan = SUBSCRIPTION_TIER['pro'];
 
   return (
     <section
@@ -70,33 +74,23 @@ const Pricing = () => {
               <div className="flex flex-col items-center bg-cardBg-800 p-8 rounded-lg shadow-lg max-w-sm transition-transform duration-300 hover:scale-105">
                 <div>
                   <h2 className="font-extrabold text-milk text-3xl text-center mb-2">
-                    Starter
+                    {starterPlan.title}
                   </h2>
                   <p className="opacity-60 text-gray-300 text-center">
-                    For the individual and small teams
+                    {starterPlan.subtitle}
                   </p>
                   <div className="flex flex-col text-gray-300 items-center my-8">
-                    <p className="font-extrabold text-4xl">$2</p>
-                    <p className="text-sm opacity-60">/month</p>
+                    <p className="font-extrabold text-4xl">{starterPlan.price}</p>
+                    {/* <p className="text-sm opacity-60">/month</p> */}
                   </div>
                 </div>
                 <div className="flex flex-col gap-1">
-                  <p className="flex items-center gap-2 text-sm text-gray-300">
-                    <SvgIcon svg={TickIcon} size="md" />
-                    <b>5 Performance Reviews</b>
-                  </p>
-                  <p className="flex items-center gap-2 text-gray-300 text-sm">
-                    <SvgIcon svg={TickIcon} size="md" />
-                    <b>5 Self Reviews</b>
-                  </p>
-                  <p className="flex items-center gap-2 text-gray-300 text-sm">
-                    <SvgIcon svg={TickIcon} size="md" />
-                    <b>Advanced LLMs</b>
-                  </p>
-                  <p className="flex items-center gap-2 text-gray-300 text-sm">
-                    <SvgIcon svg={TickIcon} size="md" />
-                    <b>Voice Enabled</b>
-                  </p>
+                  {starterPlan.features.map((feature) => (
+                    <p className="flex items-center gap-2 text-sm text-gray-300">
+                      <SvgIcon svg={TickIcon} size="md" />
+                      <b>{feature}</b>
+                    </p>
+                  ))}
                   <div className="flex justify-center mt-8 ">
                     <TextButton
                       variant={`primary-${
@@ -123,37 +117,27 @@ const Pricing = () => {
                 <div>
                   <div className="flex gap-4 justify-center">
                     <p className="font-extrabold text-milk text-3xl mb-2">
-                      Pro
+                      {proPlan.title}
                     </p>
                   </div>
                   <p className="opacity-60 text-gray-300 text-center">
-                    For agencies and businesses
+                    {proPlan.subtitle}
                   </p>
                   <p className="opacity-60 text-center"></p>
                   <div className="flex gap-4 justify-center">
                     <div className="flex flex-col text-gray-300 items-center my-8">
-                      <p className="font-extrabold text-4xl">$9</p>
-                      <p className="text-sm opacity-60">/month</p>
+                      <p className="font-extrabold text-4xl">{proPlan.price}</p>
+                      {/* <p className="text-sm opacity-60">/month</p> */}
                     </div>
                   </div>
                 </div>
                 <div className="flex flex-col gap-1">
-                  <p className="flex items-center gap-2 text-sm text-gray-300">
-                    <SvgIcon svg={TickIcon} size="md" />
-                    <b>15 Performance Reviews</b>
-                  </p>
-                  <p className="flex items-center gap-2 text-gray-300 text-sm">
-                    <SvgIcon svg={TickIcon} size="md" />
-                    <b>15 Self Reviews</b>
-                  </p>
-                  <p className="flex items-center gap-2 text-gray-300 text-sm">
-                    <SvgIcon svg={TickIcon} size="md" />
-                    <b>More Advanced LLMs</b>
-                  </p>
-                  <p className="flex items-center gap-2 text-gray-300 text-sm">
-                    <SvgIcon svg={TickIcon} size="md" />
-                    <b>AI Voice Enabled</b>
-                  </p>
+                  {proPlan.features.map((feature) => (
+                    <p className="flex items-center gap-2 text-sm text-gray-300">
+                      <SvgIcon svg={TickIcon} size="md" />
+                      <b>{feature}</b>
+                    </p>
+                  ))}
                   <div className="flex justify-center mt-8 ">
                     <TextButton
                       variant={`primary-${

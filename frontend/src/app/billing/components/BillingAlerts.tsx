@@ -1,26 +1,34 @@
-import { useSearchParams } from 'next/navigation';
-import React from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import React, { useEffect } from 'react';
 
 type Props = {};
 
 const BillingAlerts = (props: Props) => {
   const searchParams = useSearchParams();
+  const router = useRouter();
 
   let transactionStatus = Number(
     searchParams?.get('subscription_success') ?? -1
   );
+
+  useEffect(() => {
+    localStorage.removeItem('resume_billing_with_plan_id');
+  }, []);
+
   return (
     <>
       {transactionStatus === 1 && (
         <div
-          className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mt-8"
+          className="bg-green-100 border max-w-5xl border-green-400 text-green-700 px-4 py-3 rounded relative mt-8"
           role="alert"
         >
           <strong className="font-bold mr-2">Great!</strong>
-          <span className="block sm:inline">
+          <span className="block sm:inline pr-16">
             Your transaction has been successfull
           </span>
-          <span className="absolute top-0 bottom-0 right-0 px-4 py-3">
+          <span className="absolute top-0 bottom-0 right-0 px-4 py-3"
+            onClick={() => router.replace('/billing')}
+          >
             <svg
               className="fill-current h-6 w-6 text-green-500"
               role="button"
@@ -35,14 +43,16 @@ const BillingAlerts = (props: Props) => {
       )}
       {transactionStatus === 0 && (
         <div
-          className="bg-red-100 border red-green-400 text-red-700 px-4 py-3 rounded relative mb-8"
+          className="bg-red-100 border max-w-5xl red-green-400 text-red-700 px-4 py-3 rounded relative mt-8"
           role="alert"
         >
           <strong className="font-bold mr-2">Uh Oh!</strong>
-          <span className="block sm:inline">
+          <span className="block sm:inline pr-16">
             Your transaction was not successfull
           </span>
-          <span className="absolute top-0 bottom-0 right-0 px-4 py-3">
+          <span className="absolute top-0 bottom-0 right-0 px-4 py-3"
+            onClick={() => router.replace('/billing')}
+          >
             <svg
               className="fill-current h-6 w-6 text-red-500"
               role="button"
