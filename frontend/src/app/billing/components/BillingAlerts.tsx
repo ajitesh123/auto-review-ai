@@ -1,10 +1,11 @@
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect } from 'react';
 
 type Props = {};
 
 const BillingAlerts = (props: Props) => {
   const searchParams = useSearchParams();
+  const router = useRouter();
 
   let transactionStatus = Number(
     searchParams?.get('subscription_success') ?? -1
@@ -25,7 +26,9 @@ const BillingAlerts = (props: Props) => {
           <span className="block sm:inline pr-16">
             Your transaction has been successfull
           </span>
-          <span className="absolute top-0 bottom-0 right-0 px-4 py-3">
+          <span className="absolute top-0 bottom-0 right-0 px-4 py-3"
+            onClick={() => router.replace('/billing')}
+          >
             <svg
               className="fill-current h-6 w-6 text-green-500"
               role="button"
@@ -47,7 +50,9 @@ const BillingAlerts = (props: Props) => {
           <span className="block sm:inline pr-16">
             Your transaction was not successfull
           </span>
-          <span className="absolute top-0 bottom-0 right-0 px-4 py-3">
+          <span className="absolute top-0 bottom-0 right-0 px-4 py-3"
+            onClick={() => router.replace('/billing')}
+          >
             <svg
               className="fill-current h-6 w-6 text-red-500"
               role="button"

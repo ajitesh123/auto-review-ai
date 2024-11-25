@@ -13,3 +13,14 @@ export const fetchStripeCheckoutSession = async (data: any) => {
     throw error;
   }
 };
+
+
+export const fetchBillingCredits = async () => {
+  try {
+    const response = await axiosInstance.get('/billing/credits');
+    return response.data;
+  } catch (error) {
+    console.error('Error in fetching billing credits');
+    throw error;
+  }
+};

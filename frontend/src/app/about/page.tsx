@@ -1,7 +1,12 @@
-import React from 'react';
+'use client';
+
+import React, { useEffect } from 'react';
 import AuthWrapper from '@app/AuthWrapper';
 
 export default function About() {
+  useEffect(() => {
+    console.log('use effect called in about')
+  }, [])
   return (
     <AuthWrapper>
       <div className="flex flex-col items-center justify-center">
