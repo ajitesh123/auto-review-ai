@@ -5,8 +5,8 @@ import Image from 'next/image';
 import { SvgIcon } from '@components/ui/svg-icon';
 import Logout from '@assets/icons/logout.svg';
 import Price from '@assets/icons/price.svg';
-
 import { logout } from '@services/auth';
+import { NAV_LINKS } from '@constants/links';
 import type { User } from '../types/user';
 
 interface ProfileProps {
@@ -56,6 +56,12 @@ export default function Profile({ user }: ProfileProps) {
     router.push(response.logout_url);
   };
 
+  // open billing page
+  const handleBillingClick = () => {
+    router.push(NAV_LINKS.Billing);
+    setDropdownOpen(false);
+  };
+
   return (
     <section className="">
       <div className="container">
@@ -64,7 +70,7 @@ export default function Profile({ user }: ProfileProps) {
             <div
               ref={trigger}
               onClick={() => setDropdownOpen(!dropdownOpen)}
-              className="cursor-pointer relative w-12 lg:w-14 h-12 lg:h-14 rounded-full overflow-hidden border-2 border-gray-900"
+              className="cursor-pointer relative w-12 h-12 rounded-full overflow-hidden border-2 border-gray-900"
             >
               <Image
                 src={user.picture}
@@ -93,12 +99,23 @@ export default function Profile({ user }: ProfileProps) {
                 </div>
               </div>
               <div className="border-t border-gray-700">
-                <button className="flex w-full items-center justify-between px-4 py-4 text-sm font-medium text-dark hover:bg-neutral-700">
+                <button
+                  onClick={handleBillingClick}
+                  className="flex w-full items-center justify-between px-4 py-4 text-sm font-medium text-dark hover:bg-neutral-700"
+                >
                   <span className="flex items-center gap-2 tracking-wide">
                     <SvgIcon svg={Price} size="md" />
                     Manage Subscription
                   </span>
                 </button>
+                {/* <Link href={NAV_LINKS.Billing} passHref 
+                  className="flex w-full items-center justify-between px-4 py-4 text-sm font-medium text-dark hover:bg-neutral-700"
+                >
+                  <span className="flex items-center gap-2 tracking-wide">
+                    <SvgIcon svg={Price} size="md" />
+                    Manage Subscription
+                  </span>
+                </Link> */}
               </div>
               <div className="border-t border-gray-700">
                 <button

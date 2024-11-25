@@ -1,7 +1,14 @@
+from enum import Enum
 from pydantic import BaseModel, Field
 from typing import Optional
 from datetime import datetime
 from bson import ObjectId
+
+
+class SubscriptionTier(str, Enum):
+    FREE = "free"
+    STARTER = "starter"
+    PRO = "pro"
 
 class User(BaseModel):
     """
@@ -14,8 +21,18 @@ class User(BaseModel):
     email: str
     name: str
     is_paid: bool = False  # Indicates whether the user has a paid subscription
-    stripe_customer_id: Optional[str] = None  # Stripe customer ID for paid users
-    stripe_subscription_id: Optional[str] = None  # Stripe subscription ID for paid users
+    subscription_tier: SubscriptionTier = SubscriptionTier.FREE
+    subscription_start_date: Optional[datetime] = None
+    subscription_end_date: Optional[datetime] = None
+    stripe_customer_id: Optional[str] = None
+    stripe_subscription_id: Optional[str] = None
+
+    # Usage tracking
+    remaining_credits: int = 0  # Total remaining API calls
+    total_credits_purchased: int = 0  # Total credits ever purchased
+    api_calls_count: int = 0  # Total API calls made
+    last_api_call: Optional[datetime] = None
+
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 

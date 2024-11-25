@@ -2,6 +2,7 @@
 
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 import { NAV_LINKS } from '@constants/links';
 import { TextButton } from '@components/ui/button';
@@ -42,17 +43,18 @@ export default function Header() {
   };
 
   return (
-    <header className="bg-neutral-white relative z-10">
-      <nav className="fixed w-full z-20 top-0 start-0">
+    <header className="bg-neutral-white relative z-10 flex-shrink-0">
+      <nav className="fixed w-full z-20 top-0 start-0 h-[75px]">
         <div className="max-w-7xl flex flex-wrap items-center justify-between mx-auto p-4">
-          <a
+          <Link
             href={NAV_LINKS.Logo}
+            passHref
             className="flex items-center space-x-3 rtl:space-x-reverse"
           >
             <span className="self-center md:text-2xl text-xl font-bold whitespace-nowrap dark:text-white">
               Perf Review AI
             </span>
-          </a>
+          </Link>
           {!isAuthorizing && (
             <div className="flex flex-wrap items-center gap-3 md:gap-6">
               {!accessToken ? (
@@ -63,13 +65,13 @@ export default function Header() {
                   >
                     <ul className="flex flex-row p-0 font-normal gap-3 md:gap-6 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0">
                       <li className="hidden md:block">
-                        <a
-                          href={NAV_LINKS.Pricing}
-                          target="_blank"
+                        <Link
+                          href={'#pricing'}
                           className="block rounded text-gray-300 md:hover:text-white"
+                          scroll={true}
                         >
                           Pricing
-                        </a>
+                        </Link>
                       </li>
                     </ul>
                   </div>
