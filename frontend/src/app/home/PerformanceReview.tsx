@@ -4,6 +4,9 @@ import { generateReview } from '@services/review';
 import { isBlankObject } from '@utils/object';
 import { TextButton } from '@components/ui/button';
 import { useFlashMessage } from '@components/ui/flash-messages';
+import { useAppContext } from '@contexts/AppContext';
+import { SvgIcon } from '@components/ui/svg-icon';
+import AiIcon from '@assets/icons/ai.svg';
 
 const AudioInputComponent = dynamic(() => import('./AudioInput'), {
   ssr: false,
@@ -30,7 +33,8 @@ const PerformanceReview = ({
   paramsWhenKeysNeeded,
   onReviewResultsReceived,
 }: PerformanceReviewProps) => {
-  const { addFailureMessage } = useFlashMessage();
+  const { addInfoMessage, addFailureMessage } = useFlashMessage();
+  const { accessToken } = useAppContext();
 
   const [formState, setFormState] = useState<FormState>({
     yourRole: '',
@@ -64,6 +68,11 @@ const PerformanceReview = ({
   };
 
   const handleGenerateReview = async () => {
+    if (!accessToken) {
+      addInfoMessage({ message: 'Please login to generate review' });
+      return;
+    }
+
     setIsLoading(true);
 
     try {
@@ -162,6 +171,7 @@ const PerformanceReview = ({
           variant={`primary-perf-review`}
           disabled={isLoading}
           className="font-semibold"
+          startIcon={<SvgIcon svg={AiIcon} size='lg' />}
         >
           {isLoading ? 'Generating...' : 'Generate Performance Review'}
         </TextButton>

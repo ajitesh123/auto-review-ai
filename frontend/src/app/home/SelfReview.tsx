@@ -4,6 +4,9 @@ import { generateSelfReview } from '@services/review';
 import { isBlankObject } from '@utils/object';
 import { TextButton } from '@components/ui/button';
 import { useFlashMessage } from '@components/ui/flash-messages';
+import { useAppContext } from '@contexts/AppContext';
+import { SvgIcon } from '@components/ui/svg-icon';
+import AiIcon from '@assets/icons/ai.svg';
 
 const AudioInputComponent = dynamic(() => import('./AudioInput'), {
   ssr: false,
@@ -23,7 +26,9 @@ const SelfReview = ({
   paramsWhenKeysNeeded,
   onReviewResultsReceived,
 }: SelfReviewProps) => {
-  const { addFailureMessage } = useFlashMessage();
+  const { addInfoMessage, addFailureMessage } = useFlashMessage();
+  const { accessToken } = useAppContext();
+
   const [formState, setFormState] = useState({
     textDump: '',
     questions: '',
@@ -55,6 +60,11 @@ const SelfReview = ({
   };
 
   const handleGenerateSelfReview = async () => {
+    if (!accessToken) {
+      addInfoMessage({ message: 'Please login to generate review' });
+      return;
+    }
+
     setIsLoading(true);
 
     try {
@@ -142,6 +152,7 @@ const SelfReview = ({
           variant={`primary-self-review`}
           disabled={isLoading}
           className="font-semibold"
+          startIcon={<SvgIcon svg={AiIcon} size='lg' />}
         >
           {isLoading ? 'Generating...' : 'Generate Self Review'}
         </TextButton>
