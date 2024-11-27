@@ -51,7 +51,9 @@ class Config:
     class Stripe:
         SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
         PUBLISHABLE_KEY = os.getenv("STRIPE_PUBLISHABLE_KEY")
-        WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET")  
+        WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET")
+        STARTER_PRODUCT_ID = os.getenv("STARTER_PRODUCT_ID")
+        PRO_PRODUCT_ID = os.getenv("PRO_PRODUCT_ID")
 
 # Usage example:
 if __name__ == "__main__":

@@ -85,8 +85,8 @@ async def stripe_webhook(request: Request):
 
         # Mapping of product IDs to tiers
         PRODUCT_TIER_MAP = {
-            'prod_R7V2wtWtiVBcyv': "starter",
-            'prod_R717pPAun9k0s9': "pro"
+            Config.Stripe.STARTER_PRODUCT_ID: "starter",
+            Config.Stripe.PRO_PRODUCT_ID: "pro"
         }
 
         # Only process specific events we care about
