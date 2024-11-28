@@ -35,6 +35,7 @@ async def create_checkout_session(request: CheckoutSessionRequest, current_user:
             }],
             success_url=request.success_url,
             cancel_url=request.cancel_url,
+            allow_promotion_codes=True,
             metadata={
                 'customer_name': f"{current_user.get('given_name', '')} {current_user.get('family_name', '')}".strip(),
                 'customer_email': current_user.get("email", ""),
