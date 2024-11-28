@@ -21,12 +21,8 @@ export default function Header() {
       if (nav !== null) {
         if (window.scrollY > 100) {
           nav.classList.add('bg-background');
-          nav.classList.add('border-b');
-          nav.classList.add('border-slate-800');
         } else {
           nav.classList.remove('bg-background');
-          nav.classList.remove('border-b');
-          nav.classList.remove('border-slate-800');
         }
       }
     };
@@ -44,7 +40,7 @@ export default function Header() {
 
   return (
     <header className="bg-neutral-white relative z-10 flex-shrink-0">
-      <nav className="fixed w-full z-20 top-0 start-0 h-[75px]">
+      <nav className="fixed w-full z-20 top-0 start-0 h-[75px] border-b-2 border-slate-800">
         <div className="max-w-7xl flex flex-wrap items-center justify-between mx-auto p-4">
           <Link
             href={NAV_LINKS.Logo}
