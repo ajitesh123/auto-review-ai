@@ -6,7 +6,7 @@ import pytest
 from unittest.mock import patch
 from motor.motor_asyncio import AsyncIOMotorClient
 from bson import ObjectId
-from loguru import logger
+from backend.core.logger import logger
 
 project_root = os.getcwd()
 sys.path.append(project_root)

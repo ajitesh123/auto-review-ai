@@ -2,7 +2,7 @@
 from fastapi import HTTPException, Depends, status
 from fastapi.security import OAuth2AuthorizationCodeBearer
 from backend.kindle_auth import kinde_client, kinde_configuration
-from backend.config import Config
+from backend.core.config import Config
 
 
 # OAuth2 scheme for FastAPI

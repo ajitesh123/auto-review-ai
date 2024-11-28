@@ -12,10 +12,10 @@ from groq import Groq
 import openai
 import anthropic
 import google.generativeai as genai
-from loguru import logger
+from backend.core.logger import logger
 
 # Environment setup
-from backend.config import Config
+from backend.core.config import Config
 
 OPENAI_API_KEY = Config.APIKeys.OPENAI
 GOOGLE_API_KEY = Config.APIKeys.GOOGLE

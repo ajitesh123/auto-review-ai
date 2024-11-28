@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException, Request, Response, status
 from pydantic import BaseModel
 from datetime import datetime
-from loguru import logger
+from backend.core.logger import logger
 import stripe
 
-from backend.config import Config
+from backend.core.config import Config
 from backend.middleware.check_auth import get_current_user
 from backend.db.operations import update_user_subscription, get_user_by_id
 from backend.schemas.billing import CheckoutSessionRequest

@@ -7,12 +7,12 @@ from fastapi import FastAPI, HTTPException, Request, UploadFile, File, Form, Dep
 from fastapi.security import OAuth2AuthorizationCodeBearer
 from fastapi.responses import RedirectResponse
 from urllib.parse import urlencode
-from loguru import logger
+from backend.core.logger import logger
 
 # Local application imports
 from backend.llm import GroqLLM
 from backend.orchestrator import generate_review, generate_self_review, transcribe_audio
-from backend.config import Config
+from backend.core.config import Config
 from backend.kindle_auth import kinde_client, kinde_configuration
 from backend.db.operations import (
     check_and_decrement_credits,

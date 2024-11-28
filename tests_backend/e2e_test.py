@@ -1,4 +1,4 @@
-from loguru import logger
+from backend.core.logger import logger
 import json
 import urllib.request
 import urllib.error

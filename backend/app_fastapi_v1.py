@@ -2,7 +2,7 @@ from fastapi import FastAPI, HTTPException, UploadFile, File, Form
 from backend.review import ReviewRequest, generate_review
 from backend.self_review import SelfReviewRequest, generate_self_review
 from backend.llm import GroqLLM
-from loguru import logger
+from backend.core.logger import logger
 
 v1 = FastAPI()
 

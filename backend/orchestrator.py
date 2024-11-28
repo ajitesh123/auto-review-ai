@@ -2,7 +2,7 @@ import yaml
 from backend.review import generate_review as generate_review_v1
 from backend.self_review import generate_self_review as generate_self_review_v1
 from backend.llm import AnthropicLLM, GroqLLM, GoogleLLM
-from backend.config import Config
+from backend.core.config import Config
 
 
 def get_api_key(service):

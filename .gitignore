@@ -26,6 +26,8 @@ config.yaml
 # FastAPI
 # ===============================
 .env
+!.env.example
+!.env.sample
 *.sqlite3
 
 # ===============================
