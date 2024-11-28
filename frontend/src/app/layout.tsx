@@ -6,8 +6,8 @@ import { AppProvider } from '@contexts/AppContext';
 import { FlashMessagesProvider } from '@components/ui/flash-messages/flash-messages.context';
 
 export const metadata: Metadata = {
-  title: 'Voice HR',
-  description: 'Voice HR is an AI-powered performance review platform that uses your voice to generate personalized performance reviews.',
+  title: 'Simpler HR AI',
+  description: 'Simpler HR AI is an AI-powered performance review platform that uses your voice to generate personalized performance reviews.',
 };
 
 export default function RootLayout({

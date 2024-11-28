@@ -52,7 +52,7 @@ export default function Header() {
             className="flex items-center space-x-3 rtl:space-x-reverse"
           >
             <span className="self-center md:text-2xl text-xl font-bold whitespace-nowrap dark:text-white">
-              Perf Review AI
+              Simpler HR AI
             </span>
           </Link>
           {!isAuthorizing && (
