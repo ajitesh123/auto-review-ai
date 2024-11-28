@@ -47,9 +47,34 @@ export default function Header() {
             passHref
             className="flex items-center space-x-3 rtl:space-x-reverse"
           >
-            <span className="self-center md:text-2xl text-xl font-bold whitespace-nowrap text-white">
-              Simpler HR AI
-            </span>
+            <svg
+              width="40"
+              height="40"
+              viewBox="0 0 40 40"
+              xmlns="http://www.w3.org/2000/svg"
+              className="fill-current"
+            >
+              <rect
+                width="40"
+                height="40"
+                rx="4"
+                fill="black"
+                stroke="white"
+                strokeWidth="2"
+              />
+              <text
+                x="20"
+                y="28"
+                fontFamily="Arial"
+                fontSize="24"
+                fontWeight="bold"
+                fill="white"
+                textAnchor="middle"
+              >
+                H
+              </text>
+            </svg>
+            <span className="text-xl font-semibold text-white">Simple HR AI</span>
           </Link>
           {!isAuthorizing && (
             <div className="flex flex-wrap items-center gap-3 md:gap-6">
