@@ -6,8 +6,8 @@ import { AppProvider } from '@contexts/AppContext';
 import { FlashMessagesProvider } from '@components/ui/flash-messages/flash-messages.context';
 
 export const metadata: Metadata = {
-  title: 'Perf Review UI',
-  description: 'A sample perf review app',
+  title: 'Voice HR',
+  description: 'Voice HR is an AI-powered performance review platform that uses your voice to generate personalized performance reviews.',
 };
 
 export default function RootLayout({
