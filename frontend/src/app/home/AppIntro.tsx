@@ -1,8 +1,8 @@
 import { Switch } from '@components/ui/switch';
 import React, { useState } from 'react';
 import { isPerfReviewType, ReviewType } from '@constants/common';
-import GradientBackground from '@components/GradientBackground';
 import { TextButton } from '@components/ui/button';
+import GradientBackground from '@components/GradientBackground';
 
 const AppIntro = ({ reviewType, onReviewTypeChange }: any) => {
   const [isChecked, setIsChecked] = useState(!isPerfReviewType(reviewType));

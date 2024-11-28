@@ -51,7 +51,7 @@ export default function Header() {
             passHref
             className="flex items-center space-x-3 rtl:space-x-reverse"
           >
-            <span className="self-center md:text-2xl text-xl font-bold whitespace-nowrap dark:text-white">
+            <span className="self-center md:text-2xl text-xl font-bold whitespace-nowrap text-white">
               Simpler HR AI
             </span>
           </Link>

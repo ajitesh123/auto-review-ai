@@ -17,11 +17,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="min-h-screen flex flex-col">
+      <body className="min-h-screen flex flex-col bg-black relative overflow-x-hidden">
         <FlashMessagesProvider>
           <AppProvider>
             <Header />
-            <main className="flex-grow mt-[75px]">{children}</main>
+            <main className="flex-grow mt-[75px] relative">{children}</main>
             <Footer />
           </AppProvider>
         </FlashMessagesProvider>
