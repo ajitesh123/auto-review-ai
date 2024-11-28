@@ -1,6 +1,6 @@
 from kinde_sdk import Configuration
 from kinde_sdk.kinde_api_client import GrantType, KindeApiClient
-from backend.config import Config
+from backend.core.config import Config
 
 kinde_configuration = Configuration(host=Config.Kinde.DOMAIN)
 

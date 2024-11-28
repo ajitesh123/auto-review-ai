@@ -27,6 +27,10 @@ class Config:
         TOKEN = os.getenv("LOGFIRE_TOKEN")
         PROJECT_NAME = os.getenv("LOGFIRE_PROJECT_NAME")
 
+    # BetterStack
+    class BetterStack:
+        API_KEY = os.getenv("BETTERSTACK_API_KEY")
+
     # Kinde
     class Kinde:
         CLIENT_ID = os.getenv("KINDE_CLIENT_ID")

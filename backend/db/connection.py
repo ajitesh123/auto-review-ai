@@ -4,7 +4,7 @@ an asynchronous MongoDB driver for Python.
 """
 
 from motor.motor_asyncio import AsyncIOMotorClient
-from backend.config import Config
+from backend.core.config import Config
 
 # Establish a connection to the MongoDB server
 client = AsyncIOMotorClient(Config.MongoDB.URL)

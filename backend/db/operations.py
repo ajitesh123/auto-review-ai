@@ -3,7 +3,7 @@ from typing import Any
 from backend.db.connection import get_database
 from backend.models.user import User, Review
 from bson import ObjectId
-from loguru import logger
+from backend.core.logger import logger
 
 # User operations -->
 async def create_user(user: User):
