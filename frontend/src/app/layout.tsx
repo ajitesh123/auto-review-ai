@@ -4,10 +4,14 @@ import Header from '@components/Header';
 import Footer from '@components/Footer';
 import { AppProvider } from '@contexts/AppContext';
 import { FlashMessagesProvider } from '@components/ui/flash-messages/flash-messages.context';
+import logo from '@assets/icons/logo.svg';
 
 export const metadata: Metadata = {
-  title: 'Simpler HR AI',
-  description: 'Simpler HR AI is an AI-powered performance review platform that uses your voice to generate personalized performance reviews.',
+  title: 'Simple HR AI',
+  description: 'Simple HR AI is an AI-powered performance review platform that uses your voice to generate personalized performance reviews.',
+  icons: {
+    icon: logo,
+  },
 };
 
 export default function RootLayout({
