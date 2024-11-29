@@ -25,7 +25,7 @@ const CurrentPlanDetails = ({ userDetails }: Props) => {
         <div className="flex flex-col gap-0">
           <div className="flex gap-1">
             <span className="text-[#B4B4B4] text-md flex items-center gap-1.5">
-              Total Reviews Purchased:
+              {`Total Reviews${userDetails?.subscription_tier === 'free' ? '' : ' Purchased'}:`}
             </span>  
             <span className="text-lg text-milk flex items-center gap-1.5">
               {userDetails.total_credits_purchased}

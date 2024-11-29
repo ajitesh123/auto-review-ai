@@ -64,7 +64,7 @@ export default function Header() {
                     id="navbar-sticky"
                   >
                     <ul className="flex flex-row p-0 font-normal gap-3 md:gap-6 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0">
-                      <li className="hidden md:block">
+                      <li className="md:block">
                         <Link
                           href={'#pricing'}
                           className="block rounded text-gray-300 md:hover:text-white"
