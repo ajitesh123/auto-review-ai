@@ -40,7 +40,7 @@ export default function Billing() {
       </div>
     );
   }
-w
+
   return (
     <AuthWrapper>
       <div className="flex flex-col overflow-y-auto max-w-7xl mx-auto p-4 items-center justify-center">
