@@ -74,7 +74,7 @@ const Pricing = () => {
           <h1 className="text-5xl font-bold tracking-tight text-white sm:text-5xl">
             Pricing
           </h1>
-          <p className="mt-6 text-lg leading-8 text-gray-300">
+          <p className="mt-4 text-lg leading-8 text-gray-300">
             We have a very reasonable pricing
           </p>
           <div className="mt-10 flex items-center justify-center gap-x-16">
@@ -99,7 +99,7 @@ const Pricing = () => {
                   {freePlan.features.map((feature) => (
                     <p className="flex items-center gap-2 text-sm text-gray-300">
                       <SvgIcon svg={TickIcon} size="md" />
-                      <b>{feature}</b>
+                      <b className='text-left'>{feature}</b>
                     </p>
                   ))}
                   <div className="flex justify-center mt-8 ">
@@ -135,7 +135,7 @@ const Pricing = () => {
                   {starterPlan.features.map((feature) => (
                     <p className="flex items-center gap-2 text-sm text-gray-300">
                       <SvgIcon svg={TickIcon} size="md" />
-                      <b>{feature}</b>
+                      <b className='text-left'>{feature}</b>
                     </p>
                   ))}
                   <div className="flex justify-center mt-8 ">
@@ -184,7 +184,7 @@ const Pricing = () => {
                   {proPlan.features.map((feature) => (
                     <p className="flex items-center gap-2 text-sm text-gray-300">
                       <SvgIcon svg={TickIcon} size="md" />
-                      <b>{feature}</b>
+                      <b className='text-left'>{feature}</b>
                     </p>
                   ))}
                   <div className="flex justify-center mt-8 ">

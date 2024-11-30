@@ -10,6 +10,8 @@ import PerformanceReview from './home/PerformanceReview';
 import SelfReview from './home/SelfReview';
 import ReviewResults from './home/ReviewResults';
 import Pricing from '@components/Pricing';
+import Testimonials from './home/Testimonials';
+import HowItWorks from './home/HowItWorks';
 
 interface ReviewItem {
   question: string;
@@ -82,6 +84,13 @@ export default function Home() {
         <ReviewResults reviews={reviewResults} />
       )}
 
+      {/* How It works */}
+      <HowItWorks />
+
+      {/* Testimonials */}
+      <Testimonials />
+
+      {/* Pricing */}
       <Pricing />
     </div>
   );

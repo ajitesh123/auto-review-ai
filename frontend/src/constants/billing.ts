@@ -11,7 +11,7 @@ const SUBSCRIPTION_TIER:  { [key: string]: Tier } = {
     title: 'Free',
     subtitle: 'The basic features of AI reviews',
     features: [
-      'Basic AI Reviews',
+      '3 Basic AI Reviews',
       'Slow LLMs',
       'Voice Enabled'
     ]
