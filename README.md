@@ -1,8 +1,6 @@
 # 🚀 Performance Review AI
 Generate performance reviews and self-reviews in minutes using Large Language Models (LLMs).
 
-https://github.com/user-attachments/assets/81e62eda-b12c-4697-9469-d904fd8ee4ed
-
 ## ✨ Features
 
 - Performance Review Generation

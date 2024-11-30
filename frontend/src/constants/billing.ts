@@ -1,9 +1,3 @@
-// const SUBSCRIPTION_TIER:  { [key: string]: object } = {
-//   free: 'FREE',
-//   starter: 'STARTER',
-//   pro: 'PRO'
-// };
-
 interface Tier {
   price: string,
   title: string,
@@ -15,10 +9,9 @@ const SUBSCRIPTION_TIER:  { [key: string]: Tier } = {
   free: {
     price: '$0',
     title: 'Free',
-    subtitle: 'To get you started',
+    subtitle: 'The basic features of AI reviews',
     features: [
-      'Basic Performance Reviews',
-      'Basic Self Reviews',
+      'Basic AI Reviews',
       'Slow LLMs',
       'Voice Enabled'
     ]
@@ -28,10 +21,9 @@ const SUBSCRIPTION_TIER:  { [key: string]: Tier } = {
     title: 'Starter',
     subtitle: 'To get you started',
     features: [
-      '5 Performance Reviews',
-      '5 Self Reviews',
-      'Advanced LLMs',
-      'Voice Enabled'
+      '10 Advanced AI Reviews',
+      'More Advanced LLMs',
+      'AI Voice Enabled'
     ]
   },
   pro: {
@@ -39,8 +31,7 @@ const SUBSCRIPTION_TIER:  { [key: string]: Tier } = {
     title: 'Pro',
     subtitle: 'Best money saver plan',
     features: [
-      '15 Performance Reviews',
-      '15 Self Reviews',
+      '30 Advanced AI Reviews',
       'More Advanced LLMs',
       'AI Voice Enabled'
     ]

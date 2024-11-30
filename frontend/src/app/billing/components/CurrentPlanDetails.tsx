@@ -12,7 +12,7 @@ const CurrentPlanDetails = ({ userDetails }: Props) => {
   const tier = SUBSCRIPTION_TIER[userDetails?.subscription_tier];
 
   return (
-    <div className="flex flex-col md:flex-row w-full justify-between p-8 rounded-2xl border border-[#2F6846] bg-gradient-to-b from-[#191919] to-[#111111] gap-16">
+    <div className="flex flex-row w-full justify-between p-8 rounded-2xl border border-[#2F6846] bg-gradient-to-b from-[#191919] to-[#111111] gap-16">
       <div className="inline-flex flex-col gap-2 w-1/2">
         <div>
           <Badge variant="green" className="p-1.5 !px-2">
@@ -25,7 +25,7 @@ const CurrentPlanDetails = ({ userDetails }: Props) => {
         <div className="flex flex-col gap-0">
           <div className="flex gap-1">
             <span className="text-[#B4B4B4] text-md flex items-center gap-1.5">
-              Total Reviews Purchased:
+              {`Total Reviews${userDetails?.subscription_tier === 'free' ? '' : ' Purchased'}:`}
             </span>  
             <span className="text-lg text-milk flex items-center gap-1.5">
               {userDetails.total_credits_purchased}

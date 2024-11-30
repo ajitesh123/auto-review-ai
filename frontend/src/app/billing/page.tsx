@@ -58,7 +58,7 @@ export default function Billing() {
         </div>
 
         {/* Previous Transactions */}
-        <div className="flex flex-col w-full gap-4 my-4 ">
+        {/* <div className="flex flex-col w-full gap-4 my-4 ">
           <div className="border border-[#2A2A2A] bg-zinc-900 rounded-md">
             <div className="flex flex-col items-start justify-start w-full  gap-1 p-4 border-b border-[#2A2A2A] ">
               <div className="text-lg text-[#EEEEEE]">Previous Transactions</div>
@@ -70,7 +70,7 @@ export default function Billing() {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* Current plan details */}
         <CurrentPlanDetails userDetails={userDetails} />
