@@ -12,7 +12,7 @@ const CurrentPlanDetails = ({ userDetails }: Props) => {
   const tier = SUBSCRIPTION_TIER[userDetails?.subscription_tier];
 
   return (
-    <div className="flex flex-col md:flex-row w-full justify-between p-8 rounded-2xl border border-[#2F6846] bg-gradient-to-b from-[#191919] to-[#111111] gap-16">
+    <div className="flex flex-row w-full justify-between p-8 rounded-2xl border border-[#2F6846] bg-gradient-to-b from-[#191919] to-[#111111] gap-16">
       <div className="inline-flex flex-col gap-2 w-1/2">
         <div>
           <Badge variant="green" className="p-1.5 !px-2">
