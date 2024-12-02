@@ -1,4 +1,4 @@
-import axiosInstance from "./axiosInstance";
+import axiosInstance from './axiosInstance';
 
 // Fetch user details
 export const fetchUserDetails = async () => {

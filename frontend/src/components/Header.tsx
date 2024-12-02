@@ -21,12 +21,8 @@ export default function Header() {
       if (nav !== null) {
         if (window.scrollY > 100) {
           nav.classList.add('bg-background');
-          nav.classList.add('border-b');
-          nav.classList.add('border-slate-800');
         } else {
           nav.classList.remove('bg-background');
-          nav.classList.remove('border-b');
-          nav.classList.remove('border-slate-800');
         }
       }
     };
@@ -44,15 +40,42 @@ export default function Header() {
 
   return (
     <header className="bg-neutral-white relative z-10 flex-shrink-0">
-      <nav className="fixed w-full z-20 top-0 start-0 h-[75px]">
+      <nav className="fixed w-full z-20 top-0 start-0 h-[75px] border-b-2 border-slate-800">
         <div className="max-w-7xl flex flex-wrap items-center justify-between mx-auto p-4">
           <Link
             href={NAV_LINKS.Logo}
             passHref
             className="flex items-center space-x-3 rtl:space-x-reverse"
           >
-            <span className="self-center md:text-2xl text-xl font-bold whitespace-nowrap dark:text-white">
-              Simpler HR AI
+            <svg
+              width="40"
+              height="40"
+              viewBox="0 0 40 40"
+              xmlns="http://www.w3.org/2000/svg"
+              className="fill-current"
+            >
+              <rect
+                width="40"
+                height="40"
+                rx="4"
+                fill="black"
+                stroke="white"
+                strokeWidth="2"
+              />
+              <text
+                x="20"
+                y="28"
+                fontFamily="Arial"
+                fontSize="24"
+                fontWeight="bold"
+                fill="white"
+                textAnchor="middle"
+              >
+                H
+              </text>
+            </svg>
+            <span className="text-xl font-semibold text-white">
+              Simple HR AI
             </span>
           </Link>
           {!isAuthorizing && (

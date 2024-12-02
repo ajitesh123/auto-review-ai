@@ -5,8 +5,8 @@
 @layer base {
   :root {
     /* 240 1.5% 12% */
-    --background: 240 1.5% 12%;
-    --foreground: 0 0% 98%;
+    --background: 240 0% 0%;
+    --foreground: 0 0% 100%;
     --border: 240 3.7% 15.9%;
 
     /* perf review theme color */
@@ -94,4 +94,21 @@
   100% {
     transform: scale(0.8);
   }
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient {
+  background-size: 200% auto;
+  animation: gradient 3s ease infinite;
 }

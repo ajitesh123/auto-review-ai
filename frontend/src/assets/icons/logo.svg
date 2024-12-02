@@ -1,0 +1,26 @@
+<svg
+  width="40"
+  height="40"
+  viewBox="0 0 40 40"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <rect
+    width="40"
+    height="40"
+    rx="4"
+    fill="black"
+    stroke="white"
+    strokeWidth="2"
+  />
+  <text
+    x="20"
+    y="28"
+    fontFamily="Arial"
+    fontSize="24"
+    fontWeight="bold"
+    fill="white"
+    textAnchor="middle"
+  >
+    H
+  </text>
+</svg> 
