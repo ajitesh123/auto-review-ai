@@ -20,7 +20,7 @@ interface SelfReviewProps {
   onReviewResultsReceived: (
     self_review: Array<{ question: string; answer: string }>
   ) => void;
-  setIsReviewGenerating: (value: Boolean) => void
+  setIsReviewGenerating: (value: Boolean) => void;
 }
 
 const SelfReview = ({
@@ -156,7 +156,7 @@ const SelfReview = ({
           variant={`primary-self-review`}
           disabled={isLoading}
           className="font-semibold"
-          startIcon={<SvgIcon svg={AiIcon} size='lg' />}
+          startIcon={<SvgIcon svg={AiIcon} size="lg" />}
         >
           {isLoading ? 'Generating...' : 'Generate Self Review'}
         </TextButton>

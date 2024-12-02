@@ -1,20 +1,16 @@
 interface Tier {
-  price: string,
-  title: string,
-  subtitle: string,
-  features: string[]
+  price: string;
+  title: string;
+  subtitle: string;
+  features: string[];
 }
 
-const SUBSCRIPTION_TIER:  { [key: string]: Tier } = {
+const SUBSCRIPTION_TIER: { [key: string]: Tier } = {
   free: {
     price: '$0',
     title: 'Free',
     subtitle: 'The basic features of AI reviews',
-    features: [
-      '3 Basic AI Reviews',
-      'Slow LLMs',
-      'Voice Enabled'
-    ]
+    features: ['3 Basic AI Reviews', 'Slow LLMs', 'Voice Enabled'],
   },
   starter: {
     price: '$2',
@@ -23,8 +19,8 @@ const SUBSCRIPTION_TIER:  { [key: string]: Tier } = {
     features: [
       '10 Advanced AI Reviews',
       'More Advanced LLMs',
-      'AI Voice Enabled'
-    ]
+      'AI Voice Enabled',
+    ],
   },
   pro: {
     price: '$5',
@@ -33,8 +29,8 @@ const SUBSCRIPTION_TIER:  { [key: string]: Tier } = {
     features: [
       '30 Advanced AI Reviews',
       'More Advanced LLMs',
-      'AI Voice Enabled'
-    ]
+      'AI Voice Enabled',
+    ],
   },
 };
 

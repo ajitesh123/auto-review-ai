@@ -20,7 +20,7 @@ interface PerformanceReviewProps {
   onReviewResultsReceived: (
     review: Array<{ question: string; answer: string }>
   ) => void;
-  setIsReviewGenerating: (value: Boolean) => void
+  setIsReviewGenerating: (value: Boolean) => void;
 }
 
 interface FormState {
@@ -175,7 +175,7 @@ const PerformanceReview = ({
           variant={`primary-perf-review`}
           disabled={isLoading}
           className="font-semibold"
-          startIcon={<SvgIcon svg={AiIcon} size='lg' />}
+          startIcon={<SvgIcon svg={AiIcon} size="lg" />}
         >
           {isLoading ? 'Generating...' : 'Generate Performance Review'}
         </TextButton>

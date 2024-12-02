@@ -14,7 +14,6 @@ export const fetchStripeCheckoutSession = async (data: any) => {
   }
 };
 
-
 export const fetchBillingCredits = async () => {
   try {
     const response = await axiosInstance.get('/billing/credits');

@@ -80,7 +80,6 @@ const Pricing = () => {
           <div className="mt-10 flex items-center justify-center gap-x-16">
             {/* Pricing cards..... */}
             <div className="grid md:grid-cols-3 px-8 gap-12 text-cardBg-800 mt-10">
-            
               {/* Free Plan */}
               <div className="flex flex-col items-center bg-cardBg-800 p-8 rounded-lg shadow-lg max-w-full transition-transform duration-300 hover:scale-105">
                 <div>
@@ -99,7 +98,7 @@ const Pricing = () => {
                   {freePlan.features.map((feature) => (
                     <p className="flex items-center gap-2 text-sm text-gray-300">
                       <SvgIcon svg={TickIcon} size="md" />
-                      <b className='text-left'>{feature}</b>
+                      <b className="text-left">{feature}</b>
                     </p>
                   ))}
                   <div className="flex justify-center mt-8 ">
@@ -127,7 +126,9 @@ const Pricing = () => {
                     {starterPlan.subtitle}
                   </p>
                   <div className="flex flex-col text-gray-300 items-center my-8">
-                    <p className="font-extrabold text-4xl">{starterPlan.price}</p>
+                    <p className="font-extrabold text-4xl">
+                      {starterPlan.price}
+                    </p>
                     {/* <p className="text-sm opacity-60">/month</p> */}
                   </div>
                 </div>
@@ -135,7 +136,7 @@ const Pricing = () => {
                   {starterPlan.features.map((feature) => (
                     <p className="flex items-center gap-2 text-sm text-gray-300">
                       <SvgIcon svg={TickIcon} size="md" />
-                      <b className='text-left'>{feature}</b>
+                      <b className="text-left">{feature}</b>
                     </p>
                   ))}
                   <div className="flex justify-center mt-8 ">
@@ -184,7 +185,7 @@ const Pricing = () => {
                   {proPlan.features.map((feature) => (
                     <p className="flex items-center gap-2 text-sm text-gray-300">
                       <SvgIcon svg={TickIcon} size="md" />
-                      <b className='text-left'>{feature}</b>
+                      <b className="text-left">{feature}</b>
                     </p>
                   ))}
                   <div className="flex justify-center mt-8 ">

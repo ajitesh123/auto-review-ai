@@ -13,7 +13,7 @@ import CurrentPlanDetails from './components/CurrentPlanDetails';
 export default function Billing() {
   const [isLoading, setIsLoading] = useState(true);
   const { addFailureMessage } = useFlashMessage();
-  const [ userDetails, setUserDetails] = useState({} as UserDetails);
+  const [userDetails, setUserDetails] = useState({} as UserDetails);
 
   useEffect(() => {
     const fetchCredits = async () => {
@@ -23,12 +23,13 @@ export default function Billing() {
         setUserDetails(response);
       } catch (error: any) {
         const errMsg =
-          error?.message || 'An error occurred while fetching the billing credits.';
+          error?.message ||
+          'An error occurred while fetching the billing credits.';
         addFailureMessage({ message: errMsg, autoClose: false });
       } finally {
         setIsLoading(false);
       }
-    }
+    };
 
     fetchCredits();
   }, []);
@@ -44,17 +45,18 @@ export default function Billing() {
   return (
     <AuthWrapper>
       <div className="flex flex-col overflow-y-auto max-w-7xl mx-auto p-4 items-center justify-center">
-
         {/* Billing alerts */}
         <BillingAlerts />
 
-        <div
-          className="flex flex-col items-start justify-start w-full  gap-2 py-4 my-2">
-            <div className="text-2xl font-bold">Plans and Billing</div>
-            <div className="text-sm font-semibold text-[#B4B4B4]">
-              Manage your billing information and invoices. For questions about billing, contact{" "}
-              <span className="italic font-semibold text-perfReview-500">support@perfreviewai.com</span>
-            </div>
+        <div className="flex flex-col items-start justify-start w-full  gap-2 py-4 my-2">
+          <div className="text-2xl font-bold">Plans and Billing</div>
+          <div className="text-sm font-semibold text-[#B4B4B4]">
+            Manage your billing information and invoices. For questions about
+            billing, contact{' '}
+            <span className="italic font-semibold text-perfReview-500">
+              support@perfreviewai.com
+            </span>
+          </div>
         </div>
 
         {/* Previous Transactions */}
