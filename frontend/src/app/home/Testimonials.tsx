@@ -54,7 +54,6 @@ const testimonials = [
 const Testimonials = () => {
 
   return (
-      
     <section className="border-y-2 border-slate-800 relative isolate px-6 lg:px-8 widget-animate animate bg-background mt-12">
       <div className="mx-auto max-w-4xl  py-12 sm:py-18 lg:py-24">
         <div className="text-center">
