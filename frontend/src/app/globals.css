@@ -6,7 +6,7 @@
   :root {
     /* 240 1.5% 12% */
     --background: 240 0% 0%;
-    --foreground: 0 0% 0%;
+    --foreground: 0 0% 100%;
     --border: 240 3.7% 15.9%;
 
     /* perf review theme color */

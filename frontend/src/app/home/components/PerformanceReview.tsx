@@ -20,6 +20,7 @@ interface PerformanceReviewProps {
   onReviewResultsReceived: (
     review: Array<{ question: string; answer: string }>
   ) => void;
+  setIsReviewGenerating: (value: Boolean) => void;
 }
 
 interface FormState {
@@ -32,6 +33,7 @@ interface FormState {
 const PerformanceReview = ({
   paramsWhenKeysNeeded,
   onReviewResultsReceived,
+  setIsReviewGenerating,
 }: PerformanceReviewProps) => {
   const { addInfoMessage, addFailureMessage } = useFlashMessage();
   const { accessToken } = useAppContext();
@@ -74,6 +76,7 @@ const PerformanceReview = ({
     }
 
     setIsLoading(true);
+    setIsReviewGenerating(true);
 
     try {
       validateForm();
@@ -98,12 +101,13 @@ const PerformanceReview = ({
       addFailureMessage({ message: errMsg, autoClose: false });
     } finally {
       setIsLoading(false);
+      setIsReviewGenerating(false);
     }
   };
 
   return (
-    <section className="relative isolate px-6 py-4 lg:py-8 lg:px-8 widget-animate animate in-view">
-      <div className="flex flex-col shadow-2xl mx-auto max-w-5xl justify-between gap-8 border-secondary items-center rounded-xl border bg-zinc-800 p-6 sm:p-12 sm:px-12  dark:bg-zinc-900">
+    <div className="relative isolate bg-zinc-800 w-full h-full widget-animate animate in-view">
+      <div className="flex flex-col mx-auto w-full justify-between gap-8 items-center p-6 sm:p-12 sm:px-12">
         <div className="w-full">
           <label className="block text-milk text-sm font-medium mb-2">
             Your Role
@@ -171,12 +175,12 @@ const PerformanceReview = ({
           variant={`primary-perf-review`}
           disabled={isLoading}
           className="font-semibold"
-          startIcon={<SvgIcon svg={AiIcon} size='lg' />}
+          startIcon={<SvgIcon svg={AiIcon} size="lg" />}
         >
           {isLoading ? 'Generating...' : 'Generate Performance Review'}
         </TextButton>
       </div>
-    </section>
+    </div>
   );
 };
 

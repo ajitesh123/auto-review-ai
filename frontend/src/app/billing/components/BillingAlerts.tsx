@@ -26,7 +26,8 @@ const BillingAlerts = (props: Props) => {
           <span className="block sm:inline pr-16">
             Your transaction has been successfull
           </span>
-          <span className="absolute top-0 bottom-0 right-0 px-4 py-3"
+          <span
+            className="absolute top-0 bottom-0 right-0 px-4 py-3"
             onClick={() => router.replace('/billing')}
           >
             <svg
@@ -50,7 +51,8 @@ const BillingAlerts = (props: Props) => {
           <span className="block sm:inline pr-16">
             Your transaction was not successfull
           </span>
-          <span className="absolute top-0 bottom-0 right-0 px-4 py-3"
+          <span
+            className="absolute top-0 bottom-0 right-0 px-4 py-3"
             onClick={() => router.replace('/billing')}
           >
             <svg

@@ -18,12 +18,12 @@ const colorConfigs: Record<Variant, string> = {
 
 export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(function Badge(
   { children, className, variant = 'normal', ...rest },
-  ref,
+  ref
 ) {
   const badgeClasses = buildClassNames(
     'border border-solid px-2 py-1 font-semibold rounded leading-5 text-xs',
     colorConfigs[variant],
-    className,
+    className
   );
   return (
     <span

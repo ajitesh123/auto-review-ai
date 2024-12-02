@@ -1,14 +1,13 @@
-import { Badge } from "@components/ui/badge";
+import { Badge } from '@components/ui/badge';
 import TickIcon from '@assets/icons/tick.svg';
-import { UserDetails } from "../../../types/user";
-import { SUBSCRIPTION_TIER } from "@constants/billing";
-import { SvgIcon } from "@components/ui/svg-icon";
+import { UserDetails } from '../../../types/user';
+import { SUBSCRIPTION_TIER } from '@constants/billing';
+import { SvgIcon } from '@components/ui/svg-icon';
 
 interface Props {
-  userDetails: UserDetails
+  userDetails: UserDetails;
 }
 const CurrentPlanDetails = ({ userDetails }: Props) => {
-
   const tier = SUBSCRIPTION_TIER[userDetails?.subscription_tier];
 
   return (
@@ -19,33 +18,33 @@ const CurrentPlanDetails = ({ userDetails }: Props) => {
             <span>Currently Active</span>
           </Badge>
         </div>
-        <span className="text-2xl font-bold">
-          {tier?.title ?? "FREE"} Plan
-        </span>
+        <span className="text-2xl font-bold">{tier?.title ?? 'FREE'} Plan</span>
         <div className="flex flex-col gap-0">
           <div className="flex gap-1">
             <span className="text-[#B4B4B4] text-md flex items-center gap-1.5">
-              {`Total Reviews${userDetails?.subscription_tier === 'free' ? '' : ' Purchased'}:`}
-            </span>  
+              {`Total Reviews${
+                userDetails?.subscription_tier === 'free' ? '' : ' Purchased'
+              }:`}
+            </span>
             <span className="text-lg text-milk flex items-center gap-1.5">
               {userDetails.total_credits_purchased}
-            </span>  
+            </span>
           </div>
           <div className="flex gap-1">
             <span className="text-[#B4B4B4] text-md flex items-center gap-1.5">
               Reviews Used:
-            </span>  
+            </span>
             <span className="text-lg text-milk flex items-center gap-1.5">
               {userDetails.api_calls_count}
-            </span>  
+            </span>
           </div>
           <div className="flex gap-1">
             <span className="text-[#B4B4B4] text-md flex items-center gap-1.5">
               Remaining Reviews:
-            </span>  
+            </span>
             <span className="text-lg text-milk flex items-center gap-1.5">
               {userDetails.remaining_credits}
-            </span>  
+            </span>
           </div>
         </div>
 
@@ -56,9 +55,7 @@ const CurrentPlanDetails = ({ userDetails }: Props) => {
         </div> */}
       </div>
       <div className="flex flex-col gap-2 w-1/2">
-        <span className="text-xs text-[#7B7B7B]">
-          Everything listed below
-        </span>
+        <span className="text-xs text-[#7B7B7B]">Everything listed below</span>
         <div className="flex justify-start flex-col gap-2">
           {tier.features.map((feature) => (
             <span className="text-[#B4B4B4] text-xs flex items-center gap-1.5">
@@ -69,7 +66,7 @@ const CurrentPlanDetails = ({ userDetails }: Props) => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default CurrentPlanDetails;
