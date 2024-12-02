@@ -16,9 +16,7 @@ const GradientBackground = React.memo(
   ({ reviewType }: { reviewType: string }) => {
     return (
       <div className="absolute inset-0 -z-10">
-        <div 
-          className="absolute inset-0 bg-[url('/background.png')] bg-cover bg-center opacity-5"
-        />
+        <div className="absolute inset-0 bg-[url('/background.png')] bg-cover bg-center opacity-5" />
       </div>
     );
   }

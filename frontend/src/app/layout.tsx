@@ -8,7 +8,8 @@ import logo from '@assets/icons/logo.svg';
 
 export const metadata: Metadata = {
   title: 'Simple HR AI',
-  description: 'Simple HR AI is an AI-powered performance review platform that uses your voice to generate personalized performance reviews.',
+  description:
+    'Simple HR AI is an AI-powered performance review platform that uses your voice to generate personalized performance reviews.',
   icons: {
     icon: logo,
   },

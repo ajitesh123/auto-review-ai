@@ -1,3 +1,4 @@
+import { Spinner } from '@components/ui/spinner';
 import { Key, useCallback, useState } from 'react';
 
 interface ReviewItem {
@@ -23,7 +24,7 @@ function formatText(element: any) {
   return result;
 }
 
-const ReviewResults = ({ reviews }: any) => {
+const ReviewResults = ({ reviews, isReviewGenerating }: any) => {
   const [copyBtnText, setCopyBtnText] = useState('Copy');
 
   const handleCopyClick = useCallback(async () => {
@@ -49,17 +50,24 @@ const ReviewResults = ({ reviews }: any) => {
   }, [setCopyBtnText]);
 
   return (
-    <section className="relative isolate px-6 py-4 lg:py-8 lg:px-8 widget-animate animate in-view">
-      <div className="flex flex-col mx-auto max-w-5xl justify-between gap-10">
+    <section className="relative isolate widget-animate animate in-view w-full h-full">
+      <div className="flex flex-col mx-auto w-full h-full justify-between gap-10">
         <div className="h-full w-full">
-          <div className="border-secondary grid max-w-full gap-8 rounded-xl border bg-zinc-800 p-6 sm:p-12 sm:px-12 sm:text-base dark:bg-zinc-900">
-            {reviews.length > 0 && (
+          <div className="grid w-full h-full gap-8  p-6 sm:p-12 sm:px-12 sm:text-base">
+            {reviews.length === 0 ? (
+              <div className="flex flex-col text-center items-center m-auto">
+                <span className="font-semibold text-gray-800 tracking-tight text-4xl">
+                  Please provide inputs to get the generated review here...
+                </span>
+                {isReviewGenerating && <Spinner size="xl" className="mt-8" />}
+              </div>
+            ) : (
               <div>
                 <div className="flex flex-row justify-between mb-12">
-                  <h2 className="font-semibold text-milk tracking-tight text-4xl">
+                  <h2 className="font-semibold text-slate-300 tracking-tight text-4xl">
                     Generated Review
                   </h2>
-                  <div className="flex justify-end">
+                  <div className="flex justify-end overflow-y-auto">
                     <span className="inline-flex items-center text-sm">
                       <button
                         type="button"

@@ -1,17 +1,13 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { ReviewType } from '@constants/common';
-import { isEmptyArray } from '@utils/object';
 import { useAppContext } from '@contexts/AppContext';
 
 import AppIntro from './home/AppIntro';
-import PerformanceReview from './home/PerformanceReview';
-import SelfReview from './home/SelfReview';
-import ReviewResults from './home/ReviewResults';
 import Pricing from '@components/Pricing';
 import Testimonials from './home/Testimonials';
 import HowItWorks from './home/HowItWorks';
+import Review from './home/Review';
 
 interface ReviewItem {
   question: string;
@@ -63,26 +59,20 @@ export default function Home() {
         onUserApiKeyChange={(value: string) => setUserApiKey(value)}
         onGroqApiKeyChange={(value: string) => setGroqApiKey(value)}
       /> */}
+
       {/* App Introduction */}
       <AppIntro
         reviewType={reviewType}
         onReviewTypeChange={onReviewTypeChange}
       />
-      {/* Performance Review and Self Review */}
-      {reviewType === ReviewType.perfReview ? (
-        <PerformanceReview
-          paramsWhenKeysNeeded={paramsWhenKeysNeeded}
-          onReviewResultsReceived={setReviewResults}
-        />
-      ) : (
-        <SelfReview
-          paramsWhenKeysNeeded={paramsWhenKeysNeeded}
-          onReviewResultsReceived={setReviewResults}
-        />
-      )}
-      {!isEmptyArray(reviewResults) && (
-        <ReviewResults reviews={reviewResults} />
-      )}
+
+      {/* Review Section -> Main Product */}
+      <Review
+        reviewType={reviewType}
+        paramsWhenKeysNeeded={paramsWhenKeysNeeded}
+        reviewResults={reviewResults}
+        onReviewResultsReceived={setReviewResults}
+      />
 
       {/* How It works */}
       <HowItWorks />

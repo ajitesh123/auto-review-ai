@@ -1,7 +1,6 @@
 import { motion } from 'framer-motion';
 
 const HowItWorks = () => {
-
   return (
     <section className="relative isolate px-6 lg:px-8 widget-animate animate">
       <div className="mx-auto max-w-5xl py-12 sm:py-18 lg:py-24">
@@ -21,10 +20,10 @@ const HowItWorks = () => {
               role="tablist"
               aria-orientation="horizontal"
             >
-              <iframe 
+              <iframe
                 // width="700"
                 // height="443"
-                className='rounded-lg lg:w-[700px] lg:h-[443px] md:w-[550px] md:h-[345px] sm:w-[450px] sm:h-[284px] w-[300px] h-[190px]'
+                className="rounded-lg lg:w-[700px] lg:h-[443px] md:w-[550px] md:h-[345px] sm:w-[450px] sm:h-[284px] w-[300px] h-[190px]"
                 src="https://www.loom.com/embed/bc5863d58de248a3be5d37b087327420?sid=4e542a6a-cb1a-4a07-b1cf-a3119d0bb245"
                 frameBorder="0"
                 allowFullScreen
@@ -34,7 +33,7 @@ const HowItWorks = () => {
         </div>
       </div>
     </section>
-  )
-}
+  );
+};
 
 export default HowItWorks;
