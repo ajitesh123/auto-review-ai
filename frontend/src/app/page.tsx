@@ -71,7 +71,6 @@ export default function Home() {
         reviewType={reviewType}
         paramsWhenKeysNeeded={paramsWhenKeysNeeded}
         reviewResults={reviewResults}
-        setReviewResults={setReviewResults}
         onReviewResultsReceived={setReviewResults}
       />
 

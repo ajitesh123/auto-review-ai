@@ -1,3 +1,4 @@
+import { Spinner } from '@components/ui/spinner';
 import { Key, useCallback, useState } from 'react';
 
 interface ReviewItem {
@@ -23,7 +24,7 @@ function formatText(element: any) {
   return result;
 }
 
-const ReviewResults = ({ reviews }: any) => {
+const ReviewResults = ({ reviews, isReviewGenerating }: any) => {
   const [copyBtnText, setCopyBtnText] = useState('Copy');
 
   const handleCopyClick = useCallback(async () => {
@@ -55,10 +56,13 @@ const ReviewResults = ({ reviews }: any) => {
           <div className="grid w-full h-full gap-8  p-6 sm:p-12 sm:px-12 sm:text-base">
             {reviews.length === 0 
               ? (
-                <div className='text-center m-auto'>
+                <div className='flex flex-col text-center items-center m-auto'>
                   <span className="font-semibold text-gray-800 tracking-tight text-3xl">
                       Please provide inputs to get the generated review here...
                   </span>
+                  {isReviewGenerating && (
+                     <Spinner size="xl" className='mt-8' />
+                  )}
                 </div>
               )
               : (

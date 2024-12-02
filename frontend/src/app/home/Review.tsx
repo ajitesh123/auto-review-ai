@@ -2,6 +2,7 @@ import PerformanceReview from "./components/PerformanceReview";
 import SelfReview from "./components/SelfReview";
 import { ReviewType } from "@constants/common";
 import ReviewResults from "./components/ReviewResults";
+import { useState } from "react";
 
 // TODO: to be removed
 const abc = [
@@ -25,6 +26,7 @@ const Review = ({
   reviewResults,
   onReviewResultsReceived,
 }: any) => {
+  const [isReviewGenerating, setIsReviewGenerating] = useState<Boolean>(false);
 
   return (
     <section className="relative isolate widget-animate animate in-view  mt-12 px-6 lg:px-8">
@@ -36,16 +38,21 @@ const Review = ({
               <PerformanceReview
                 paramsWhenKeysNeeded={paramsWhenKeysNeeded}
                 onReviewResultsReceived={onReviewResultsReceived}
+                setIsReviewGenerating={setIsReviewGenerating}
               />
             ) : (
               <SelfReview
                 paramsWhenKeysNeeded={paramsWhenKeysNeeded}
                 onReviewResultsReceived={onReviewResultsReceived}
+                setIsReviewGenerating={setIsReviewGenerating}
               />
             )}
           </div>
           <div className="flex flex-1">
-            <ReviewResults reviews={reviewResults} />
+            <ReviewResults
+              reviews={reviewResults}
+              isReviewGenerating={isReviewGenerating}
+            />
           </div>
         </div>
       </div>
