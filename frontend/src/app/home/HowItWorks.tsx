@@ -24,7 +24,7 @@ const HowItWorks = () => {
                 // width="700"
                 // height="443"
                 className="rounded-lg lg:w-[700px] lg:h-[443px] md:w-[550px] md:h-[345px] sm:w-[450px] sm:h-[284px] w-[300px] h-[190px]"
-                src="https://www.loom.com/embed/bc5863d58de248a3be5d37b087327420?sid=4e542a6a-cb1a-4a07-b1cf-a3119d0bb245"
+                src="https://www.loom.com/embed/e87c0e72ed3042f297cfd62275e02455?sid=e4d5654b-990a-43f6-bc0c-aed2914296b7"
                 frameBorder="0"
                 allowFullScreen
               ></iframe>
