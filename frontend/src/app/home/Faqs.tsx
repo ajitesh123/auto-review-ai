@@ -62,8 +62,8 @@ const Faqs = () => {
             </p>
           </div>
           <div className="space-y-12 px-2 xl:px-16 mt-16">
-            {faqItems.map((faqItem) => (
-              <FaqItem faqItem={faqItem} />
+            {faqItems.map((faqItem, index) => (
+              <FaqItem key={index} faqItem={faqItem} />
             ))}
           </div>
         </div>
