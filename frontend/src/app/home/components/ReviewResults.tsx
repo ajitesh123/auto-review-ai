@@ -50,7 +50,7 @@ const ReviewResults = ({ reviews, isReviewGenerating }: any) => {
   }, [setCopyBtnText]);
 
   return (
-    <section className="relative isolate widget-animate animate in-view w-full h-full">
+    <section className="relative isolate widget-animate animate w-full h-full">
       <div className="flex flex-col mx-auto w-full h-full justify-between gap-10">
         <div className="h-full w-full">
           <div className="grid w-full h-full gap-8  p-6 sm:p-12 sm:px-12 sm:text-base">

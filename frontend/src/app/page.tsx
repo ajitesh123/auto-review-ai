@@ -8,6 +8,7 @@ import Pricing from '@components/Pricing';
 import Testimonials from './home/Testimonials';
 import HowItWorks from './home/HowItWorks';
 import Review from './home/Review';
+import Faqs from './home/Faqs';
 
 interface ReviewItem {
   question: string;
@@ -82,6 +83,9 @@ export default function Home() {
 
       {/* Pricing */}
       <Pricing />
+
+      {/* FAQs */}
+      <Faqs />
     </div>
   );
 }

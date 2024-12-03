@@ -4,9 +4,9 @@ const NAV_LINKS = {
 };
 
 const SOCIAL_MEDIA_LINKS = {
-  Instagram: "javascipt:void(0);",
-  Linkedin: "javascipt:void(0);",
-  Twitter: "javascipt:void(0);",
+  Instagram: 'javascipt:void(0);',
+  Linkedin: 'javascipt:void(0);',
+  Twitter: 'javascipt:void(0);',
 };
 
 export { NAV_LINKS, SOCIAL_MEDIA_LINKS };
