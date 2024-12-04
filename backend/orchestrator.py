@@ -11,7 +11,7 @@ def get_api_key(service):
 def get_llm_config(is_paid, service):
     if is_paid:
         if service in ['review', 'self_review']:
-            return 'openai', get_api_key('openai'), 'large'
+            return 'anthropic', get_api_key('anthropic'), 'medium'
         elif service == 'transcription':
             return 'groq', get_api_key('groq'), 'small'
     else:
