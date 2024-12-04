@@ -25,13 +25,13 @@ HELIECONE_API_KEY = Config.Helicone.API_KEY
 
 MODEL_MAPPING = {
     "openai": {
-        "small": "gpt-3.5-turbo-0125",
-        "medium": "gpt-4",
-        "large": "gpt-4-turbo"
+        "small": "gpt-4o-mini",
+        "medium": "gpt-4o",
+        "large": "o1-mini"
     },
     "anthropic": {
         "small": "claude-3-haiku-20240307",
-        "medium": "claude-3-5-sonnet-20240620",
+        "medium": "claude-3-5-sonnet-latest",
         "large": "claude-3-opus-20240229"
     },
     "groq": {
