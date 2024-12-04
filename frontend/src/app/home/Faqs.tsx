@@ -5,21 +5,22 @@ interface FaqItem {
   };
 }
 
+
 const faqItems = [
   {
-    question: 'Lorem ipsum dolor sit amet?',
+    question: "Why don't I just use OpenAI or Anthropic to generate review?",
     answer:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quae, dignissimos. Neque eos, dignissimos provident reiciendis debitis repudiandae commodi perferendis et itaque, similique fugiat cumque impedit iusto vitae dolorum. Nostrum, fugit!',
+      "We are not a general purpose AI tool. We've put a great deal of attention and care to cut down the time it will take for you write prompts, get the output in right format, and generate high-quality performance reviews. This tool is for busy professionals who want to write better performance in minutes. Not hours.",
   },
   {
-    question: 'Lorem ipsum dolor sit amet?',
+    question: 'Do you offer free trials?',
     answer:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quae, dignissimos. Neque eos, dignissimos provident reiciendis debitis repudiandae commodi perferendis et itaque, similique fugiat cumque impedit iusto vitae dolorum. Nostrum, fugit!',
+      "We offer 3 free reviews for you to try out. After that, you can choose to subscribe to our service that uses more advanced models. We have kept the pricing very low to make it affordable for you to try it out. The tools is also open source so it can be self-hosted if you want to.",
   },
   {
-    question: 'Lorem ipsum dolor sit amet?',
+    question: 'How can I add my team to the platform?',
     answer:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quae, dignissimos. Neque eos, dignissimos provident reiciendis debitis repudiandae commodi perferendis et itaque, similique fugiat cumque impedit iusto vitae dolorum. Nostrum, fugit!',
+      "We don't have option to add team members yet. You can invite your team to sign up with their own email and they will be able to see the reviews you have written. Feel free to drop us a note for any feature requests or feedback at ajabhish@gmail.com.",
   },
 ];
 
