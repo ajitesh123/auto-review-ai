@@ -12,6 +12,11 @@ const AudioInputComponent = dynamic(() => import('./AudioInput'), {
   ssr: false,
 });
 
+const reviewQuestionsHint = 
+`- What actions did they take?
+- What impacts did their actions have?
+- What recommendations do you have for their growth?`;
+
 interface PerformanceReviewProps {
   paramsWhenKeysNeeded: {
     userApiKey?: string;
@@ -143,7 +148,7 @@ const PerformanceReview = ({
           <textarea
             value={formState.perfQuestion}
             onChange={updateFormField('perfQuestion')}
-            placeholder="Please enter questions..."
+            placeholder={reviewQuestionsHint}
             className="w-full px-3 py-2 border rounded
               bg-background border-gray-700 text-gray-300
               placeholder:text-gray-600 hover:bg-neutral-800"
