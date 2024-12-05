@@ -20,10 +20,6 @@ class ReviewRequest(BaseModel):
     
     model_config = ConfigDict(protected_namespaces=())
 
-def get_completion(prompt, llm, model_size):
-    response = llm.generate_text(prompt, model=model_size)
-    return response
-
 def create_llm_instance(llm_type, user_api_key):
     llm_classes = {
         "openai": OpenAILLM,
