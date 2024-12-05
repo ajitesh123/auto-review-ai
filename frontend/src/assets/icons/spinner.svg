@@ -4,8 +4,8 @@
     cy="12"
     r="10"
     stroke="currentColor"
-    strokeWidth="4"
-    strokeOpacity="0.25"
+    stroke-width="4"
+    stroke-opacity="0.25"
   ></circle>
   <path
     fill="currentColor"

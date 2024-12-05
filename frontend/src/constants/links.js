@@ -1,6 +1,8 @@
 const NAV_LINKS = {
   Logo: '/', // TODO: will refresh the page
   Billing: '/billing',
+  Priv_Policy: '/privacy-policy',
+  Terms: '/terms-and-conditions',
 };
 
 const SOCIAL_MEDIA_LINKS = {

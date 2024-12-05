@@ -85,20 +85,20 @@ export default function Footer() {
 
             <ul className="mt-6 space-y-4 text-sm">
               <li>
-                <a
-                  href={NAV_LINKS.Logo}
+                <Link
+                  href={NAV_LINKS.Priv_Policy}
                   className="text-slate-300 transition hover:opacity-75"
                 >
                   Privacy
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href={NAV_LINKS.Logo}
+                <Link
+                  href={NAV_LINKS.Terms}
                   className="text-slate-300 transition hover:opacity-75"
                 >
                   Terms
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -106,7 +106,7 @@ export default function Footer() {
 
         <div className="mt-16">
           <div className="flex flex-col md:flex-row md:justify-between">
-            <ul className="col-span-2 flex justify-start gap-6 lg:col-span-5 lg:justify-end">
+            <ul className="col-span-2 flex justify-start gap-6 lg:col-span-5 lg:justify-end invisible">
               <li>
                 <a
                   href={SOCIAL_MEDIA_LINKS.Instagram}
