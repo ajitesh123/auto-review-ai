@@ -95,5 +95,5 @@ def generate_review(your_role, candidate_role, perf_question=None, your_review=N
     perf_question = perf_question or DEFAULT_QUESTIONS
     prompt = generate_prompt(your_role, candidate_role, perf_question, your_review)
     llm = create_llm_instance(llm_type, user_api_key)
-    response = get_completion(prompt, llm, model_size)
+    response = llm.generate_text(prompt, model=model_size)
     return parse_llm_response(response)

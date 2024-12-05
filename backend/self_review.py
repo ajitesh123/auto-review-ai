@@ -3,9 +3,14 @@ from typing import List, Dict, Optional
 import re
 from backend.llm import OpenAILLM, GoogleLLM, AnthropicLLM, GroqLLM
 
+DEFAULT_QUESTIONS = """
+- Describe the top three achievements of this performance cycle.
+- Share two stances of team leadership you showcased this performance cycle.
+"""
+
 class SelfReviewRequest(BaseModel):
     text_dump: str
-    questions: List[str]
+    questions: Optional[str] = None
     instructions: Optional[str] = None
     llm_type: str
     user_api_key: str
@@ -27,7 +32,7 @@ def create_llm_instance(llm_type, user_api_key):
     
     return llm_class(api_key=user_api_key)
 
-def generate_self_review_prompt(text_dump: str, questions: List[str], instructions: Optional[str]) -> str:
+def generate_self_review_prompt(text_dump: str, questions: Optional[str] = DEFAULT_QUESTIONS, instructions: Optional[str] = None) -> str:
     context = text_dump if text_dump else "No text dump provided."    
     prompt = f"""
     You are an AI assistant tasked with helping write a performance self-review. Use the following information and instructions to generate a comprehensive self-review.
@@ -75,7 +80,7 @@ def parse_self_review_response(response: str) -> List[Dict[str, str]]:
     
     return result
 
-def generate_self_review(text_dump: Optional[str] = None, questions: Optional[List[str]] = None, instructions: Optional[str] = None, llm_type: Optional[str] = None, user_api_key: Optional[str] = None, model_size: Optional[str] = None) -> List[Dict[str, str]]:
+def generate_self_review(text_dump: Optional[str] = None, questions: Optional[str] = DEFAULT_QUESTIONS, instructions: Optional[str] = None, llm_type: Optional[str] = None, user_api_key: Optional[str] = None, model_size: Optional[str] = None) -> List[Dict[str, str]]:
     prompt = generate_self_review_prompt(text_dump, questions, instructions)
     llm = create_llm_instance(llm_type, user_api_key)
     response = llm.generate_text(prompt, model=model_size)
