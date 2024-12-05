@@ -106,7 +106,7 @@ export default function Footer() {
 
         <div className="mt-16">
           <div className="flex flex-col md:flex-row md:justify-between">
-            <ul className="col-span-2 flex justify-start gap-6 lg:col-span-5 lg:justify-end">
+            <ul className="col-span-2 flex justify-start gap-6 lg:col-span-5 lg:justify-end invisible">
               <li>
                 <a
                   href={SOCIAL_MEDIA_LINKS.Instagram}
