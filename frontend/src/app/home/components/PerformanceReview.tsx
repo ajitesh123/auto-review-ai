@@ -12,8 +12,7 @@ const AudioInputComponent = dynamic(() => import('./AudioInput'), {
   ssr: false,
 });
 
-const reviewQuestionsHint = 
-`- What actions did they take?
+const reviewQuestionsHint = `- What actions did they take?
 - What impacts did their actions have?
 - What recommendations do you have for their growth?`;
 
