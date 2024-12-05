@@ -96,7 +96,10 @@ const Pricing = () => {
                 </div>
                 <div className="flex flex-col gap-1">
                   {freePlan.features.map((feature, index) => (
-                    <p key={index} className="flex items-center gap-2 text-sm text-gray-300">
+                    <p
+                      key={index}
+                      className="flex items-center gap-2 text-sm text-gray-300"
+                    >
                       <SvgIcon svg={TickIcon} size="md" />
                       <b className="text-left">{feature}</b>
                     </p>
@@ -134,7 +137,10 @@ const Pricing = () => {
                 </div>
                 <div className="flex flex-col gap-1">
                   {starterPlan.features.map((feature, index) => (
-                    <p key={index} className="flex items-center gap-2 text-sm text-gray-300">
+                    <p
+                      key={index}
+                      className="flex items-center gap-2 text-sm text-gray-300"
+                    >
                       <SvgIcon svg={TickIcon} size="md" />
                       <b className="text-left">{feature}</b>
                     </p>
@@ -183,7 +189,10 @@ const Pricing = () => {
                 </div>
                 <div className="flex flex-col gap-1">
                   {proPlan.features.map((feature, index) => (
-                    <p key={index} className="flex items-center gap-2 text-sm text-gray-300">
+                    <p
+                      key={index}
+                      className="flex items-center gap-2 text-sm text-gray-300"
+                    >
                       <SvgIcon svg={TickIcon} size="md" />
                       <b className="text-left">{feature}</b>
                     </p>

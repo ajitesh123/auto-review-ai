@@ -85,20 +85,20 @@ export default function Footer() {
 
             <ul className="mt-6 space-y-4 text-sm">
               <li>
-                <a
-                  href={NAV_LINKS.Logo}
+                <Link
+                  href={NAV_LINKS.Priv_Policy}
                   className="text-slate-300 transition hover:opacity-75"
                 >
                   Privacy
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href={NAV_LINKS.Logo}
+                <Link
+                  href={NAV_LINKS.Terms}
                   className="text-slate-300 transition hover:opacity-75"
                 >
                   Terms
-                </a>
+                </Link>
               </li>
             </ul>
           </div>

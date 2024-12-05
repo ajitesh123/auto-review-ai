@@ -112,3 +112,7 @@
   background-size: 200% auto;
   animation: gradient 3s ease infinite;
 }
+
+.prose {
+  max-width: 95% !important;
+}

@@ -5,7 +5,6 @@ interface FaqItem {
   };
 }
 
-
 const faqItems = [
   {
     question: "Why don't I just use OpenAI or Anthropic to generate review?",
@@ -15,7 +14,7 @@ const faqItems = [
   {
     question: 'Do you offer free trials?',
     answer:
-      "We offer 3 free reviews for you to try out. After that, you can choose to subscribe to our service that uses more advanced models. We have kept the pricing very low to make it affordable for you to try it out. The tools is also open source so it can be self-hosted if you want to.",
+      'We offer 3 free reviews for you to try out. After that, you can choose to subscribe to our service that uses more advanced models. We have kept the pricing very low to make it affordable for you to try it out. The tools is also open source so it can be self-hosted if you want to.',
   },
   {
     question: 'How can I add my team to the platform?',
