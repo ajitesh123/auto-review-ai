@@ -20,11 +20,12 @@ This Agreement is between ${BRAND_NAME}, operated by ${BRAND_NAME}, Inc., and th
 
 ${BRAND_NAME} is an AI-powered platform designed to assist developers in fixing bugs, reviewing code, and answering questions about codebases. ${BRAND_NAME} uses a variety of models, including those from Anthropic, OpenAI, and Google Gemini, and integrates with the Pinecone Inc. vector database for advanced functionalities.
 
-#### **2\. Subscription and Fees**
+#### **2\. Credits and Fees**
 
-- **Subscription Period:** The subscription is on a month-to-month basis.
-- **Fees:** Pricing for ${BRAND_NAME} varies depending on the selected plan and usage. All fees are charged monthly in advance, with any usage-based fees charged in arrears.
-- **Payment Method:** Fees are automatically charged to the payment method on file. Customer authorizes automatic billing for these charges.
+- **Usage-Based Model:** ${BRAND_NAME} operates on a credit-based system where users purchase credits that can be used for various features.
+- **Credit Validity:** Purchased credits do not expire and remain valid until used.
+- **Fees:** Pricing varies based on the number of credits purchased. All fees are charged upfront at the time of credit purchase.
+- **Payment Method:** Fees are charged to the payment method on file when purchasing credits. Customer authorizes these charges.
 
 #### **3\. Customer Responsibilities**
 
