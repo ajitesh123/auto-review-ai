@@ -22,21 +22,23 @@ def get_llm_config(is_paid, service):
 
 def generate_review(is_paid, **kwargs):
     llm_type, user_api_key, model_size = get_llm_config(is_paid, 'review')
-    return generate_review_v1(
+    for chunk in generate_review_v1(
         llm_type=llm_type,
         user_api_key=user_api_key,
         model_size=model_size,
         **kwargs
-    )
+    ): 
+        yield chunk
 
 def generate_self_review(is_paid, **kwargs):
     llm_type, user_api_key, model_size = get_llm_config(is_paid, 'self_review')
-    return generate_self_review_v1(
+    for chunk in generate_self_review_v1(
         llm_type=llm_type,
         user_api_key=user_api_key,
         model_size=model_size,
         **kwargs
-    )
+    ):
+        yield chunk
 
 def transcribe_audio(is_paid, audio_bytes):
     llm_type, api_key, _ = get_llm_config(is_paid, 'transcription')

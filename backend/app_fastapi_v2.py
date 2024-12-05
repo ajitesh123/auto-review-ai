@@ -8,6 +8,7 @@ from fastapi.security import OAuth2AuthorizationCodeBearer
 from fastapi.responses import RedirectResponse
 from urllib.parse import urlencode
 from backend.core.logger import logger
+from fastapi.responses import StreamingResponse
 
 # Local application imports
 from backend.llm import GroqLLM
@@ -25,6 +26,7 @@ from backend.db.operations import (
     update_user_subscription
 )
 from backend.models.user import User, Review
+from backend.review import parse_llm_response
 from backend.routers import billing
 from backend.schemas.review import ReviewRequestV2
 from tests_backend.test_data.test_review_data import TEST_DATA_REVIEW
@@ -43,9 +45,41 @@ async def ping():
     """Health check endpoint."""
     return {"status": "pong"}
 
+# @v2.post("/generate_review")
+# async def api_generate_review(request: ReviewRequestV2, current_user: dict = Depends(get_current_user)):
+#     try:
+#         # Check and decrement credits
+#         credits_available = await check_and_decrement_credits(current_user["id"])
+
+#         if not credits_available:
+#             raise HTTPException(
+#                 status_code=403,
+#                 detail="No credits remaining. Please purchase more credits to continue using this feature."
+#             )
+
+#         # review =  TEST_DATA_REVIEW #Uncomment this for running tests to avoid LLM calls
+#         review = generate_review(**request.model_dump())
+#         logger.info(f"Generated review: {review}")
+
+#         # Save the review to the database
+#         review_obj = Review(
+#             user_id=current_user["id"],
+#             review_type="performance",
+#             review_details=review
+#         )
+#         review_id = await create_review(review_obj)
+#         logger.info(f"Review created with ID: {review_id}")
+
+#         return {"review": review}
+#     except Exception as e:
+#         raise HTTPException(status_code=500, detail=str(e))
+    
 @v2.post("/generate_review")
-async def api_generate_review(request: ReviewRequestV2, current_user: dict = Depends(get_current_user)):
+async def api_generate_review(request: ReviewRequestV2):
     try:
+        current_user = {}
+        current_user["id"] = "kp_12ded86c1d05440b917db676043677db"
+        
         # Check and decrement credits
         credits_available = await check_and_decrement_credits(current_user["id"])
 
@@ -55,21 +89,44 @@ async def api_generate_review(request: ReviewRequestV2, current_user: dict = Dep
                 detail="No credits remaining. Please purchase more credits to continue using this feature."
             )
 
-        # review =  TEST_DATA_REVIEW #Uncomment this for running tests to avoid LLM calls
-        review = generate_review(**request.model_dump())
-        logger.info(f"Generated review: {review}")
+        # Buffer to store the complete review text
+        complete_review = []
 
-        # Save the review to the database
-        review_obj = Review(
-            user_id=current_user["id"],
-            review_type="performance",
-            review_details=review
+        async def generate():
+            try:
+                for chunk in generate_review(**request.model_dump()):
+                    complete_review.append(chunk)
+                    # Format each chunk as a proper SSE message
+                    yield chunk
+
+                # After streaming is complete, save to database
+                full_review = "".join(complete_review)
+                full_review = parse_llm_response(full_review)
+                review_obj = Review(
+                    user_id=current_user["id"],
+                    review_type="performance",
+                    review_details=full_review
+                )
+                review_id = await create_review(review_obj)
+                logger.info(f"Review created with ID: {review_id}")
+
+                # Send a completion message
+                yield f"data: {full_review}\n\n"
+            except Exception as e:
+                logger.error(f"Error in generate stream: {str(e)}")
+                yield f"data: [ERROR] {str(e)}\n\n"
+
+        return StreamingResponse(
+            generate(),
+            media_type="text/event-stream",
+            headers={
+                "Cache-Control": "no-cache",
+                "Connection": "keep-alive",
+                "Content-Type": "text/plain"
+            }
         )
-        review_id = await create_review(review_obj)
-        logger.info(f"Review created with ID: {review_id}")
-
-        return {"review": review}
     except Exception as e:
+        logger.error(f"Error in generate_review: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @v2.post("/generate_self_review")

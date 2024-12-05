@@ -114,7 +114,7 @@ class AnthropicLLM(LLM):
         return response.content[0].text
     
     def stream_text(self, prompt: str, model: str = "large", **kwargs):
-        model_name = self.get_model_name(model)
+        model_name = MODEL_MAPPING["anthropic"][model]
         messages = [{"role": "user", "content": prompt}]
         with self.client.messages.stream(
             model=model_name,
