@@ -1,5 +1,6 @@
 import { Spinner } from '@components/ui/spinner';
 import { Key, useCallback, useState } from 'react';
+import CustomMarkdown from 'src/components/CustomMarkdown';
 
 interface ReviewItem {
   question: string;
@@ -64,7 +65,7 @@ const ReviewResults = ({ reviews, isReviewGenerating }: any) => {
             ) : (
               <div>
                 <div className="flex flex-row justify-between mb-12">
-                  <h2 className="font-semibold text-slate-300 tracking-tight text-4xl">
+                  <h2 className="font-semibold text-milk tracking-tight text-4xl">
                     Generated Review
                   </h2>
                   <div className="flex justify-end overflow-y-auto">
@@ -101,11 +102,11 @@ const ReviewResults = ({ reviews, isReviewGenerating }: any) => {
                       key={index}
                       className="mb-12 border-b pb-8 border-gray-600"
                     >
-                      <h3 className="text-milk font-semibold mb-2">
+                      <h3 className="text-milk text-lg font-semibold mb-2">
                         {item.question}
                       </h3>
                       <p className="text-gray-300 leading-6 text-sm font-medium">
-                        {item.answer}
+                        <CustomMarkdown content={item.answer} />
                       </p>
                     </div>
                   ))}
