@@ -75,7 +75,7 @@ export default function Header() {
               </text>
             </svg>
             <span className="text-xl font-semibold text-white">
-              Simple HR AI
+              OpenHR AI
             </span>
           </Link>
           {!isAuthorizing && (

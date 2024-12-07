@@ -12,7 +12,7 @@ const testimonials = [
     reviewer_name: 'Thomas Nguyen',
     reviewer_img: Thomas_Nguyen,
     review_text:
-      "Simple HR AI has significantly reduced the time I spend on administrative tasks. The AI-generated performance reviews are insightful and personalized. The voice-first feature is incredibly convenient. It's an indispensable tool for any manager.",
+      "OpenHR AI has significantly reduced the time I spend on administrative tasks. The AI-generated performance reviews are insightful and personalized. The voice-first feature is incredibly convenient. It's an indispensable tool for any manager.",
   },
   {
     reviewer_name: 'Kunal Mishra',
@@ -36,13 +36,13 @@ const testimonials = [
     reviewer_name: 'Mayank Raj',
     reviewer_img: Mayank_Raj,
     review_text:
-      "Writing self-reviews was always a chore for me. With Simple HR AI, it's a breeze. The AI helps me articulate my achievements effectively. It's user-friendly and incredibly efficient.",
+      "Writing self-reviews was always a chore for me. With OpenHR AI, it's a breeze. The AI helps me articulate my achievements effectively. It's user-friendly and incredibly efficient.",
   },
   {
     reviewer_name: 'Jinal Dalal',
     reviewer_img: Jinal_Dalal,
     review_text:
-      "I was skeptical about using AI for performance reviews, but Simple HR AI exceeded my expectations. The quality of the reviews is exceptional, and the platform is user-friendly. It's a must-have for any organization looking to modernize their HR processes.",
+      "I was skeptical about using AI for performance reviews, but OpenHR AI exceeded my expectations. The quality of the reviews is exceptional, and the platform is user-friendly. It's a must-have for any organization looking to modernize their HR processes.",
   },
 ];
 
