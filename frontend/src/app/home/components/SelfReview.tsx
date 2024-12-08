@@ -94,7 +94,9 @@ const SelfReview = ({
       if (error?.response && error?.status === 403) {
         errMsg = error?.response?.data?.detail;
       } else {
-        errMsg = error?.message || 'An error occurred while generating the self review.';
+        errMsg =
+          error?.message ||
+          'An error occurred while generating the self review.';
       }
       addFailureMessage({ message: errMsg, autoClose: false });
     } finally {

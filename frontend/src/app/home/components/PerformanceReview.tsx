@@ -104,7 +104,8 @@ const PerformanceReview = ({
       if (error?.response && error?.status === 403) {
         errMsg = error?.response?.data?.detail;
       } else {
-        errMsg = error?.message || 'An error occurred while generating the review.';
+        errMsg =
+          error?.message || 'An error occurred while generating the review.';
       }
       addFailureMessage({ message: errMsg, autoClose: false });
     } finally {
