@@ -45,16 +45,16 @@ async def ping():
 
 @v2.post("/generate_review")
 async def api_generate_review(request: ReviewRequestV2, current_user: dict = Depends(get_current_user)):
+    # Check and decrement credits
+    credits_available = await check_and_decrement_credits(current_user["id"])
+
+    if not credits_available:
+        raise HTTPException(
+            status_code=403,
+            detail="No credits remaining. Please purchase more credits to continue using this feature."
+        )
+
     try:
-        # Check and decrement credits
-        credits_available = await check_and_decrement_credits(current_user["id"])
-
-        if not credits_available:
-            raise HTTPException(
-                status_code=403,
-                detail="No credits remaining. Please purchase more credits to continue using this feature."
-            )
-
         # review =  TEST_DATA_REVIEW #Uncomment this for running tests to avoid LLM calls
         review = generate_review(**request.model_dump())
         logger.info(f"Generated review: {review}")
@@ -74,16 +74,16 @@ async def api_generate_review(request: ReviewRequestV2, current_user: dict = Dep
 
 @v2.post("/generate_self_review")
 async def api_generate_self_review(request: SelfReviewRequestV2, current_user: dict = Depends(get_current_user)):
-    try:
-        # Check and decrement credits
-        credits_available = await check_and_decrement_credits(current_user["id"])
+    # Check and decrement credits
+    credits_available = await check_and_decrement_credits(current_user["id"])
 
-        if not credits_available:
-            raise HTTPException(
-                status_code=403,
-                detail="No credits remaining. Please purchase more credits to continue using this feature."
-            )
-        
+    if not credits_available:
+        raise HTTPException(
+            status_code=403,
+            detail="No credits remaining. Please purchase more credits to continue using this feature."
+        )
+
+    try:    
         self_review = generate_self_review(**request.model_dump())
 
         # Save the review to the database

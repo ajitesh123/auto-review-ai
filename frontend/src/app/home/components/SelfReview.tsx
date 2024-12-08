@@ -90,9 +90,14 @@ const SelfReview = ({
       onReviewResultsReceived(response.self_review);
     } catch (error: any) {
       console.error('Error generating self-review:', error);
-
-      const errMsg =
-        error?.message || 'An error occurred while generating the self review.';
+      let errMsg = '';
+      if (error?.response && error?.status === 403) {
+        errMsg = error?.response?.data?.detail;
+      } else {
+        errMsg =
+          error?.message ||
+          'An error occurred while generating the self review.';
+      }
       addFailureMessage({ message: errMsg, autoClose: false });
     } finally {
       setIsLoading(false);
