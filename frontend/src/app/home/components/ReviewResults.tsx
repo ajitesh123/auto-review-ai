@@ -1,5 +1,7 @@
 import { Spinner } from '@components/ui/spinner';
-import { Key, useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
+import CustomMarkdown from 'src/components/CustomMarkdown';
+import Typewriter from 'src/components/Typewriter';
 
 interface ReviewItem {
   question: string;
@@ -26,6 +28,7 @@ function formatText(element: any) {
 
 const ReviewResults = ({ reviews, isReviewGenerating }: any) => {
   const [copyBtnText, setCopyBtnText] = useState('Copy');
+  const [activeStreamIndex, setActiveStreamIndex] = useState(0); // Track the active review stream
 
   const handleCopyClick = useCallback(async () => {
     setCopyBtnText('Copied!');
@@ -48,6 +51,12 @@ const ReviewResults = ({ reviews, isReviewGenerating }: any) => {
       setCopyBtnText('Copy');
     }, 1500);
   }, [setCopyBtnText]);
+
+  const handleCompleteStream = () => {
+    if (activeStreamIndex < reviews.length - 1) {
+      setActiveStreamIndex((prev) => prev + 1); // Move to the next review
+    }
+  };
 
   return (
     <section className="relative isolate widget-animate animate w-full h-full">
@@ -95,18 +104,31 @@ const ReviewResults = ({ reviews, isReviewGenerating }: any) => {
                   </div>
                 </div>
 
-                <div id="reviews">
-                  {reviews.map((item: ReviewItem, index: Key) => (
+                <div id="reviews" className="flex flex-col gap-8">
+                  {reviews.map((item: ReviewItem, index: any) => (
                     <div
                       key={index}
-                      className="mb-12 border-b pb-8 border-gray-600"
+                      className={`border-b pb-8 border-gray-600 ${
+                        index <= activeStreamIndex ? 'block' : 'hidden'
+                      }`}
                     >
                       <h3 className="text-milk font-semibold mb-2">
                         {item.question}
                       </h3>
-                      <p className="text-gray-300 leading-6 text-sm font-medium">
-                        {item.answer}
-                      </p>
+                      {index < activeStreamIndex ? (
+                        <CustomMarkdown
+                          content={item.answer}
+                          className="text-sm leading-6 font-medium"
+                        />
+                      ) : index === activeStreamIndex ? (
+                        <p className="text-slate-300 leading-6 text-sm font-medium">
+                          <Typewriter
+                            text={item.answer}
+                            speed={10}
+                            onComplete={handleCompleteStream}
+                          />
+                        </p>
+                      ) : null}
                     </div>
                   ))}
                 </div>

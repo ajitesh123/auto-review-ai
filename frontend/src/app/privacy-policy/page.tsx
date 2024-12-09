@@ -6,7 +6,7 @@ import CustomMarkdown from 'src/components/CustomMarkdown';
 type Props = {};
 
 const BRAND_NAME = 'OpenHR AI';
-const SUPPORT_EMAIL = 'support@openhrai[dot]com';
+const SUPPORT_EMAIL = 'support@getopenhrai[dot]com';
 
 const page = (props: Props) => {
   const privacyPolicyContent = `

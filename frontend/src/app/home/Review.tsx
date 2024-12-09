@@ -13,7 +13,7 @@ const Review = ({
   const [isReviewGenerating, setIsReviewGenerating] = useState<Boolean>(false);
 
   return (
-    <section className="relative isolate widget-animate animate in-view  mt-12 px-6 lg:px-8">
+    <section className="relative isolate widget-animate animate in-view mt-12 px-6 lg:px-8">
       <div className="mx-auto border-2 rounded-lg bg-zinc-900 border-slate-800 w-full lg:max-w-7xl">
         <div className="grid grid-cols-1 md:grid-cols-2 h-full items-stretch justify-center">
           <div className="flex flex-1 items-start">

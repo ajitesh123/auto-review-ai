@@ -46,7 +46,7 @@ export default function Footer() {
                 </text>
               </svg>
               <span className="self-center text-2xl font-bold whitespace-nowrap dark:text-white">
-                Simple HR AI
+                OpenHR AI
               </span>
             </Link>
             <div className="col-span-2">

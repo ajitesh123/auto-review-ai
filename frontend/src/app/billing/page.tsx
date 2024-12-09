@@ -54,7 +54,7 @@ export default function Billing() {
             Manage your billing information and invoices. For questions about
             billing, contact{' '}
             <span className="italic font-semibold text-perfReview-500">
-              support@perfreviewai.com
+              support@getopenhrai.com
             </span>
           </div>
         </div>
