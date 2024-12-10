@@ -1,5 +1,9 @@
-# 🚀 Performance Review AI
-Generate performance reviews and self-reviews in minutes using Large Language Models (LLMs).
+# 🚀 OpenHR AI: Write better performance reviews in minutes
+
+Smartest way to generate performance reviews and self-reviews using AI. Our voice-first and AI-powered platform makes the review process incredibly simple and efficient.
+
+https://github.com/ajitesh123/Random-Forest/blob/master/AI%20Performance%20Review%20Demo%20%F0%9F%A4%96%20(1).mp4
+
 
 ## ✨ Features
 
@@ -117,3 +121,22 @@ Supported LLM providers:
 ## Note
 
 Make sure to provide your own API key for the selected LLM provider when using the application.
+
+## How to contribute
+
+We welcome contributions from the community! If you'd like to contribute to this project, please follow these steps:
+
+1. Fork the repository
+2. Create a new branch
+3. Make your changes
+4. Create a pull request
+
+Also, this is the first tool in the set of tools we want to build to simplify HR workflow and make what it should about - simple, helpful, feel-like coaching vs what it is today - complex, stressful, and time-consuming.
+
+## 📧 Contact
+
+For any questions or feedback, please reach out to us at [ajabhish@gmail.com](mailto:ajabhish@gmail.com).
+
+## 📝 License
+
+This project is open-sourced under the MIT License - see the [LICENSE](LICENSE) file for details.
