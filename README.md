@@ -1,11 +1,17 @@
 # 🚀 OpenHR AI: Write better performance reviews in minutes
+[![Website](https://img.shields.io/badge/Website-getopenhrai.com-blue)](https://www.getopenhrai.com/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-Smartest way to generate performance reviews and self-reviews using AI. Our voice-first and AI-powered platform makes the review process incredibly simple and efficient.
+In our career at big and startups, we have hardly enjoyed HR workflow eventhough they are critical part of firms and meant to be simple and helpful. In our small ways, we want to fix it by building tools that make HR workflow simple, helpful, and feel-like coaching vs what it is today - complex, stressful, and time-consuming.
 
-https://github.com/ajitesh123/Random-Forest/blob/master/AI%20Performance%20Review%20Demo%20%F0%9F%A4%96%20(1).mp4
+If this is something that excites you, please reach out to us at [ajabhish@gmail.com](mailto:ajabhish@gmail.com).
 
+Demo of our first tool:
+https://github.com/user-attachments/assets/21f7a559-d007-4098-9b42-dff2aee08c6b
 
-## ✨ Features
+We aim to keep this open source so that you can use it with no strings attached, contribute to it, and make something useful for the world.
+
+## ✨ Existing Features
 
 - Performance Review Generation
 - Self-Review Generation
@@ -14,7 +20,7 @@ https://github.com/ajitesh123/Random-Forest/blob/master/AI%20Performance%20Revie
 - Streamlit web interface
 - FastAPI backend for API access
 
-## Installation
+## 🚀 Getting Started
 
 1. Clone the repository
 
@@ -134,9 +140,13 @@ We welcome contributions from the community! If you'd like to contribute to this
 Also, this is the first tool in the set of tools we want to build to simplify HR workflow and make what it should about - simple, helpful, feel-like coaching vs what it is today - complex, stressful, and time-consuming.
 
 ## 📧 Contact
-
-For any questions or feedback, please reach out to us at [ajabhish@gmail.com](mailto:ajabhish@gmail.com).
+- 📧 Email: [ajabhish@gmail.com](mailto:ajabhish@gmail.com)
+- 🌐 Website: [getopenhrai.com](https://www.getopenhrai.com/)
 
 ## 📝 License
 
 This project is open-sourced under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+<p align="center">Made with ❤️ by the OpenHR AI Team</p>
