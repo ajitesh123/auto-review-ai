@@ -7,6 +7,7 @@ In our career at big and startups, we have hardly enjoyed HR workflow eventhough
 If this is something that excites you, please reach out to us at [ajabhish@gmail.com](mailto:ajabhish@gmail.com).
 
 Demo of our first tool:
+
 https://github.com/user-attachments/assets/21f7a559-d007-4098-9b42-dff2aee08c6b
 
 We aim to keep this open source so that you can use it with no strings attached, contribute to it, and make something useful for the world.
