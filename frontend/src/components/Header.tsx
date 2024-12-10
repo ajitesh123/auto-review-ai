@@ -10,6 +10,8 @@ import Profile from '@components/Profile';
 import { useAppContext } from '@contexts/AppContext';
 import { isPerfReviewType } from '@constants/common';
 import { login } from '@services/auth';
+import githubLogo from '@assets/icons/github-logo.svg';
+import { SvgIcon } from './ui/svg-icon';
 
 export default function Header() {
   const { reviewType, accessToken, user, isAuthorizing } = useAppContext();
@@ -76,6 +78,13 @@ export default function Header() {
             </svg>
             <span className="text-xl font-semibold text-white">OpenHR AI</span>
           </Link>
+          <Link
+            href={NAV_LINKS.Github}
+            passHref
+            target='_blank'
+          >
+            <SvgIcon svg={githubLogo} size='custom' width={35} height={35} />
+          </Link>
           {!isAuthorizing && (
             <div className="flex flex-wrap items-center gap-3 md:gap-6">
               {!accessToken ? (
@@ -85,7 +94,7 @@ export default function Header() {
                     id="navbar-sticky"
                   >
                     <ul className="flex flex-row p-0 font-normal gap-3 md:gap-6 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0">
-                      <li className="md:block">
+                      <li className="hidden md:block">
                         <Link
                           href={'#pricing'}
                           className="block rounded text-gray-300 md:hover:text-white"
