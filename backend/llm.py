@@ -40,8 +40,8 @@ MODEL_MAPPING = {
         "large": "mixtral-8x7b-32768"
     },
     "google": {
-        "small": "gemini-1.5-flash-latest",
-        "medium": "gemini-1.0-pro",
+        "small": "gemini-2.0-flash-exp",
+        "medium": "gemini-2.0-flash-exp",
         "large": "gemini-1.5-pro-latest"
     }
 }
