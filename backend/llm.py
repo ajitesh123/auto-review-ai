@@ -40,8 +40,8 @@ MODEL_MAPPING = {
         "large": "mixtral-8x7b-32768"
     },
     "google": {
-        "small": "gemini-1.5-flash-latest",
-        "medium": "gemini-1.0-pro",
+        "small": "gemini-2.0-flash-exp",
+        "medium": "gemini-2.0-flash-exp",
         "large": "gemini-1.5-pro-latest"
     }
 }
@@ -202,7 +202,6 @@ class GoogleLLM(LLM):
         generation_config = {
             "temperature": kwargs.get("temperature", 0.2),
             "top_p": kwargs.get("top_p", 0.95),
-            "top_k": kwargs.get("top_k", 64),
             "max_output_tokens": kwargs.get("max_tokens", 8192),
             "response_mime_type": "text/plain",
         }
@@ -215,7 +214,6 @@ class GoogleLLM(LLM):
         generation_config = {
             "temperature": kwargs.get("temperature", 0.2),
             "top_p": kwargs.get("top_p", 0.95),
-            "top_k": kwargs.get("top_k", 64),
             "max_output_tokens": kwargs.get("max_tokens", 8192),
             "response_mime_type": "text/plain",
         }
