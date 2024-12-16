@@ -152,6 +152,8 @@ async def callback(code: str, state: str):
                 id=user_details["id"],  # Use the Kinde-provided ID
                 email=user_details["email"],
                 name=user_details.get("given_name", "") + " " + user_details.get("family_name", ""),
+                remaining_credits=3,
+                total_credits_purchased=3,
                 is_paid=False
             )
             await create_user(user)
