@@ -4,6 +4,7 @@ const NAV_LINKS = {
   Priv_Policy: '/privacy-policy',
   Terms: '/terms-and-conditions',
   Github: 'https://github.com/ajitesh123/auto-review-ai',
+  Voice_AI: '/voice-ai',
 };
 
 const SOCIAL_MEDIA_LINKS = {
