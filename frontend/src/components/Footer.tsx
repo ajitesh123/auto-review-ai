@@ -77,6 +77,15 @@ export default function Footer() {
                   Self Review
                 </Link>
               </li>
+              <li>
+                <Link
+                  href={NAV_LINKS.Voice_AI}
+                  onClick={scrollToTop}
+                  className="text-slate-300 transition hover:opacity-75"
+                >
+                  Voice Companion
+                </Link>
+              </li>
             </ul>
           </div>
 
