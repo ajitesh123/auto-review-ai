@@ -2,6 +2,7 @@
 
 import React, { useRef, useState } from 'react';
 import { LiveAPIProvider } from '@contexts/LiveAPIContext';
+import ControlTray from './components/ControlTray';
 
 const API_KEY = process.env.NEXT_PUBLIC_GEMINI_API_KEY as string;
 if (typeof API_KEY !== 'string') {
@@ -26,6 +27,14 @@ export default function VoiceAI() {
           <div className="text-sm font-semibold text-[#B4B4B4]">
             This is a sample voice AI page. {API_KEY}
           </div>
+
+          <ControlTray
+            videoRef={videoRef}
+            supportsVideo={true}
+            onVideoStreamChange={setVideoStream}
+          >
+            {/* put your own buttons here */}
+          </ControlTray>
         </div>
       </LiveAPIProvider>
     </div>
