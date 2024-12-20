@@ -17,7 +17,7 @@
 import {
   createWorketFromSrc,
   registeredWorklets,
-} from "./audioworklet-registry";
+} from './audioworklet-registry';
 
 export class AudioStreamer {
   public audioQueue: Float32Array[] = [];
@@ -45,7 +45,7 @@ export class AudioStreamer {
   async addWorklet<T extends (d: any) => void>(
     workletName: string,
     workletSrc: string,
-    handler: T,
+    handler: T
   ): Promise<this> {
     let workletsRecord = registeredWorklets.get(this.context);
     if (workletsRecord && workletsRecord[workletName]) {
@@ -91,7 +91,7 @@ export class AudioStreamer {
     }
 
     const newBuffer = new Float32Array(
-      this.processingBuffer.length + float32Array.length,
+      this.processingBuffer.length + float32Array.length
     );
     newBuffer.set(this.processingBuffer);
     newBuffer.set(float32Array, this.processingBuffer.length);
@@ -115,7 +115,7 @@ export class AudioStreamer {
     const audioBuffer = this.context.createBuffer(
       1,
       audioData.length,
-      this.sampleRate,
+      this.sampleRate
     );
     audioBuffer.getChannelData(0).set(audioData);
     return audioBuffer;
@@ -203,7 +203,7 @@ export class AudioStreamer {
         (this.scheduledTime - this.context.currentTime) * 1000;
       setTimeout(
         () => this.scheduleNextBuffer(),
-        Math.max(0, nextCheckTime - 50),
+        Math.max(0, nextCheckTime - 50)
       );
     }
   }
@@ -222,7 +222,7 @@ export class AudioStreamer {
 
     this.gainNode.gain.linearRampToValueAtTime(
       0,
-      this.context.currentTime + 0.1,
+      this.context.currentTime + 0.1
     );
 
     setTimeout(() => {
@@ -233,7 +233,7 @@ export class AudioStreamer {
   }
 
   async resume() {
-    if (this.context.state === "suspended") {
+    if (this.context.state === 'suspended') {
       await this.context.resume();
     }
     this.isStreamComplete = false;

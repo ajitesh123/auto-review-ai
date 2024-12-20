@@ -78,12 +78,8 @@ export default function Header() {
             </svg>
             <span className="text-xl font-semibold text-white">OpenHR AI</span>
           </Link>
-          <Link
-            href={NAV_LINKS.Github}
-            passHref
-            target='_blank'
-          >
-            <SvgIcon svg={githubLogo} size='custom' width={35} height={35} />
+          <Link href={NAV_LINKS.Github} passHref target="_blank">
+            <SvgIcon svg={githubLogo} size="custom" width={35} height={35} />
           </Link>
           {!isAuthorizing && (
             <div className="flex flex-wrap items-center gap-3 md:gap-6">

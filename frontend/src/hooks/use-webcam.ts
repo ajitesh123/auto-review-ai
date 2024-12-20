@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { useState, useEffect } from "react";
-import { UseMediaStreamResult } from "./use-media-stream-mux";
+import { useState, useEffect } from 'react';
+import { UseMediaStreamResult } from './use-media-stream-mux';
 
 export function useWebcam(): UseMediaStreamResult {
   const [stream, setStream] = useState<MediaStream | null>(null);
@@ -29,12 +29,12 @@ export function useWebcam(): UseMediaStreamResult {
     if (stream) {
       stream
         .getTracks()
-        .forEach((track) => track.addEventListener("ended", handleStreamEnded));
+        .forEach((track) => track.addEventListener('ended', handleStreamEnded));
       return () => {
         stream
           .getTracks()
           .forEach((track) =>
-            track.removeEventListener("ended", handleStreamEnded),
+            track.removeEventListener('ended', handleStreamEnded)
           );
       };
     }
@@ -58,7 +58,7 @@ export function useWebcam(): UseMediaStreamResult {
   };
 
   const result: UseMediaStreamResult = {
-    type: "webcam",
+    type: 'webcam',
     start,
     stop,
     isStreaming,
