@@ -21,7 +21,7 @@ import {
   ClientContentMessage,
   isInterrupted,
   isModelTurn,
-  isServerContenteMessage,
+  isServerContentMessage,
   isSetupCompleteMessage,
   isToolCallCancellationMessage,
   isToolCallMessage,
@@ -189,7 +189,7 @@ export class MultimodalLiveClient extends EventEmitter<MultimodalLiveClientEvent
 
     // this json also might be `contentUpdate { interrupted: true }`
     // or contentUpdate { end_of_turn: true }
-    if (isServerContenteMessage(response)) {
+    if (isServerContentMessage(response)) {
       const { serverContent } = response;
       if (isInterrupted(serverContent)) {
         this.log('receive.serverContent', 'interrupted');

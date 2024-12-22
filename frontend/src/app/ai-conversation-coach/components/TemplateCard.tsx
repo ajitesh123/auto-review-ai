@@ -15,11 +15,11 @@ const TemplateCard = ({ template, onClick }: any) => {
           <span className="grid h-16 w-16 place-items-center rounded-full bg-zinc-800 transition-all duration-300 group-hover:bg-zinc-900">
             <SvgIcon svg={MicrophoneIcon} className="h-8 w-8 text-white" />
           </span>
-          <span className="text-lg font-mono text-white transition-all duration-300 px-4">
-            {template.title}
+          <span className="text-lg font-mono text-white transition-all duration-300 pl-4">
+            {template.name}
           </span>
         </div>
-        <div className="space-y-6 pt-5 h-32 text-base leading-7 text-gray-400 transition-all duration-300 group-hover:text-white/90">
+        <div className="space-y-6 pt-5 h-28 text-base leading-7 text-gray-400 transition-all duration-300 group-hover:text-white/90">
           <p>{template.description}</p>
         </div>
         <div className="pt-5 text-base font-semibold leading-7">

@@ -1,3 +1,5 @@
+'use client';
+
 import React, { createContext, FC, ReactNode, useContext } from 'react';
 import { useLiveAPI, UseLiveAPIResults } from '../hooks/use-live-api';
 

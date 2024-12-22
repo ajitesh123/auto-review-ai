@@ -4,6 +4,7 @@ import Header from '@components/Header';
 import Footer from '@components/Footer';
 import { AppProvider } from '@contexts/AppContext';
 import { FlashMessagesProvider } from '@components/ui/flash-messages/flash-messages.context';
+import { LiveAPIProvider } from '@contexts/LiveAPIContext';
 
 export const metadata: Metadata = {
   title: 'OpenHR AI',
@@ -13,6 +14,15 @@ export const metadata: Metadata = {
     icon: '/favicon.png',
   },
 };
+
+
+const API_KEY = process.env.NEXT_PUBLIC_GEMINI_API_KEY as string;
+if (typeof API_KEY !== 'string') {
+  throw new Error('set REACT_APP_GEMINI_API_KEY in .env');
+}
+
+const host = 'generativelanguage.googleapis.com';
+const uri = `wss://${host}/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent`;
 
 export default function RootLayout({
   children,
@@ -28,13 +38,15 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen flex flex-col bg-black relative overflow-x-hidden">
-        <FlashMessagesProvider>
-          <AppProvider>
-            <Header />
-            <main className="flex-grow mt-[75px] relative">{children}</main>
-            <Footer />
-          </AppProvider>
-        </FlashMessagesProvider>
+        <LiveAPIProvider url={uri} apiKey={API_KEY}>
+          <FlashMessagesProvider>
+            <AppProvider>
+              <Header />
+              <main className="flex-grow mt-[75px] relative">{children}</main>
+              <Footer />
+            </AppProvider>
+          </FlashMessagesProvider>
+        </LiveAPIProvider>
       </body>
     </html>
   );

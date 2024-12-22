@@ -168,7 +168,7 @@ export const isToolResponseMessage = (a: unknown): a is ToolResponseMessage =>
 export const isSetupCompleteMessage = (a: unknown): a is SetupCompleteMessage =>
   prop(a, 'setupComplete');
 
-export const isServerContenteMessage = (a: any): a is ServerContentMessage =>
+export const isServerContentMessage = (a: any): a is ServerContentMessage =>
   prop(a, 'serverContent');
 
 export const isToolCallMessage = (a: any): a is ToolCallMessage =>

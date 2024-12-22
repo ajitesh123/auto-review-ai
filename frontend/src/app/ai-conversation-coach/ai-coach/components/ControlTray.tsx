@@ -11,7 +11,7 @@ import { useLiveAPIContext } from '@contexts/LiveAPIContext';
 import { UseMediaStreamResult } from '@hooks/use-media-stream-mux';
 import { useScreenCapture } from '@hooks/use-screen-capture';
 import { useWebcam } from '@hooks/use-webcam';
-import { AudioRecorder } from '../../../voice-ai-lib/audio-recorder';
+import { AudioRecorder } from 'src/voice-ai-lib/audio-recorder';
 import AudioPulse from './audio-pulse/AudioPulse';
 import { buildClassNames } from '@utils/classnames';
 
@@ -116,7 +116,7 @@ export const ConnectionButton = memo(
           onMouseLeave={() => setShowTooltip(false)}
           className={buildClassNames(
             'material-symbols-outlined filled text-lg',
-            !connected && 'bg-[var(--Blue-500)] text-[var(--Neutral-5)]'
+            connected ? 'bg-[var(--Blue-500)] text-[var(--Neutral-5)]' : undefined
           )}
         >
           <span className="material-symbols-outlined filled text-lg">
@@ -271,7 +271,7 @@ export default function ControlTray({
           'bg-[var(--Neutral-5)] border border-white',
           'rounded-[16px] p-2.5',
           'overflow-clip transition-all duration-600 ease-in',
-          !connected && 'opacity-70'
+          connected ? undefined : 'opacity-70'
         )}
       >
         <MicButton muted={muted} onToggle={() => setMuted(!muted)} />
@@ -306,14 +306,14 @@ export default function ControlTray({
           className={buildClassNames(
             'relative rounded-[14px] border border-[var(--Neutral-30)]',
             'bg-[var(--Neutral-5)] p-2.5',
-            !connected && [
+            ...(!connected ? [
               "after:content-['']",
               'after:absolute after:-inset-[2px]',
               'after:rounded-[16px]',
               'after:bg-[var(--Blue-500)]',
               'after:opacity-20 after:-z-10',
               'after:animate-[pulse-attention_2s_infinite]',
-            ]
+            ] : [])
           )}
         >
           <ConnectionButton
@@ -325,7 +325,7 @@ export default function ControlTray({
         <span
           className={buildClassNames(
             'text-[11px] text-[var(--Blue-500)] select-none',
-            !connected && 'opacity-0'
+            !connected ? 'opacity-0' : undefined
           )}
         >
           Streaming

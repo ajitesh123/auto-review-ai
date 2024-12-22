@@ -1,36 +1,13 @@
 'use client';
 
-import React, { useRef, useState } from 'react';
+import React from 'react';
 import RepeatBackground from '@components/RepeatBackground';
 import TemplateCard from './components/TemplateCard';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
+import { conversationTemplates } from '@app/ai-conversation-coach/constants/coach-templates';
 
-const templates = [
-  {
-    id: 1,
-    title: 'Mock Interview',
-    description:
-      'Perfect for learning how the framework works, prototyping a new idea, or creating a demo to share online.',
-  },
-  {
-    id: 2,
-    title: 'Performance Review',
-    description: 'Perfect for practicing feedback on your performance.',
-  },
-  {
-    id: 3,
-    title: 'Sales Pitch',
-    description: 'Perfect for practicing a sales pitch.',
-  },
-  {
-    id: 4,
-    title: 'Business Pitch',
-    description: 'Perfect for practicing a business pitch.',
-  },
-];
-
-export default function VoiceAI() {
+export default function AIConversationTemplates() {
   const router = useRouter();
 
   const onClickTemplate = (template: any) => {
@@ -85,7 +62,7 @@ export default function VoiceAI() {
           aria-orientation="horizontal"
         >
             <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-              {templates.map((template, i) => (
+              {conversationTemplates.map((template, i) => (
                 <TemplateCard
                   key={i}
                   template={template}
