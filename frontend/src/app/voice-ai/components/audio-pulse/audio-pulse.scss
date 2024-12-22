@@ -6,11 +6,7 @@
   transition: all 0.5s;
 
   & > div {
-    background: linear-gradient(
-      45deg,
-      #9c27b0,
-      #ff69b4
-    );
+    background: linear-gradient(45deg, #9c27b0, #ff69b4);
     border-radius: 1000px;
     width: 4px;
     min-height: 4px;
@@ -29,11 +25,7 @@
     opacity: 1;
 
     & > div {
-      background: linear-gradient(
-        45deg,
-        #ff1493,
-        #9400d3
-      );
+      background: linear-gradient(45deg, #ff1493, #9400d3);
     }
   }
 }
@@ -59,9 +51,15 @@
 }
 
 @keyframes gradientShift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 .audioPulse > div {

@@ -32,6 +32,18 @@
     --self-review-700: #0f766e;
     --self-review-800: #115e59;
     --self-review-900: #134e4a;
+
+    /* conversation coach theme color */
+    --conversation-coach-50: #f5f3ff;
+    --conversation-coach-100: #ede9fe;
+    --conversation-coach-200: #ddd6fe;
+    --conversation-coach-300: #c4b5fd;
+    --conversation-coach-400: #a78bfa;
+    --conversation-coach-500: #8b5cf6;
+    --conversation-coach-600: #7c3aed;
+    --conversation-coach-700: #6d28d9;
+    --conversation-coach-800: #5b21b6;
+    --conversation-coach-900: #4c1d95;
   }
 }
 
