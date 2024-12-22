@@ -1,19 +1,10 @@
 'use client';
 
 import React, { useRef, useState } from 'react';
-import { LiveAPIProvider } from '@contexts/LiveAPIContext';
-import ControlTray from './components/ControlTray';
 import RepeatBackground from '@components/RepeatBackground';
 import TemplateCard from './components/TemplateCard';
 import { motion } from 'framer-motion';
-
-const API_KEY = process.env.NEXT_PUBLIC_GEMINI_API_KEY as string;
-if (typeof API_KEY !== 'string') {
-  throw new Error('set REACT_APP_GEMINI_API_KEY in .env');
-}
-
-const host = 'generativelanguage.googleapis.com';
-const uri = `wss://${host}/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent`;
+import { useRouter } from 'next/navigation';
 
 const templates = [
   {
@@ -40,14 +31,11 @@ const templates = [
 ];
 
 export default function VoiceAI() {
-  // this video reference is used for displaying the active stream, whether that is the webcam or screen capture
-  // feel free to style as you see fit
-  const videoRef = useRef<HTMLVideoElement>(null);
-  // either the screen capture, the video or null, if null we hide it
-  const [videoStream, setVideoStream] = useState<MediaStream | null>(null);
+  const router = useRouter();
 
   const onClickTemplate = (template: any) => {
     console.log('clicked template', template);
+    router.push(`/ai-conversation-coach/ai-coach`);
   };
 
   return (
@@ -92,11 +80,10 @@ export default function VoiceAI() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.4 }}
-          className="flex flex-col overflow-y-auto max-w-6xl mx-auto p-4 items-center justify-center"
+          className="flex flex-col overflow-y-auto max-w-6xl mx-auto p-4 items-center justify-center mb-8"
           role="tablist"
           aria-orientation="horizontal"
         >
-          <LiveAPIProvider url={uri} apiKey={API_KEY}>
             <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
               {templates.map((template, i) => (
                 <TemplateCard
@@ -106,15 +93,6 @@ export default function VoiceAI() {
                 />
               ))}
             </div>
-
-            <ControlTray
-              videoRef={videoRef}
-              supportsVideo={true}
-              onVideoStreamChange={setVideoStream}
-            >
-              {/* put your own buttons here */}
-            </ControlTray>
-          </LiveAPIProvider>
         </motion.div>
       </div>
     </div>

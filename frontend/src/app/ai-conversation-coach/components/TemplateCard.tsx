@@ -5,7 +5,10 @@ import MicrophoneIcon from '@assets/icons/mic_new.svg';
 
 const TemplateCard = ({ template, onClick }: any) => {
   return (
-    <div className="w-full border border-gray-800 group relative cursor-pointer p-4 overflow-hidden bg-zinc-900  shadow-xl ring-1 ring-gray-900/5 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl sm:mx-auto sm:rounded-lg">
+    <div
+      onClick={() => onClick(template)}
+      className="w-full border border-gray-800 group relative cursor-pointer p-4 overflow-hidden bg-zinc-900  shadow-xl ring-1 ring-gray-900/5 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl sm:mx-auto sm:rounded-lg"
+    >
       <span className="absolute top-4 z-0 h-16 w-16 rounded-full bg-zinc-800 transition-all duration-300 group-hover:scale-[12]"></span>
       <div className="relative mx-auto max-w-md">
         <div className="flex flex-row items-center">
