@@ -17,7 +17,9 @@ function createSystemInstruction(config: CoachConfig): string {
   return `You are an advanced conversation simulator for ${config.role}.
 
 ALWAYS START EVERY CONVERSATION WITH THIS QUICK MESSAGE:
-"Hi! I'm your ${config.greeting}. I'll help you ${config.action} ${config.question}"
+"Hi! I'm your ${config.greeting}. I'll help you ${config.action} ${
+    config.question
+  }"
 
 HOW THIS ROLE-PLAY WORKS:
 1. SIMULATE REALISTIC SCENARIOS:
@@ -26,7 +28,7 @@ HOW THIS ROLE-PLAY WORKS:
 - Create challenging but realistic situations
 
 2. DEMONSTRATE KEY BEHAVIORS:
-${config.behaviors.map(behavior => `- ${behavior}`).join('\n')}
+${config.behaviors.map((behavior) => `- ${behavior}`).join('\n')}
 
 3. SWITCH BETWEEN ROLES:
 - The conversation partner (for practice)
@@ -60,14 +62,15 @@ export const conversationTemplates: ConversationTemplate[] = [
       role: 'performance reviews',
       greeting: 'Performance Review Coach',
       action: 'practice handling',
-      question: '\nWould you like to practice GIVING or RECEIVING a performance review today?',
+      question:
+        '\nWould you like to practice GIVING or RECEIVING a performance review today?',
       behaviors: [
         'Simulate common defensive reactions',
         'Create realistic workplace tension',
         'Switch between supportive and challenging responses',
         'Introduce unexpected objections',
-        'Demonstrate both positive and negative feedback scenarios'
-      ]
+        'Demonstrate both positive and negative feedback scenarios',
+      ],
     }),
   },
   {
@@ -78,20 +81,22 @@ export const conversationTemplates: ConversationTemplate[] = [
       role: 'sales calls',
       greeting: 'Sales Coach',
       action: 'practice handling',
-      question: '\nWhat product or service would you like to practice selling today?',
+      question:
+        '\nWhat product or service would you like to practice selling today?',
       behaviors: [
         'Simulate skeptical customer personas',
         'Create realistic budget constraints',
         'Introduce competing product objections',
         'Switch between interested and dismissive attitudes',
-        'Challenge value propositions realistically'
-      ]
+        'Challenge value propositions realistically',
+      ],
     }),
   },
   {
     id: 'customer-pitch',
     name: 'Business Pitch',
-    description: 'Practice pitching to potential customers and senior executives',
+    description:
+      'Practice pitching to potential customers and senior executives',
     systemInstruction: createSystemInstruction({
       role: 'business pitches',
       greeting: 'Business Pitch Coach',
@@ -102,8 +107,8 @@ export const conversationTemplates: ConversationTemplate[] = [
         'Create time-pressure scenarios',
         'Interrupt with tough questions',
         'Challenge assumptions and numbers',
-        'Switch between interested and skeptical responses'
-      ]
+        'Switch between interested and skeptical responses',
+      ],
     }),
   },
   {
@@ -114,14 +119,15 @@ export const conversationTemplates: ConversationTemplate[] = [
       role: 'job interviews',
       greeting: 'Interview Coach',
       action: 'practice',
-      question: '\nWould you like to practice as an INTERVIEWER or CANDIDATE today?',
+      question:
+        '\nWould you like to practice as an INTERVIEWER or CANDIDATE today?',
       behaviors: [
         'Simulate various interviewing styles',
         'Create stress-test scenarios',
         'Switch between formal and casual approaches',
         'Introduce unexpected interview questions',
-        'Demonstrate different power dynamics'
-      ]
+        'Demonstrate different power dynamics',
+      ],
     }),
   },
 ];

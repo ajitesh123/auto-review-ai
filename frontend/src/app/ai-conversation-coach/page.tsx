@@ -61,15 +61,15 @@ export default function AIConversationTemplates() {
           role="tablist"
           aria-orientation="horizontal"
         >
-            <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-              {conversationTemplates.map((template, i) => (
-                <TemplateCard
-                  key={i}
-                  template={template}
-                  onClick={onClickTemplate}
-                />
-              ))}
-            </div>
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            {conversationTemplates.map((template, i) => (
+              <TemplateCard
+                key={i}
+                template={template}
+                onClick={onClickTemplate}
+              />
+            ))}
+          </div>
         </motion.div>
       </div>
     </div>

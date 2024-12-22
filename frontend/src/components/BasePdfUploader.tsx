@@ -1,10 +1,13 @@
 import { useState, useCallback } from 'react';
 import { buildClassNames } from '@utils/classnames';
-import { FileUp } from "lucide-react";
-import { getDocument, GlobalWorkerOptions, version } from 'pdfjs-dist';
+import { FileUp } from 'lucide-react';
+import { getDocument } from 'pdfjs-dist';
+import * as pdfjsLib from 'pdfjs-dist';
 
-// Initialize PDF.js worker
-GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${version}/pdf.worker.min.js`;
+// Configure worker
+if (typeof window !== 'undefined') {
+  pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+}
 
 interface BasePdfUploaderProps {
   onPdfUpload: (content: string) => void;
@@ -26,13 +29,14 @@ export function BasePdfUploader({
   const [isProcessing, setIsProcessing] = useState(false);
 
   const extractPdfText = async (arrayBuffer: ArrayBuffer): Promise<string> => {
-    const pdf = await getDocument(arrayBuffer).promise;
+    const loadingTask = getDocument({ data: arrayBuffer });
+    const pdf = await loadingTask.promise;
     let fullText = '';
     
     for (let i = 1; i <= pdf.numPages; i++) {
       const page = await pdf.getPage(i);
       const textContent = await page.getTextContent();
-      const pageText = textContent.items.map(item => (item as any).str).join(' ');
+      const pageText = textContent.items.map((item: any) => item.str).join(' ');
       fullText += pageText + '\n';
     }
     

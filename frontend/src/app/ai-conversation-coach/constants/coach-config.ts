@@ -1,7 +1,7 @@
 export interface Config {
   model: string;
   generationConfig: {
-    responseModalities: "text" | "audio" | "image";
+    responseModalities: 'text' | 'audio' | 'image';
     speechConfig: {
       voiceConfig: {
         prebuiltVoiceConfig: {
@@ -21,11 +21,11 @@ export interface Config {
 }
 
 export const defaultConfig: Config = {
-  model: "models/gemini-2.0-flash-exp",
+  model: 'models/gemini-2.0-flash-exp',
   generationConfig: {
-    responseModalities: "audio" as const,
+    responseModalities: 'audio' as const,
     speechConfig: {
-      voiceConfig: { prebuiltVoiceConfig: { voiceName: "Aoede" } },
+      voiceConfig: { prebuiltVoiceConfig: { voiceName: 'Aoede' } },
     },
   },
   systemInstruction: {
@@ -66,7 +66,5 @@ Don't hold back - create realistic pressure while maintaining a safe practice en
       },
     ],
   },
-  tools: [
-    { googleSearch: {} }
-  ],
-}; 
+  tools: [{ googleSearch: {} }],
+};

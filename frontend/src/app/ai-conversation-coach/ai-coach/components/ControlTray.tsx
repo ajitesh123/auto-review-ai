@@ -116,7 +116,9 @@ export const ConnectionButton = memo(
           onMouseLeave={() => setShowTooltip(false)}
           className={buildClassNames(
             'material-symbols-outlined filled text-lg',
-            connected ? 'bg-[var(--Blue-500)] text-[var(--Neutral-5)]' : undefined
+            connected
+              ? 'bg-[var(--Blue-500)] text-[var(--Neutral-5)]'
+              : undefined
           )}
         >
           <span className="material-symbols-outlined filled text-lg">
@@ -306,14 +308,16 @@ export default function ControlTray({
           className={buildClassNames(
             'relative rounded-[14px] border border-[var(--Neutral-30)]',
             'bg-[var(--Neutral-5)] p-2.5',
-            ...(!connected ? [
-              "after:content-['']",
-              'after:absolute after:-inset-[2px]',
-              'after:rounded-[16px]',
-              'after:bg-[var(--Blue-500)]',
-              'after:opacity-20 after:-z-10',
-              'after:animate-[pulse-attention_2s_infinite]',
-            ] : [])
+            ...(!connected
+              ? [
+                  "after:content-['']",
+                  'after:absolute after:-inset-[2px]',
+                  'after:rounded-[16px]',
+                  'after:bg-[var(--Blue-500)]',
+                  'after:opacity-20 after:-z-10',
+                  'after:animate-[pulse-attention_2s_infinite]',
+                ]
+              : [])
           )}
         >
           <ConnectionButton

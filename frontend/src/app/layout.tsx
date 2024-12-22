@@ -15,7 +15,6 @@ export const metadata: Metadata = {
   },
 };
 
-
 const API_KEY = process.env.NEXT_PUBLIC_GEMINI_API_KEY as string;
 if (typeof API_KEY !== 'string') {
   throw new Error('set REACT_APP_GEMINI_API_KEY in .env');

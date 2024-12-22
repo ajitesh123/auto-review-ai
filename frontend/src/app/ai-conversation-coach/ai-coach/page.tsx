@@ -3,7 +3,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useLiveAPIContext } from '@contexts/LiveAPIContext';
 import ControlTray from './components/ControlTray';
-import { ConversationTemplate, conversationTemplates } from '@app/ai-conversation-coach/constants/coach-templates';
+import {
+  ConversationTemplate,
+  conversationTemplates,
+} from '@app/ai-conversation-coach/constants/coach-templates';
 import { defaultConfig } from '../constants/coach-config';
 import { Sidebar } from './components/sidebar/Sidebar';
 import RepeatBackground from '@components/RepeatBackground';
@@ -17,7 +20,7 @@ type SystemInstruction = {
 type GeminiConfig = {
   model: string;
   generationConfig: {
-    responseModalities: "text" | "audio" | "image";
+    responseModalities: 'text' | 'audio' | 'image';
     speechConfig: {
       voiceConfig: {
         prebuiltVoiceConfig: {
@@ -37,14 +40,13 @@ function AICoachPlayground() {
   // either the screen capture, the video or null, if null we hide it
   const [videoStream, setVideoStream] = useState<MediaStream | null>(null);
 
-
-   // LiveAPI Context provides websocket connection management:
+  // LiveAPI Context provides websocket connection management:
   // - setConfig: Updates Gemini configuration (model, speech, system instructions)
   // - connected: Boolean indicating if websocket is connected to Gemini
   // - disconnect: Closes websocket connection to Gemini
   // - connect: Establishes new websocket connection with current config
   const { setConfig, connected, disconnect, connect } = useLiveAPIContext();
-  
+
   // get the template from somewhere
   const templateObject = conversationTemplates[1] as ConversationTemplate;
 
@@ -52,8 +54,8 @@ function AICoachPlayground() {
   useEffect(() => {
     console.log('console useeffect ');
     // Find selected conversation template
-    const template = templateObject 
-      ? conversationTemplates.find(t => t.id === templateObject.id)
+    const template = templateObject
+      ? conversationTemplates.find((t) => t.id === templateObject.id)
       : null;
 
     // Create new Gemini configuration:
@@ -61,16 +63,18 @@ function AICoachPlayground() {
     // - Updates system instructions based on selected template
     // This config will be sent through the websocket connection
     const newConfig: GeminiConfig = {
-      ...defaultConfig as unknown as GeminiConfig, // Cast needed due to type mismatch
-      systemInstruction: template ? {
-        parts: [{ text: template.systemInstruction }],
-      } : defaultConfig.systemInstruction,
+      ...(defaultConfig as unknown as GeminiConfig), // Cast needed due to type mismatch
+      systemInstruction: template
+        ? {
+            parts: [{ text: template.systemInstruction }],
+          }
+        : defaultConfig.systemInstruction,
     };
 
     // Send config through websocket to Gemini API
     setConfig(newConfig);
   }, [setConfig]);
-  
+
   return (
     <div className="flex flex-col min-h-screen">
       <div className="relative">
