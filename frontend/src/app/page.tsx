@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useAppContext } from '@contexts/AppContext';
 
 import AppIntro from './home/AppIntro';
-import Pricing from '@components/Pricing';
+import Pricing from './home/Pricing';
 import Testimonials from './home/Testimonials';
 import HowItWorks from './home/HowItWorks';
 import Review from './home/Review';

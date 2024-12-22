@@ -1,15 +1,15 @@
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+
 import { useAppContext } from '@contexts/AppContext';
-import GradientBackground from './GradientBackground';
-import { TextButton } from './ui/button';
+import { TextButton } from '@components/ui/button';
 import TickIcon from '@assets/icons/tick.svg';
 import PopularIcon from '@assets/icons/popular.svg';
-import { SvgIcon } from './ui/svg-icon';
+import { SvgIcon } from '@components/ui/svg-icon';
 import { isPerfReviewType } from '@constants/common';
 import { login } from '@services/auth';
-import { useRouter } from 'next/navigation';
 import useStripeCheckout from 'src/hooks/useStripeCheckout';
-import { useFlashMessage } from './ui/flash-messages';
+import { useFlashMessage } from '@components/ui/flash-messages';
 import { SUBSCRIPTION_TIER } from '@constants/billing';
 
 const Plans = {
@@ -216,7 +216,6 @@ const Pricing = () => {
           </div>
         </div>
       </div>
-      {/* <GradientBackground reviewType={reviewType} /> */}
     </section>
   );
 };

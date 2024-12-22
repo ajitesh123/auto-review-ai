@@ -65,7 +65,7 @@ export default function Footer() {
                   onClick={scrollToTop}
                   className="text-slate-300 transition hover:opacity-75"
                 >
-                  Performance Review
+                  AI Performance Review
                 </Link>
               </li>
               <li>
@@ -74,16 +74,16 @@ export default function Footer() {
                   onClick={scrollToTop}
                   className="text-slate-300 transition hover:opacity-75"
                 >
-                  Self Review
+                  AI Self Review
                 </Link>
               </li>
               <li>
                 <Link
-                  href={NAV_LINKS.Voice_AI}
+                  href={NAV_LINKS.AI_Conversation_Coach}
                   onClick={scrollToTop}
                   className="text-slate-300 transition hover:opacity-75"
                 >
-                  Voice Companion
+                  AI Conversation Coach
                 </Link>
               </li>
             </ul>
