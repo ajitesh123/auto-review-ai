@@ -5,14 +5,15 @@ import RepeatBackground from '@components/RepeatBackground';
 import TemplateCard from './components/TemplateCard';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
-import { conversationTemplates } from '@app/ai-conversation-coach/constants/coach-templates';
+import { useAICoachTemplatesStore } from 'src/store/useAICoachTemplatesStore';
 
 export default function AIConversationTemplates() {
   const router = useRouter();
+  const { templates } = useAICoachTemplatesStore();
 
   const onClickTemplate = (template: any) => {
     console.log('clicked template', template);
-    router.push(`/ai-conversation-coach/ai-coach`);
+    router.push(`/ai-conversation-coach/${template.id}`);
   };
 
   return (
@@ -62,7 +63,7 @@ export default function AIConversationTemplates() {
           aria-orientation="horizontal"
         >
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {conversationTemplates.map((template, i) => (
+            {templates.map((template, i) => (
               <TemplateCard
                 key={i}
                 template={template}

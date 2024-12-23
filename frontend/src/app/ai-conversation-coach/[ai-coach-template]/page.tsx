@@ -3,14 +3,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useLiveAPIContext } from '@contexts/LiveAPIContext';
 import ControlTray from './components/ControlTray';
-import {
-  ConversationTemplate,
-  conversationTemplates,
-} from '@app/ai-conversation-coach/constants/coach-templates';
+import { ConversationTemplate } from '@app/ai-conversation-coach/constants/coach-templates';
 import { defaultConfig } from '../constants/coach-config';
 import { Sidebar } from './components/sidebar/Sidebar';
 import RepeatBackground from '@components/RepeatBackground';
-import AudioPulse from './components/audio-pulse/AudioPulse';
+import { useAICoachTemplatesStore } from 'src/store/useAICoachTemplatesStore';
+import { useParams, useRouter } from 'next/navigation';
 
 // LiveAPI Configuration Types
 type SystemInstruction = {
@@ -35,29 +33,43 @@ type GeminiConfig = {
 };
 
 function AICoachPlayground() {
+  const router = useRouter();
+  const params = useParams();
+
   // this video reference is used for displaying the active stream, whether that is the webcam or screen capture
   // feel free to style as you see fit
   const videoRef = useRef<HTMLVideoElement>(null);
   // either the screen capture, the video or null, if null we hide it
   const [videoStream, setVideoStream] = useState<MediaStream | null>(null);
 
+  // state to get the selected template
+  const [selectedTemplate, setSelectedTemplate] =
+    useState<ConversationTemplate | null>(null);
+
   // LiveAPI Context provides websocket connection management:
   // - setConfig: Updates Gemini configuration (model, speech, system instructions)
   // - connected: Boolean indicating if websocket is connected to Gemini
   // - disconnect: Closes websocket connection to Gemini
   // - connect: Establishes new websocket connection with current config
-  const { setConfig, connected, disconnect, connect, volume } = useLiveAPIContext();
+  const { setConfig, connected, disconnect, connect, volume } =
+    useLiveAPIContext();
 
-  // get the template from somewhere
-  const templateObject = conversationTemplates[1] as ConversationTemplate;
+  // get the template from store
+  const { templates } = useAICoachTemplatesStore();
+  // const templateObject = templates[1] as ConversationTemplate;
 
   // Update Gemini API config when template changes
   useEffect(() => {
-    console.log('console useeffect ');
     // Find selected conversation template
-    const template = templateObject
-      ? conversationTemplates.find((t) => t.id === templateObject.id)
-      : null;
+    const selectedTemplateId = params['ai-coach-template'];
+    const template = templates.find(
+      (t) => t.id === selectedTemplateId
+    ) as ConversationTemplate;
+    console.log('console template found ', template);
+    if (!template) {
+      router.push('/ai-conversation-coach');
+    }
+    setSelectedTemplate(template);
 
     // Create new Gemini configuration:
     // - Uses defaultConfig for model and speech settings
@@ -84,8 +96,9 @@ function AICoachPlayground() {
           <Sidebar />
         </aside>
         <div className="flex flex-col items-center justify-center h-full">
-          <div className='border h-20 w-20 items-center'>
-            <AudioPulse volume={volume} active={connected} hover={false} />
+          <div className="flex flex-col">
+            {selectedTemplate?.name}
+            <p>{selectedTemplate?.description}</p>
           </div>
           <ControlTray
             videoRef={videoRef}

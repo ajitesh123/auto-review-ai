@@ -17,12 +17,12 @@ interface BasePdfUploaderProps {
   labelClassName?: string;
 }
 
-export function BasePdfUploader({ 
-  onPdfUpload, 
+export function BasePdfUploader({
+  onPdfUpload,
   className,
   inputId,
   containerClassName,
-  labelClassName
+  labelClassName,
 }: BasePdfUploaderProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [fileName, setFileName] = useState<string | null>(null);
@@ -32,14 +32,14 @@ export function BasePdfUploader({
     const loadingTask = getDocument({ data: arrayBuffer });
     const pdf = await loadingTask.promise;
     let fullText = '';
-    
+
     for (let i = 1; i <= pdf.numPages; i++) {
       const page = await pdf.getPage(i);
       const textContent = await page.getTextContent();
       const pageText = textContent.items.map((item: any) => item.str).join(' ');
       fullText += pageText + '\n';
     }
-    
+
     return fullText;
   };
 
@@ -82,21 +82,26 @@ export function BasePdfUploader({
     }
   }, []);
 
-  const handleFileInput = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      processPdfFile(file);
-    }
-  }, []);
-  
+  const handleFileInput = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (file) {
+        processPdfFile(file);
+      }
+    },
+    []
+  );
+
   return (
-    <div className={buildClassNames("p-2", containerClassName)}>
+    <div className={buildClassNames('p-2', containerClassName)}>
       <div
         className={buildClassNames(
-          "flex items-center justify-center min-h-10 p-2 rounded-lg border border-dashed border-gray-600 transition-all duration-200 bg-gray-900",
-          isDragging ? "border-accent-blue bg-accent-blue-active" : "",
-          fileName ? "border-solid border-accent-green" : "",
-          isProcessing ? "border-accent-blue bg-accent-blue-active opacity-70 cursor-not-allowed" : "",
+          'flex items-center justify-center min-h-10 p-2 rounded-lg border border-dashed border-gray-600 transition-all duration-200 bg-gray-900',
+          isDragging ? 'border-accent-blue bg-accent-blue-active' : '',
+          fileName ? 'border-solid border-accent-green' : '',
+          isProcessing
+            ? 'border-accent-blue bg-accent-blue-active opacity-70 cursor-not-allowed'
+            : '',
           className
         )}
         onDragOver={handleDragOver}
@@ -111,11 +116,11 @@ export function BasePdfUploader({
           id={inputId}
           disabled={isProcessing}
         />
-        <label 
+        <label
           htmlFor={inputId}
           className={buildClassNames(
-            "flex items-center gap-2 cursor-pointer text-neutral-400 hover:text-cyan-200 transition-colors",
-            isProcessing ? "cursor-not-allowed" : "",
+            'flex items-center gap-2 cursor-pointer text-neutral-400 hover:text-cyan-200 transition-colors',
+            isProcessing ? 'cursor-not-allowed' : '',
             labelClassName
           )}
         >
