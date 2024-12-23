@@ -10,6 +10,7 @@ import {
 import { defaultConfig } from '../constants/coach-config';
 import { Sidebar } from './components/sidebar/Sidebar';
 import RepeatBackground from '@components/RepeatBackground';
+import AudioPulse from './components/audio-pulse/AudioPulse';
 
 // LiveAPI Configuration Types
 type SystemInstruction = {
@@ -45,7 +46,7 @@ function AICoachPlayground() {
   // - connected: Boolean indicating if websocket is connected to Gemini
   // - disconnect: Closes websocket connection to Gemini
   // - connect: Establishes new websocket connection with current config
-  const { setConfig, connected, disconnect, connect } = useLiveAPIContext();
+  const { setConfig, connected, disconnect, connect, volume } = useLiveAPIContext();
 
   // get the template from somewhere
   const templateObject = conversationTemplates[1] as ConversationTemplate;
@@ -82,13 +83,18 @@ function AICoachPlayground() {
         <aside className="fixed md:relative w-64 h-full">
           <Sidebar />
         </aside>
-        <ControlTray
-          videoRef={videoRef}
-          supportsVideo={true}
-          onVideoStreamChange={setVideoStream}
-        >
-          {/* put your own buttons here */}
-        </ControlTray>
+        <div className="flex flex-col items-center justify-center h-full">
+          <div className='border h-20 w-20 items-center'>
+            <AudioPulse volume={volume} active={connected} hover={false} />
+          </div>
+          <ControlTray
+            videoRef={videoRef}
+            supportsVideo={true}
+            onVideoStreamChange={setVideoStream}
+          >
+            {/* put your own buttons here */}
+          </ControlTray>
+        </div>
       </div>
     </div>
   );
