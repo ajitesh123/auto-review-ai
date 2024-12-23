@@ -96,7 +96,7 @@ export default function Header() {
                           className="block rounded text-gray-300 md:hover:text-white"
                           scroll={true}
                         >
-                          Voice AI
+                          AI Coach
                         </Link>
                       </li>
                       <li className="hidden md:block">
