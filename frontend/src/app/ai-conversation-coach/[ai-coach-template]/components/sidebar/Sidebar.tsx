@@ -5,7 +5,7 @@ import { buildClassNames } from '@utils/classnames';
 import { PanelLeft } from 'lucide-react';
 import { Input } from '@components/ui/input';
 import { useLiveAPIContext } from '@contexts/LiveAPIContext';
-import { useLoggerStore } from '../../../../../voice-ai-lib/store-logger';
+import { useLoggerStore } from 'src/voice-ai-lib/store-logger';
 import Logger from '../logger/Logger';
 import { PdfUploader } from './PdfUploader';
 

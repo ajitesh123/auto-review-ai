@@ -9,6 +9,7 @@ import { Sidebar } from './components/sidebar/Sidebar';
 import RepeatBackground from '@components/RepeatBackground';
 import { useAICoachTemplatesStore } from 'src/store/useAICoachTemplatesStore';
 import { useParams, useRouter } from 'next/navigation';
+import cn from 'classnames';
 
 // LiveAPI Configuration Types
 type SystemInstruction = {
@@ -89,26 +90,41 @@ function AICoachPlayground() {
   }, [setConfig]);
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <div className="relative">
-        <RepeatBackground />
-        <aside className="fixed md:relative w-64 h-full">
-          <Sidebar />
-        </aside>
-        <div className="flex flex-col items-center justify-center h-full">
+    <div className="relative flex h-screen overflow-hidden -mt-[75px]">
+      <div className="absolute inset-0 bg-black/70 z-0" />
+      <aside className="fixed md:relative w-64 h-full z-20 md:z-10">
+        <Sidebar />
+      </aside>
+
+      <main className="flex-1 ml-12 md:ml-0 relative z-[1] overflow-hidden flex flex-col">
+        <div className="flex-1 overflow-y-auto">
+          <RepeatBackground />
           <div className="flex flex-col">
             {selectedTemplate?.name}
             <p>{selectedTemplate?.description}</p>
           </div>
+
+          <video
+            className={cn(
+              'absolute top-0 right-0 w-[320px] h-[180px] object-cover rounded-lg m-4 z-10',
+              'md:w-[320px] md:h-[180px]',
+              'sm:w-[240px] sm:h-[135px]',
+              { hidden: !videoRef.current || !videoStream }
+            )}
+            ref={videoRef}
+            autoPlay
+            playsInline
+          />
+        </div>
+
+        <div className="flex justify-center pb-4">
           <ControlTray
             videoRef={videoRef}
             supportsVideo={true}
             onVideoStreamChange={setVideoStream}
-          >
-            {/* put your own buttons here */}
-          </ControlTray>
+          />
         </div>
-      </div>
+      </main>
     </div>
   );
 }

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 import { NAV_LINKS } from '@constants/links';
@@ -12,10 +12,12 @@ import { isPerfReviewType } from '@constants/common';
 import { login } from '@services/auth';
 import githubLogo from '@assets/icons/github-logo.svg';
 import { SvgIcon } from './ui/svg-icon';
+import { isAICoachPlaygroundRoute } from '@utils/common';
 
 export default function Header() {
   const { reviewType, accessToken, user, isAuthorizing } = useAppContext();
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -39,6 +41,10 @@ export default function Header() {
     // login redirection
     router.push(response.login_url);
   };
+
+  if (isAICoachPlaygroundRoute(pathname)) {
+    return null;
+  }
 
   return (
     <header className="bg-neutral-white relative z-10 flex-shrink-0">

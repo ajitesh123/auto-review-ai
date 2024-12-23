@@ -66,68 +66,67 @@ export const MicButton = memo(
 /**
  * Button for controlling connection state
  */
+type ConnectionButtonProps = {
+  connected: boolean;
+  onToggle: () => void;
+};
+
 export const ConnectionButton = memo(
-  ({
-    connected,
-    onToggle,
-    ref,
-  }: {
-    connected: boolean;
-    onToggle: () => void;
-    ref: RefObject<HTMLButtonElement>;
-  }) => {
-    const [showTooltip, setShowTooltip] = useState(!connected);
+  React.forwardRef<HTMLButtonElement, ConnectionButtonProps>(
+    ({ connected, onToggle }, ref) => {
+      const [showTooltip, setShowTooltip] = useState(!connected);
 
-    useEffect(() => {
-      if (showTooltip && !connected) {
-        const timer = setTimeout(() => {
-          setShowTooltip(false);
-        }, 1000); // 1 second
+      useEffect(() => {
+        if (showTooltip && !connected) {
+          const timer = setTimeout(() => {
+            setShowTooltip(false);
+          }, 1000); // 1 second
 
-        return () => clearTimeout(timer);
-      }
-    }, [showTooltip, connected]);
+          return () => clearTimeout(timer);
+        }
+      }, [showTooltip, connected]);
 
-    return (
-      <div className="relative">
-        {showTooltip && (
-          <div
+      return (
+        <div className="relative">
+          {showTooltip && (
+            <div
+              className={buildClassNames(
+                'absolute bottom-[calc(100%+15px)] left-1/2 -translate-x-1/2',
+                'bg-black text-white p-2 rounded-md',
+                'text-sm whitespace-nowrap border border-white',
+                'transition-opacity duration-300',
+                "after:content-[''] after:absolute after:top-full after:left-1/2",
+                'after:-translate-x-1/2 after:border-8 after:border-transparent',
+                'after:border-t-[var(--Neutral-80)]'
+              )}
+            >
+              Click to start the conversation
+            </div>
+          )}
+          <ControlButton
+            ref={ref}
+            variant={connected ? 'default' : 'play'}
+            onClick={() => {
+              onToggle();
+              setShowTooltip(false);
+            }}
+            onMouseEnter={() => !connected && setShowTooltip(true)}
+            onMouseLeave={() => setShowTooltip(false)}
             className={buildClassNames(
-              'absolute bottom-[calc(100%+15px)] left-1/2 -translate-x-1/2',
-              'bg-black text-white p-2 rounded-md',
-              'text-sm whitespace-nowrap border border-white',
-              'transition-opacity duration-300',
-              "after:content-[''] after:absolute after:top-full after:left-1/2",
-              'after:-translate-x-1/2 after:border-8 after:border-transparent',
-              'after:border-t-[var(--Neutral-80)]'
+              'material-symbols-outlined filled text-lg',
+              connected
+                ? 'bg-[var(--Blue-500)] text-[var(--Neutral-5)]'
+                : undefined
             )}
           >
-            Click to start the conversation
-          </div>
-        )}
-        <ControlButton
-          ref={ref}
-          variant={connected ? 'default' : 'play'}
-          onClick={() => {
-            onToggle();
-            setShowTooltip(false);
-          }}
-          onMouseEnter={() => !connected && setShowTooltip(true)}
-          onMouseLeave={() => setShowTooltip(false)}
-          className={buildClassNames(
-            'material-symbols-outlined filled text-lg',
-            connected
-              ? 'bg-[var(--Blue-500)] text-[var(--Neutral-5)]'
-              : undefined
-          )}
-        >
-          <span className="material-symbols-outlined filled text-lg">
-            {connected ? 'pause' : 'play_arrow'}
-          </span>
-        </ControlButton>
-      </div>
-    );
-  }
+            <span className="material-symbols-outlined filled text-lg">
+              {connected ? 'pause' : 'play_arrow'}
+            </span>
+          </ControlButton>
+        </div>
+      );
+    }
+  )
 );
 
 // ==========================================================================

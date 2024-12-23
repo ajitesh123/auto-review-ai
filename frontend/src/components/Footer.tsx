@@ -3,11 +3,19 @@
 import { NAV_LINKS, SOCIAL_MEDIA_LINKS } from '@constants/links';
 import React from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { isAICoachPlaygroundRoute } from '@utils/common';
 
 export default function Footer() {
+  const pathname = usePathname();
+
   const scrollToTop = () => {
     document.body.scrollTop = document.documentElement.scrollTop = 0;
   };
+
+  if (isAICoachPlaygroundRoute(pathname)) {
+    return null;
+  }
 
   return (
     <footer className="bg-background border-t px-6 lg:px-8">
