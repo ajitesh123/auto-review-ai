@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useLiveAPIContext } from '@contexts/LiveAPIContext';
 import ControlTray from './components/ControlTray';
 import { ConversationTemplate } from '@app/ai-conversation-coach/constants/coach-templates';
@@ -89,9 +89,24 @@ function AICoachPlayground() {
     setConfig(newConfig);
   }, [setConfig]);
 
+  const handleBackClick = useCallback(() => {
+    // disconnect from the websocket when leaving the page
+    if (connected) {
+      disconnect();
+    }
+    router.push('/ai-conversation-coach');
+  }, [connected, disconnect]);
+
   return (
     <div className="relative flex h-screen overflow-hidden -mt-[75px]">
       <div className="absolute inset-0 bg-black/70 z-0" />
+      <div
+        onClick={handleBackClick}
+        className="absolute cursor-pointer top-[max(1vh,8px)] right-[max(2vh,16px)] text-white no-underline font-mono text-[0.9rem] transition-all duration-300 opacity-100 z-10 pointer-events-auto hover:opacity-100 hover:-translate-y-0.5 hover:text-shadow-white"
+      >
+        Back to Templates
+      </div>
+
       <aside className="fixed md:relative w-64 h-full z-20 md:z-10">
         <Sidebar />
       </aside>
@@ -99,10 +114,21 @@ function AICoachPlayground() {
       <main className="flex-1 ml-12 md:ml-0 relative z-[1] overflow-hidden flex flex-col">
         <div className="flex-1 overflow-y-auto">
           <RepeatBackground />
-          <div className="flex flex-col">
-            {selectedTemplate?.name}
-            <p>{selectedTemplate?.description}</p>
+
+          {/* Main Hero */}
+          <div className="flex flex-col items-center justify-center min-h-[calc(100vh-200px)] w-full max-w-3xl mx-auto px-4 py-8 text-center">
+            <div className="flex items-center justify-center w-full mb-8 mt-20">
+              <h1 className="text-6xl font-bold bg-gradient-to-r from-pink-600 via-purple-600 to-pink-600 animate-gradient bg-300% bg-clip-text text-transparent inline-flex items-start gap-2">
+                {selectedTemplate?.name}
+              </h1>
+            </div>
+            <div className="relative w-full mb-12">
+              <p className="text-xl text-white/90 leading-relaxed whitespace-pre-wrap">
+                {selectedTemplate?.description}
+              </p>
+            </div>
           </div>
+          {/* /Main Hero */}
 
           <video
             className={cn(

@@ -97,7 +97,8 @@ export const ConnectionButton = memo(
                 'transition-opacity duration-300',
                 "after:content-[''] after:absolute after:top-full after:left-1/2",
                 'after:-translate-x-1/2 after:border-8 after:border-transparent',
-                'after:border-t-[var(--Neutral-80)]'
+                'after:border-t-[var(--Neutral-80)]',
+                'font-mono'
               )}
             >
               Click to start the conversation
