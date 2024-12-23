@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 import { NAV_LINKS } from '@constants/links';
@@ -12,10 +12,12 @@ import { isPerfReviewType } from '@constants/common';
 import { login } from '@services/auth';
 import githubLogo from '@assets/icons/github-logo.svg';
 import { SvgIcon } from './ui/svg-icon';
+import { isAICoachPlaygroundRoute } from '@utils/common';
 
 export default function Header() {
   const { reviewType, accessToken, user, isAuthorizing } = useAppContext();
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -39,6 +41,10 @@ export default function Header() {
     // login redirection
     router.push(response.login_url);
   };
+
+  if (isAICoachPlaygroundRoute(pathname)) {
+    return null;
+  }
 
   return (
     <header className="bg-neutral-white relative z-10 flex-shrink-0">
@@ -78,12 +84,8 @@ export default function Header() {
             </svg>
             <span className="text-xl font-semibold text-white">OpenHR AI</span>
           </Link>
-          <Link
-            href={NAV_LINKS.Github}
-            passHref
-            target='_blank'
-          >
-            <SvgIcon svg={githubLogo} size='custom' width={35} height={35} />
+          <Link href={NAV_LINKS.Github} passHref target="_blank">
+            <SvgIcon svg={githubLogo} size="custom" width={35} height={35} />
           </Link>
           {!isAuthorizing && (
             <div className="flex flex-wrap items-center gap-3 md:gap-6">
@@ -94,6 +96,15 @@ export default function Header() {
                     id="navbar-sticky"
                   >
                     <ul className="flex flex-row p-0 font-normal gap-3 md:gap-6 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0">
+                      <li className="hidden md:block">
+                        <Link
+                          href={NAV_LINKS.AI_Conversation_Coach}
+                          className="block rounded text-gray-300 md:hover:text-white"
+                          scroll={true}
+                        >
+                          AI Coach
+                        </Link>
+                      </li>
                       <li className="hidden md:block">
                         <Link
                           href={'#pricing'}

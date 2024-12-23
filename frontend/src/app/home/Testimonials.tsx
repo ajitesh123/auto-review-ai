@@ -5,7 +5,7 @@ import Anmol_Sinha from '@assets/images/testimonials/anmol_sinha.png';
 import Jinal_Dalal from '@assets/images/testimonials/jinal_dalal.jpeg';
 import Avinash_Malik from '@assets/images/testimonials/avinash_malik.jpeg';
 import Thomas_Nguyen from '@assets/images/testimonials/thomas_nguyen.jpg';
-import TestimonialCard from '@components/TestimonialCard';
+import TestimonialCard from '@app/home/components/TestimonialCard';
 
 const testimonials = [
   {

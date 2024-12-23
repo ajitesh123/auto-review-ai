@@ -1,8 +1,8 @@
 import { Switch } from '@components/ui/switch';
 import React, { useState } from 'react';
 import { isPerfReviewType, ReviewType } from '@constants/common';
-import GradientBackground from '@components/GradientBackground';
-import Background from '@assets/icons/background.png';
+// import GradientBackground from '@components/GradientBackground';
+import RepeatBackground from '@components/RepeatBackground';
 import { motion } from 'framer-motion';
 
 const AppIntro = ({ reviewType, onReviewTypeChange }: any) => {
@@ -19,19 +19,9 @@ const AppIntro = ({ reviewType, onReviewTypeChange }: any) => {
 
   return (
     <div className="relative">
-      <div
-        className="fixed inset-0"
-        style={{
-          backgroundImage: `url(${Background.src})`,
-          backgroundSize: '400px',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'repeat',
-          opacity: 0.2,
-          zIndex: -1,
-        }}
-      />
+      <RepeatBackground />
       <section className="relative isolate px-6 lg:px-8 pt-6 lg:pt-12">
-        <GradientBackground reviewType={reviewType} />
+        {/* <GradientBackground reviewType={reviewType} /> */}
         <div className="flex flex-col md:flex-row  mx-auto max-w-7xl py-16">
           <div className="flex flex-col flex-1 items-center m-auto">
             <motion.h1

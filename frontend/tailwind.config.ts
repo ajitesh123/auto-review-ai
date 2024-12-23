@@ -54,6 +54,20 @@ module.exports = {
           900: 'var(--self-review-900)',
         },
 
+        'conv-coach': {
+          DEFAULT: 'var(--conversation-coach-500)',
+          50: 'var(--conversation-coach-50)',
+          100: 'var(--conversation-coach-100)',
+          200: 'var(--conversation-coach-200)',
+          300: 'var(--conversation-coach-300)',
+          400: 'var(--conversation-coach-400)',
+          500: 'var(--conversation-coach-500)',
+          600: 'var(--conversation-coach-600)',
+          700: 'var(--conversation-coach-700)',
+          800: 'var(--conversation-coach-800)',
+          900: 'var(--conversation-coach-900)',
+        },
+
         jungle: {
           DEFAULT: '#00a886',
           900: '#005C3F',

@@ -32,6 +32,58 @@
     --self-review-700: #0f766e;
     --self-review-800: #115e59;
     --self-review-900: #134e4a;
+
+    /* conversation coach theme color */
+    --conversation-coach-50: #f5f3ff;
+    --conversation-coach-100: #ede9fe;
+    --conversation-coach-200: #ddd6fe;
+    --conversation-coach-300: #c4b5fd;
+    --conversation-coach-400: #a78bfa;
+    --conversation-coach-500: #8b5cf6;
+    --conversation-coach-600: #7c3aed;
+    --conversation-coach-700: #6d28d9;
+    --conversation-coach-800: #5b21b6;
+    --conversation-coach-900: #4c1d95;
+
+    /* To be checked again */
+    --text: white;
+    --gray-200: #b4b8bb;
+    --gray-300: #80868b;
+    --gray-500: #5f6368;
+    --gray-600: #444444;
+    --gray-700: #202020;
+    --gray-800: #171717;
+    --gray-900: #111111;
+    --gray-1000: #0a0a0a;
+    --border-stroke: #444444;
+    --accent-blue: rgb(161, 228, 242);
+    --accent-blue-active-bg: #001233;
+    --accent-blue-active: #98beff;
+    --accent-blue-headers: #448dff;
+    --accent-green: rgb(168, 218, 181);
+    --midnight-blue: rgb(0, 18, 51);
+    --blue-30: #99beff;
+    --accent-red: #ff4600;
+    --color: var(--text);
+    --font-family: 'Space Mono', monospace;
+    --Neutral-00: #000;
+    --Neutral-5: #181a1b;
+    --Neutral-10: #1c1f21;
+    --Neutral-15: #232729;
+    --Neutral-20: #2a2f31;
+    --Neutral-30: #404547;
+    --Neutral-50: #707577;
+    --Neutral-60: #888d8f;
+    --Neutral-80: #c3c6c7;
+    --Neutral-90: #e1e2e3;
+    --Green-500: #0d9c53;
+    --Green-700: #025022;
+    --Blue-500: #1f94ff;
+    --Blue-800: #0f3557;
+    --Red-400: #ff9c7a;
+    --Red-500: #ff4600;
+    --Red-600: #e03c00;
+    --Red-700: #bd3000;
   }
 }
 

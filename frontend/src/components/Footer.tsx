@@ -3,11 +3,19 @@
 import { NAV_LINKS, SOCIAL_MEDIA_LINKS } from '@constants/links';
 import React from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { isAICoachPlaygroundRoute } from '@utils/common';
 
 export default function Footer() {
+  const pathname = usePathname();
+
   const scrollToTop = () => {
     document.body.scrollTop = document.documentElement.scrollTop = 0;
   };
+
+  if (isAICoachPlaygroundRoute(pathname)) {
+    return null;
+  }
 
   return (
     <footer className="bg-background border-t px-6 lg:px-8">
@@ -65,7 +73,7 @@ export default function Footer() {
                   onClick={scrollToTop}
                   className="text-slate-300 transition hover:opacity-75"
                 >
-                  Performance Review
+                  AI Performance Review
                 </Link>
               </li>
               <li>
@@ -74,7 +82,16 @@ export default function Footer() {
                   onClick={scrollToTop}
                   className="text-slate-300 transition hover:opacity-75"
                 >
-                  Self Review
+                  AI Self Review
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href={NAV_LINKS.AI_Conversation_Coach}
+                  onClick={scrollToTop}
+                  className="text-slate-300 transition hover:opacity-75"
+                >
+                  AI Conversation Coach
                 </Link>
               </li>
             </ul>
